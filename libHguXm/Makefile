@@ -25,24 +25,26 @@ ARCHIVE			= $(LIBNAME).a
 EXECUTABLES		=
 
 # List of all 'C' source files (modify as required).
-CSOURCES		=                 \
-                  HGU_XmDialogUtils.c     \
-                  HGU_DrawingA.c          \
-                  HGU_XmFileProcs.c       \
-                  HGU_XmGraph.c           \
-                  HGU_XmMenuUtils.c       \
-                  HGU_XmMiscCallbacks.c   \
-                  HGU_XmMiscProcs.c       \
-                  HGU_XmPB_Radio.c        \
-                  HGU_XmPB_Row.c          \
-                  HGU_XmSaveRestore.c     \
-		  HGU_XmSetInt.c	  \
-                  HGU_XmSlider.c          \
-                  HGU_XmTextLine.c        \
-                  HGU_XmUserPrompt.c      \
-                  HGU_XmHelpMenu.c        \
-                  HGU_XmMacroMenu.c \
-		  HGU_XmVarArgs.c
+CSOURCES		= \
+			HGU_XmDialogUtils.c \
+			HGU_DrawingA.c \
+			HGU_XmFileProcs.c \
+			HGU_XmGraph.c \
+			HGU_XmImageView.c \
+			HGU_XmImageViewMappingControls.c \
+			HGU_XmMenuUtils.c \
+			HGU_XmMiscCallbacks.c \
+			HGU_XmMiscProcs.c \
+			HGU_XmPB_Radio.c \
+			HGU_XmPB_Row.c \
+			HGU_XmSaveRestore.c \
+			HGU_XmSetInt.c \
+			HGU_XmSlider.c \
+			HGU_XmTextLine.c \
+			HGU_XmUserPrompt.c \
+			HGU_XmHelpMenu.c \
+			HGU_XmMacroMenu.c \
+			HGU_XmVarArgs.c
 
 # List of all header files that are available outside of either this archive
 # or these executables (modify as required).
@@ -80,6 +82,7 @@ MANPAGES		=                  \
 INCDIRS			= .  \
 			../libHguX \
 			../../Core/libWlz \
+			../../Core/libWlzExtFF \
 			../../Core/libAlg \
 			../../Core/libAlc \
 			$(X11_INC_DIR) \
