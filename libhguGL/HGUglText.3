@@ -1,0 +1,67 @@
+'\" te
+.\" ident MRC HGU $Id$
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\" Project:	Mouse Atlas
+.\" Title:	HGUglText.3
+.\" Date:	April 1999
+.\" Author:	Bill Hill
+.\" Copyright:	1999 Medical Research Council, UK.
+.\"		All rights reserved.
+.\" Address:	MRC Human Genetics Unit,
+.\"		Western General Hospital,
+.\"		Edinburgh, EH4 2XU, UK.
+.\" Purpose:	Functions for handling text in the HGU OpenGL library.
+.\" $Revision$
+.\" Maintenance: Log changes below, with most recent at top of list.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.EQ
+delim $$
+.EN
+.TH HGUglText 3 "June 1995"
+.SH NAME
+HGUglTextFontCreate,
+HGUglTextFontDestroy,
+HGUglTextFontChar,
+HGUglTextFontStr \- functions for handling text in Open GL.
+.SH SYNOPSIS
+.LP
+#include <\fBHGUgl.h\fR>
+.LP
+\fBHGUglTextFont *HGUglTextFontCreate\fR(\fBFont \fIxFont\fR);
+.LP
+\fBvoid HGUglTextFontDestroy\fR(\fBfBHGUglTextFont *\fIfnt\fR);
+.LP
+\fBvoid HGUglTextFontChar\fR(\fBHGUglTextFont *\fIfnt\fR, \
+\fBchar \fIcharCode\fR);
+.LP
+\fBvoid HGUglTextFontStr\fR(\fBHGUglTextFont *\fIfnt\fR, \
+\fBchar *\fIstr\fR);
+.SH MT-LEVEL
+.LP
+Unsafe.
+.SH DESCRIPTION
+.LP
+Functions for handling text in Open GL.
+.LP
+\fBHGUglTextFontCreate\fR creates and returns 
+an HGUgl text font instance using the given
+X11 font \fIxFont\fR.
+.LP
+\fBHGUglTextFontDestroy\fR destroys the given HGUgl text font instance
+\fIfnt\fR.
+.LP
+\fBHGUglTextFontChar\fR draws the pixmap for the given character \fIcharCode\fR
+using the given HGUgl text font instance \fIfnt\fR. The character is
+drawn at the current Open GL raster position.
+.LP
+\fBHGUglTextFontStr\fR draws the pixmaps for the given NULL terminated
+character string \fIstr\fR
+using the given HGUgl text font instance \fIfnt\fR. The character is
+drawn at the current Open GL raster position.
+.SH SEE ALSO
+XFontStruct(3),
+glRasterPos(3).
+.SH REFERENCES
+-
+.SH BUGS
+Still to be found.

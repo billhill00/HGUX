@@ -1,0 +1,263 @@
+'\" te
+.\" ident MRC HGU $Id$
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\" Project:	Mouse Atlas
+.\" Title:	HGUglwCanvas.3
+.\" Date:	April 1999
+.\" Author:	Bill Hill
+.\" Copyright:	1999 Medical Research Council, UK.
+.\"		All rights reserved.
+.\" Address:	MRC Human Genetics Unit,
+.\"		Western General Hospital,
+.\"		Edinburgh, EH4 2XU, UK.
+.\" Purpose:	An Open GL drawing area widget and associated
+.\"		functions for the HGU OpenGL library.
+.\" $Revision$
+.\" Maintenance: Log changes below, with most recent at top of list.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.EQ
+delim $$
+.EN
+.TH HGUglwCanvas 3 "June 1995"
+.SH NAME
+HGUglwCanvas,
+HGUglwCreateCanvas,
+HGUglwSetCanvasGlxContext,
+HGUglwCanvasSwapBuffers,
+HGUglwCreateCanvasGlxContext,
+HGUglwGetCanvasGlxContext,
+HGUglwCanvasGlxMakeCurrent \- an Open GL drawing area widget and associated
+functions.
+.SH DESCRIPTION
+.LP
+HGUglwCanvas is a widget class descended from XmPrimitive.
+It can create a canvas window for drawing using Open GL
+with either a specified visual, a specified colormap or
+visual and colormap appropriate to the given
+resources.
+.SS "Classes"
+HGUglwCanvas inherits behavior and resources from \fBXmPrimitive(3)\fR.
+.PP
+The class pointer is \fBhguGLwCanvasWidgetClass\fR.
+.PP
+The class name is \fBHGUglwCanvas\fR.
+.SS "New Resources"
+.TS
+expand tab(:);
+l:l:l:l:l:l
+l:l:l:l:l:l
+l:l:l:l:l:l.
+_
+Name:Class:Type:Default:Access:GLX Visual
+:::::Attribute
+_
+HGUglwNaccumAlphaSize:HGUglwCAccumAlphaSize:int:0:C:*
+HGUglwNaccumBlueSize:HGUglwCAccumColorSize:int:0:C:*
+HGUglwNaccumGreenSize:HGUglwCAccumColorSize:int:0:C:*
+HGUglwNaccumRedSize:HGUglwCAccumColorSize:int:0:C:*
+HGUglwNallocateBackground:HGUglwCAllocateColors:Boolean:FALSE:CG:
+HGUglwNallocateOtherColors:HGUglwCAllocateColors:Boolean:FALSE:CG:
+HGUglwNalphaSize:HGUglwCAlphaSize:int:0:C:*
+HGUglwNattribList:HGUglwCAttribList:int *:NULL:CG:
+HGUglwNauxBuffers:HGUglwCAuxBuffers:int:0:C:*
+HGUglwNblueSize:HGUglwCColorSize:int:1:C:*
+HGUglwNbufferSize:HGUglwCBufferSize:int:0:C:*
+HGUglwNdepthSize:HGUglwCDepthSize:int:0:C:*
+HGUglwNdirectRender:HGUglwCDirectRender:Boolean:FALSE:C:*
+HGUglwNdoublebuffer:HGUglwCDoublebuffer:Boolean:FALSE:C:*
+HGUglwNexposeCallback:HGUglwCCallback:Pointer:NULL:C:
+HGUglwNglxCtx:HGUglwCGlxCtx:GLXContext:NULL:SG:
+HGUglwNgreenSize:HGUglwCColorSize:int:1:C:*
+HGUglwNinitCallback:HGUglwCCallback:Pointer:NULL:C:
+HGUglwNinputCallback:HGUglwCCallback:Pointer:NULL:C:
+HGUglwNinstallBackground:HGUglwCInstallBackground:Boolean:TRUE:CG:
+HGUglwNinstallColormap:HGUglwCInstallColormap:Boolean:TRUE:CG:
+HGUglwNlevel:HGUglwCLevel:int:0:C:*
+HGUglwNredSize:HGUglwCRedSize:int:1:C:*
+HGUglwNresizeCallback:HGUglwCCallback:Pointer:NULL:C:
+HGUglwNrgba:HGUglwCRgba:Boolean:FALSE:C:*
+HGUglwNstencilSize:HGUglwCStencilSize:int:0:C:*
+HGUglwNstereo:HGUglwCStereo:Boolean:FALSE:C:*
+HGUglwNvisualInfo:HGUglwCVisualInfo:VisualInfo:NULL:CG:
+_
+.T&
+l:s
+l:s.
+Access  codes
+C - can be set at creation time:::
+S - can be set using XtSetValues(3):::
+G - can be retrieved using XtGetValues(3):::
+_
+.T&
+l:s:s:s:s:s.
+* Indicates a GLX visual atribute, see glXChooseVisual(3).
+_
+.TE
+.P
+\fBHGUglwNallocateBackground\fR
+If TRUE XmNbackground and backgroundPixmap are allocated.
+.P
+\fBHGUglwNallocateOtherColors\fR
+If TRUE the XmNforeground, XmNhighlightColor and XmNhighlightPixmap
+are allocated.
+.P
+\fBHGUglwNattribList\fR
+The list of Open GL GLX attributes (see glXChooseVisual(3)).
+If NULL the attribute list is calculated from
+the attribute resources.
+.P
+\fBHGUglwNglxCtx\fR
+The Open GL GLX rendering context associated with the widget.
+.P
+\fBHGUglwNinstallBackground\fR
+If TRUE installs the background of the widgets window.
+.P
+\fBHGUglwNinstallColormap\fR
+If TRUE installs the colormap of the widgets window.
+.P
+\fBHGUglwNvisualInfo\fR
+If non NULL contains a pointer to the window's visual info structure.
+.ne 12
+.SS "Callback Structure"
+Each callback function is passed the following structure:
+.br
+\fBtypedef struct\fR
+.br
+\fR{
+.br
+.in +2m
+\fBint \fIreason\fR;
+.br
+\fBXEvent *\fIevent\fR;
+.br
+\fBDimension \fIwidth\fR;
+.br
+\fBDimension \fIheight\fR;
+.br
+\fBGLXContext \fIglxCtx\fR;
+.br
+.in -2m
+\fR}\fB HGUglwCanvasCallbackStruct\fR;
+.P
+\fIreason\fR indicates the reason the callback function was called.
+The HGUglwCanvasWidget has he following callbacks:
+.TS
+expand tab(:);
+l:l:l
+l:l:l.
+_
+Callback Name:Callback Reason:
+_
+HGUglwNexposeCallback:HGUglw_CR_EXPOSE:Equivalent to XmCR_EXPOSE
+HGUglwNresizeCallback:HGUglw_CR_RESIZE:Equivalent to XmCR_RESIZE
+HGUglwNinputCallback:HGUglw_CR_INPUT:Equivalent to XmCR_INPUT
+HGUglwNinitCallback:HGUglw_CR_INIT:T{
+Initialization callback which is called when the widget has
+been realized..
+T}
+HGUglwNtrackballCallback:HGUglw_CR_TRACKBALL:T{
+Trackball movement, not used by HGUglwCanvas see
+HGUglwCanvasTb(3).
+T}
+_
+.TE
+.P
+\fIevent\fR indicates the \fBXEvent(3)\fR which triggered the callback.
+The event pointer is NULL when the callback reason is either
+HGUglw_CR_INIT or HGUglw_CR_RESIZE.
+.P
+\fIwidth\ indicates the canvas windows current width.
+.P
+\fIheight\ indicates the canvas windows current height.
+.P
+\fIglxCtx\fR is the Open GL context associated with the widget.
+.SS "Translations"
+.TS 
+tab(:);
+lb:li.
+_
+<Key>osfHelp:PrimitiveHelp()
+_
+<KeyDown>:HGUglwCanvasInput()
+<KeyUp>:HGUglwCanvasInput()
+<BtnDown>:HGUglwCanvasInput()
+<BtnUp>:HGUglwCanvasInput()
+<BtnMotion>:HGUglwCanvasInput()
+_
+.TE
+.SS "Action Routines"
+The HGUglwCanvasWidget has the following new action routine: 
+.P
+\fBHGUglwCanvasInput()\fR is called whenever one of the above translations
+occurrs. This function simply calls the \fBHGUglw_CR_INPUT\fR
+callback list.
+.SH FUNCTIONS
+.LP
+\fBWidget HGUglwCreateCanvas\fR(\fBWidget \fIparentW\fR,
+\fBchar *\fIname\fR, \fBArgList \fIargList\fR, \fBCardinal \fIargCount\fR);
+.P
+Motif style convienience function to create an HGU Open GL canvas widget.
+.P
+\fIparentW\fR indicates the parent widget.
+.P
+\fIname\fR is the new widget name.
+.P
+\fIargList\fR is the argument list for new widget.
+.P
+\fIargCount\fR is the number of arguments in the argument list.
+.LP
+\fBvoid HGUglwSetCanvasGlxContext\fR(\fBWidget \fIcanvasW\fR,
+\fBGLXContext \fIglxCtx\fR);
+.P
+Sets the Open GL GLX rendering context associated with the canvas widget.
+.P
+\fIcanvasW\fR is the given HGU Open GL canvas widget.
+.P
+\fIglxCtx\fR is the given Open GL GLX rendering context to set.
+.LP
+\fBvoid HGUglwCanvasSwapBuffers\fR(\fBWidget \fIcanvasW\fR);
+.P
+Convienience function to swap the Open GL front and back buffers.
+.P
+\fIcanvasW\fR is the given HGU Open GL canvas widget.
+.LP
+\fBGLXContext HGUglwCreateCanvasGlxContext\fR(\fBWidget \fIcanvasW\fR,
+\fBGLXContext \fIshareList\fR);
+.P
+Creates and returns an Open GL GLX rendering context
+and associates it with the given HGU Open GL canvas widget.
+.P
+\fIcanvasW\fR is the given HGU Open GL canvas widget.
+.P
+\fIshareList\fR if non NULL, indicates the Open GL GLX rendering context
+with which to share display lists.
+NULL indicates that there is to be no display list sharing.
+.LP
+\fBGLXContext HGUglwGetCanvasGlxContext\fR(\fBWidget \fIcanvasW\fR);
+Gets the Open GL GLX rendering context associated with the canvas widget.
+.P
+\fIcanvasW\fR is the given HGU Open GL canvas widget.
+.LP
+\fBBool HGUglwCanvasGlxMakeCurrent\fR(\fBWidget \fIcanvasW\fR,
+\fBGLXContext \fIglxCtx\fR);
+.P
+Convienience function to make given Open GL GLX rendering context
+the current context.
+.P
+\fIcanvasW\fR is the given HGU Open GL canvas widget.
+.P
+\fIglxCtx\fR if non NULL indicates the Open GL GLX rendering context to make
+current (the rendering context associated with the canvas is not changed).
+If NULL then the rendering context associated with the canvas is made
+current.
+.SH SEE ALSO
+HGUglwCanvasTb(3),
+XmPrimitive(3),
+glXChooseVisual(3),
+glXCreateContext(3),
+glXMakeCurrent(3),
+glXSwapBuffers(3).
+.SH REFERENCES
+-
+.SH BUGS
+Still to be found.

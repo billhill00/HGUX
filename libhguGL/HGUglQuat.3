@@ -1,0 +1,117 @@
+'\" te
+.\" ident MRC HGU $Id$
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\" Project:	Mouse Atlas
+.\" Title:	HGUglQuat.3
+.\" Date:	April 1999
+.\" Author:	Bill Hill
+.\" Copyright:	1999 Medical Research Council, UK.
+.\"		All rights reserved.
+.\" Address:	MRC Human Genetics Unit,
+.\"		Western General Hospital,
+.\"		Edinburgh, EH4 2XU, UK.
+.\" Purpose:	Data structures, functions and macros for manipulating
+.\"		quaternions in the HGU OpenGL library.
+.\" $Revision$
+.\" Maintenance: Log changes below, with most recent at top of list.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.EQ
+delim $$
+.EN
+.TH HGUglQuat 3 "June 1995"
+.SH NAME
+HGUglQuatProduct,
+HGUglQuatToMatrixGL,
+HGUglQuatNormalise,
+HGUglQuatFromAxis.
+HGUgl_QUAT_SET,
+HGUgl_QUAT_SET4,
+HGUgl_QUAT_ADD,
+HGUgl_QUAT_SUB,
+HGUgl_QUAT_SCALE \- data structures, functions and macros for manipulating
+quaternions.
+.SH SYNOPSIS
+.LP
+#include <\fBHGUgl.h\fR>
+.LP
+\fBtypedef struct
+.br
+{
+.in +2m
+.br
+\fBdouble \fIqW\fR;
+.br
+\fBWlzDvertex3 \fIqV\fR;
+.br
+.in -2m
+.br
+\fB} HGUglQuaternion\fR;
+.LP
+\fBvoid HGUglQuatToMatrixGL\fR(\fBdouble \fIdest\fB[4][4]\fR, \
+\fBHGUglQuaternion \fIquat\fR);
+.LP
+\fBHGUglQuaternion HGUglQuatProduct\fR(\fBHGUglQuaternion \fIquat1\fR, \
+\fBHGUglQuaternion \fIquat2\fR);
+.LP
+\fBHGUglQuaternion HGUglQuatNormalise\fR(\fBHGUglQuaternion \fIquat\fR);
+.LP
+\fBHGUglQuaternion HGUglQuatFromAxis\fR(\fBWlzDvertex3 \fIaxis\fR, \
+\fBdouble \fIphi\fR);
+.LP
+\fBHGUgl_QUAT_SET\fR(\fBHGUglQuaternion \fIQ\fR, \
+\fBHGUglQuaternion \fIW\fR, \
+\fBHGUglQuaternion \fIV\fR);
+.LP
+\fBHGUgl_QUAT_SET4\fR(\fBHGUglQuaternion \fIQ\fR, \
+\fBdouble \fIW\fR, \
+\fBdouble \fIX\fR, \
+\fBdouble \fIY\fR, \
+\fBdouble \fIZ\fR);
+.LP
+\fBHGUgl_QUAT_ADD\fR(\fBHGUglQuaternion \fIQ\fR, \
+\fBHGUglQuaternion \fIO\fR, \
+\fBHGUglQuaternion \fIP\fR);
+.LP
+\fBHGUgl_QUAT_SUB\fR(\fBHGUglQuaternion \fIQ\fR, \
+\fBHGUglQuaternion \fIO\fR, \
+\fBHGUglQuaternion \fIP\fR);
+.LP
+\fBHGUgl_QUAT_SCALE\fR(\fBHGUglQuaternion \fIQ\fR, \
+\fBHGUglQuaternion \fIP\fR, \
+\fBdouble \fIS\fR);
+.SH MT-LEVEL
+.LP
+Believed safe, but not tested.
+.SH DESCRIPTION
+.LP
+Data structures, functions and macros for manipulating quaternions.
+In comparison with matricies,
+quaternions require one quarter the data storage and are 
+generally more efficient for encoding rotations.
+Quaternions are used to encode rotations about an axis
+in the \fIHGUglwCanvasTb(3)\fR widget.
+.LP
+\fBHGUglQuatProduct\fR calculates and returns the product of the two given
+quaternions.
+.LP
+\fBHGUglQuatToMatrixGL\fR converts the given quaternion into an (Open GL)
+transformation matrix.
+.LP
+\fBHGUglQuatNormalise\fR normalises the given quaternion to lie on the
+unit sphere.
+.LP
+\fBHGUglQuatFromAxis\fR calculates a rotation quaternion (which lies on the
+unit sphere) using the given axis \fIaxis\fR and 
+the rotation about that axis \fIphi\fR, where \fIphi\fR is expressed in
+radians.
+.SH SEE ALSO
+HGUglwCanvasTb(3).
+.SH REFERENCES
+.LP
+Shoemake K. Animating Rotation with Quaternion Curves,
+SIGRAPH (1985) 19 245-254.
+.LP
+Birkhoff G, MacLane S. A survey of Modern Algebra,
+Macmillan (1966).
+.SH BUGS
+Still to be found.

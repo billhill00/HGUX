@@ -1,0 +1,63 @@
+'\" te
+.\" ident MRC HGU $Id$
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\" Project:	Mouse Atlas
+.\" Title:	HGUglShape.3
+.\" Date:	April 1999
+.\" Author:	Bill Hill
+.\" Copyright:	1999 Medical Research Council, UK.
+.\"		All rights reserved.
+.\" Address:	MRC Human Genetics Unit,
+.\"		Western General Hospital,
+.\"		Edinburgh, EH4 2XU, UK.
+.\" Purpose:	Data structures, functions for drawing simple shapes
+.\"		in the HGU OpenGL library.
+.\" $Revision$
+.\" Maintenance: Log changes below, with most recent at top of list.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.EQ
+delim $$
+.EN
+.TH HGUglShape 3 "June 1995"
+.SH NAME
+HGUglShapeWireAxes,
+HGUglShapeWireCube,
+HGUglShapeSolidCube \- functions for drawing simple shapes in Open GL.
+.SH SYNOPSIS
+.LP
+#include <\fBHGUgl.h\fR>
+.LP
+\fBvoid HGUglShapeWireAxes\fR(\fBHGUglTextFont *\fIfnt\fR, \
+\fBWlzDvertex3 \fIscale\fR, \
+\fBchar *\fIxLabel\fR, \
+\fBchar *\fIyLabel\fR, \
+\fBchar *\fIzLabel\fR);
+.LP
+\fBvoid HGUglShapeWireCube\fR(\fBWlzDvertex3 \fIside\fR, \
+\fBWlzDvertex3 \fIcenter\fR);
+.LP
+\fBvoid HGUglShapeSolidCube\fR(\fBWlzDvertex3 \fIside\fR, \
+\fBWlzDvertex3 \fIcenter\fR);
+.SH MT-LEVEL
+.LP
+Unsafe.
+.SH DESCRIPTION
+.LP
+Functions for drawing simple Open GL shapes.
+.LP
+\fBHGUglShapeWireAxes\fR draws a set of wire axes of length
+1.0$times$\fIscale\fR, origin at (0, 0, 0).
+Each axis ends with a simple wire arrow tip and an optional
+label rendered using the given font (\fIfnt\fR).
+.LP
+\fBHGUglShapeWireCube\fR draws a wire cube 
+with each side of length \fIside\fR, and center at \fIcenter\fR.
+.LP
+\fBHGUglShapeSolidCube\fR draws a solid cube (using GL_QUADS) ,
+with each side of length \fIside\fR, and center at \fIcenter\fR.
+.SH SEE ALSO
+-
+.SH REFERENCES
+-
+.SH BUGS
+Still to be found.

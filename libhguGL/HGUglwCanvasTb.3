@@ -1,0 +1,333 @@
+'\" te
+.\" ident MRC HGU $Id$
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\" Project:	Mouse Atlas
+.\" Title:	HGUglwCanvasTb.3
+.\" Date:	April 1999
+.\" Author:	Bill Hill
+.\" Copyright:	1999 Medical Research Council, UK.
+.\"		All rights reserved.
+.\" Address:	MRC Human Genetics Unit,
+.\"		Western General Hospital,
+.\"		Edinburgh, EH4 2XU, UK.
+.\" Purpose:	An Open GL drawing area + trackball widget and
+.\"		associated functions for the HGU OpenGL library.
+.\" $Revision$
+.\" Maintenance: Log changes below, with most recent at top of list.
+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.EQ
+delim $$
+.EN
+.TH HGUglwCanvasTb 3 "June 1995"
+.SH NAME
+HGUglwCanvasTb,
+HGUglwCreateCanvasTb,
+HGUglwCanvasTbAnimate,
+HGUglwCanvasTbGetAnimateInterval,
+HGUglwCanvasTbGetMotionInterval,
+HGUglwCanvasTbGetRotateMatrixGL,
+HGUglwCanvasTbGetTrackballSize,
+HGUglwCanvasTbGetTranslate,
+HGUglwCanvasTbPause,
+HGUglwCanvasTbReset,
+HGUglwCanvasTbSetAnimateInterval,
+HGUglwCanvasTbSetMotionInterval,
+HGUglwCanvasTbSetTrackballSize,
+HGUglwCanvasTbStop,
+HGUglwCanvasTbUpdate.  \- an Open GL drawing area widget with virtual
+trackball and associated functions.
+.SH DESCRIPTION
+.LP
+HGUglwCanvasTb is a widget class descended from HGUglwCanvas.
+In addition to the behavior inherited from HGUglwCanvas,
+it provides a virtual trackball centered on the center of the canvas window
+which can be used for inputing
+three dimensional rotations and translations.
+The trackball is always in one of the five modes outlined
+below. The simplest of these modes is HGUglwCANVASTB_MODE_STILL,
+in this mode the trackball is neither recieving
+rotation/translation input nor
+calling the HGUglwNtrackballCallback callback list for animation.
+In HGUglwCANVASTB_MODE_ANIMATION mode, the trackball is not
+recieving any rotation or translation input either,
+but the HGUglwNtrackballCallback list is called repeatedly
+irrespective of whether the rotation and translation
+are identity transforms. The minimum time interval between
+the animation HGUglwNtrackballCallback calls is controlled by the
+resources HGUglwNanimateInterval.
+In modes: HGUglwCANVASTB_MODE_XY, HGUglwCANVASTB_MODE_Z
+or HGUglwCANVASTB_MODE_ROTATE the trackball is receives 
+rotation/translation input and makes single calls of
+the HGUglwNtrackballCallback list.
+.SS "Classes"
+HGUglwCanvasTb inherits the
+behavior and resources from \fBHGUglwCanvas(3)\fR.
+.PP
+The class pointer is \fBhguGLwCanvasTbWidgetClass\fR.
+.PP
+The class name is \fBHGUglwCanvasTb\fR.
+.SS "New Resources"
+.TS
+expand tab(:);
+l:l:l:l:l:l
+l:l:l:l:l:l.
+_
+Name:Class:Type:Default:Access
+_
+HGUglwNanimateInterval:HGUglwCAnimateInterval:int:100:CGS
+HGUglwNtrackballSize:HGUglwCTrackballSize:int:80:CGS
+HGUglwNtrackballMode:HGUglwCTrackballMode:HGUglwTrackballMode::G
+HGUglwNmotionInterval:HGUglwCMotionInterval:int:200:CGS
+_
+.T&
+l:s
+l:s.
+Access  codes
+C - can be set at creation time:::
+S - can be set using XtSetValues(3):::
+G - can be retrieved using XtGetValues(3):::
+_
+.TE
+.P
+\fBHGUglwNanimateInterval\fR
+The minimum time interval in milliseconds between animation frames,
+ie calls of the HGUglwNtrackballCallback list.
+.P
+\fBHGUglwCTrackballSize\fR
+The size of the trackball expressed as a percentage of the window width
+and height, range 1-100.
+.P
+\fBHGUglwNtrackballMode\fR
+The trackball is always in one of the following modes:
+.TS
+tab(:);
+l:l.
+_
+HGUglwCANVASTB_MODE_STILL:T{
+The trackball \fBdoes not\fR
+call the HGUglwNtrackballCallback callback list for animation,
+and has identity rotation and translation transforms.
+T}
+HGUglwCANVASTB_MODE_ANIMATION:T{
+The trackball \fBcontinuously\fR 
+repeatedly calls the HGUglwNtrackballCallback callback list for
+animation.
+T}
+HGUglwCANVASTB_MODE_XY:T{
+The trackball is being 
+used to set an X\-Y translation
+and the HGUglwNtrackballCallback callback list
+is being called to update the display.
+T}
+HGUglwCANVASTB_MODE_Z:T{
+The trackball is being 
+used to set a Z translation
+and the HGUglwNtrackballCallback callback list
+is being called to update the display.
+T}
+HGUglwCANVASTB_MODE_ROTATE:T{
+The trackball is being
+used to set a rotation
+and the HGUglwNtrackballCallback callback list
+is being called to update the display.
+T}
+_
+.TE
+.P
+\fBHGUglwNmotionInterval\fR
+The maximum time in milliseconds that the
+cursor can be kept still when leaving
+HGUglwCANVASTB_MODE_XY, HGUglwCANVASTB_MODE_Z or HGUglwCANVASTB_MODE_ROTATE
+mode for the trackball to enter HGUglwCANVASTB_MODE_STILL
+instead of HGUglwCANVASTB_MODE_ANIMATION.
+.ne 12
+.SS "Callback Structure"
+Callback stuctures are the same as for HGUglwCanvas(3),
+however the HGUglwNtrackballCallback is called for
+trackball animation..
+.SS "Translations"
+.TS 
+tab(:);
+lb:li.
+_
+<Key>osfHelp:PrimitiveHelp()
+_
+<KeyDown>:HGUglwCanvasInput()
+<KeyUp>:HGUglwCanvasInput()
+<BtnDown>:HGUglwCanvasInput()
+<BtnUp>:HGUglwCanvasInput()
+<BtnMotion>:HGUglwCanvasInput()
+_
+Shift<Btn1Down>:HGUglwCanvasTbMotionBeginZ()
+<Btn1Down>:HGUglwCanvasTbMotionBeginRotate()
+<Btn2Down>HGUglwCanvasTbMotionBeginXY()
+Shift<Btn1Motion>:HGUglwCanvasTbMotionZ()
+<Btn1Motion>:HGUglwCanvasTbMotionRotate()
+<Btn2Motion>:HGUglwCanvasTbMotionXY()
+<Btn1Up>:HGUglwCanvasTbMotionEnd()
+<Btn2Up>:HGUglwCanvasTbMotionEnd()
+_
+.TE
+.SS "Action Routines"
+See XmPrimitive(3) for a description of PrimitiveHelp and
+HGUglwCanvas(3) for a description of HGUglwCanvasInput.
+The HGUglwCanvasTbWidget has the following new action routines:
+.P
+\fBHGUglwCanvasTbMotionBeginZ()\fR
+sets the trackballs mode to
+HGUglwCANVASTB_MODE_Z.
+.P
+\fBHGUglwCanvasTbMotionBeginRotate()\fR
+sets the trackballs mode to
+HGUglwCANVASTB_MODE_ROTATE.
+.P
+\fBHGUglwCanvasTbMotionBeginXY()\fR 
+sets the trackballs mode to 
+HGUglwCANVASTB_MODE_XY.
+.P
+\fBHGUglwCanvasTbMotionZ()\fR
+translates the trackball along the Z axis.
+.P
+\fBHGUglwCanvasTbMotionZ()\fR
+translates the trackball along the X and Y axes.
+.P
+HGUglwCanvasTbMotionRotate()\fR
+rotates the trackball.
+.P
+\fBHGUglwCanvasTbMotionEnd()\fR
+sets the trackballs mode to
+to either HGUglwCANVASTB_MODE_ANIMATION or HGUglwCANVASTB_MODE_STILL
+depending on the time interval since the last
+trackball action routine was executed.
+If the interval is less than the resource HGUglwNmotionInterval then
+the trackball mode is set to HGUglwCANVASTB_MODE_ANIMATION,
+otherwise if the interval is longer than this resource
+it's set to HGUglwCANVASTB_MODE_STILL.
+.SH FUNCTIONS
+See HGUglwCreateCanvas(3) for a description of
+HGUglwSetCanvasGlxContext(),
+HGUglwCanvasSwapBuffers(),
+HGUglwCreateCanvasGlxContext(),
+HGUglwGetCanvasGlxContext(),
+HGUglwCanvasGlxMakeCurrent().
+.LP
+\fBWidget HGUglwCreateCanvasTb\fR(\fBWidget \fIparentW\fR,
+\fBchar *\fIname\fR, \fBArgList \fIargList\fR, \fBCardinal \fIargCount\fR);
+.P
+Motif style convienience function to create an
+HGU Open GL canvas/trackball widget.
+.P
+\fIparentW\fR indicates the parent widget.
+.P
+\fIname\fR is the new widget name.
+.P
+\fIargList\fR is the argument list for new widget.
+.P
+\fIargCount\fR is the number of arguments in the argument list.
+.LP
+\fBHGUglwCanvasTbAnimate\fR(\fBWidget \fIcanvasW\fR);
+.P
+Starts trackball animation.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.LP
+\fBHGUglwCanvasTbGetAnimateInterval\fR(\fBWidget \fIcanvasW\fR);
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+Returns the current trackball animation interval, ie the
+minimum time between anaimation frames in milliseconds.
+.LP
+\fBHGUglwCanvasTbGetMotionInterval\fR(\fBWidget \fIcanvasW\fR);
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+Returns the current trackball motion interval, ie the
+minimum time in milliseconds between motion events for no animation.
+.LP
+\fBHGUglwCanvasTbGetRotateMatrixGL\fR(\fBWidget \fIcanvasW\fR,
+\fBdouble \fImatrix\fB[4][4]\fR);
+.P
+Converts the current trackball rotation to an Open GL rotation matrix,
+using the given Open GL matrix.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.P
+\fImatrix\fR the given Open GL rotation matrix.
+.LP
+\fBHGUglwCanvasTbGetTrackballSize\fR\fBWidget \fIcanvasW\fR);
+.P
+Gets the current trackball size as percentage of the
+canvas widgets window size(ie height and width).
+.LP
+\fBHGUglwCanvasTbGetTranslate\fR(\fBWidget \fIcanvasW\fR,
+\fBWlzDvertex3 *\fItranslate\fR);
+.P
+Gets the current trackball XYZ translation.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.P
+\fItranslate\fR the given translation vertex.
+.LP
+\fBHGUglwCanvasTbPause\fR(\fBWidget \fIcanvasW\fR);
+.P
+Pauses the trackball without changing the animation
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+rotation and translation.
+.LP
+\fBHGUglwCanvasTbReset\fR(\fBWidget \fIcanvasW\fR);
+.P
+Resets the trackball to have identity rotation and translation and no
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+animation.
+.LP
+\fBHGUglwCanvasTbSetAnimateInterval\fR(\fBWidget \fIcanvasW\fR,
+\fBint \fIitvl\fR);
+.P
+Sets the current trackball animation interval, ie the
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+minimum time between animation frames in milliseconds.
+.P
+\fIitvl\fR the new animation interval.
+.LP
+\fBHGUglwCanvasTbSetMotionInterval\fR(\fBWidget \fIcanvasW\fR,
+\fBint \fIitvl\fR);
+.P
+Sets the current trackball motion interval, ie the
+minimum time between motion events for no animation.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.P
+\fIitvl\fR the new motion interval.
+.LP
+\fBHGUglwCanvasTbSetTrackballSize\fR(\fBWidget \fIcanvasW\fR,
+\fBint \fIsize\fR);
+.P
+Sets the current trackball size as percentage of the
+canvas widgets window size.
+.LP
+\fBHGUglwCanvasTbStop\fR(\fBWidget \fIcanvasW\fR);
+.P
+Stops the trackball with rotation and translation delta's
+set to identity.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.LP
+\fBHGUglwCanvasTbUpdate\fR(\fBWidget \fIcanvasW\fR);
+.P
+Calls the trackball animation function without setting
+the trackball mode so that a single update is done.
+.P
+\fIcanvasW\fR the canvas/trackball widget.
+.SH SEE ALSO
+HGUglwCanvasTb(3),
+XmPrimitive(3),
+glXChooseVisual(3),
+glXCreateContext(3),
+glXMakeCurrent(3),
+glXSwapBuffers(3).
+.SH REFERENCES
+-
+.SH BUGS
+Still to be found.
