@@ -171,7 +171,7 @@ Widget HGU_XmBuildRadioMenu(
 
     /* create the menu */
     if( menu_type == XmMENU_PULLDOWN || menu_type == XmMENU_OPTION )
-	menu = XmCreatePulldownMenu( cascade, "_pulldown", arg, 1 );
+      menu = XmCreatePulldownMenu( cascade, "_pulldown", arg, 1 );
     else if( menu_type == XmMENU_POPUP ){
 	String	name_buf = (String) calloc(strlen(menu_name)+16, sizeof(char));
 	(void) sprintf(name_buf, "%s_popup", menu_name);

@@ -445,7 +445,7 @@ String	pattern_str)
     /* create the file selection dialog - unmanaged */
     filename_dialog = XmCreateFileSelectionDialog(dialog,
 						  "GetFilename_dialog",
-						  NULL, 0);
+						  arg, 1);
     XtSetSensitive(XmSelectionBoxGetChild(filename_dialog, XmDIALOG_HELP_BUTTON),
 		   False);
     XtAddCallback(filename_dialog, XmNcancelCallback, podownGetFilenameCb,

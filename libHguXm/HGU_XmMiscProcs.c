@@ -118,7 +118,7 @@ Visual *HGU_XGetVisual(
   int		class,
   unsigned int	depth)
 {
-  Visual	*visual;
+  Visual	*visual=NULL;
   XVisualInfo	visualTemplate, *visualList;
   int		numVisuals;
   int		i, numCells;
