@@ -45,11 +45,7 @@
 *		Text widgets.						     *
 *****************************************************************************/
 #include <stdio.h>
-
-#if defined SUNOS5 || defined IRIX5 || defined IRIX646
 #include <stdlib.h>
-#endif /* SUNOS5 || IRIX5 || IRIX646 */
-
 #include <math.h>
 
 #include <Xm/Form.h>
@@ -59,9 +55,7 @@
 
 #include <HGU_XmUtils.h>
 
-#if defined SUNOS5 || defined IRIX5 || defined IRIX646
 #define nint(a) ((a<0)?(int)(a-0.5):(int)(a+0.5))
-#endif /* SUNOS5 || IRIX5 || IRIX646 */
  
 /************************************************************************
 * Function:	int slider_scale_value()				*
