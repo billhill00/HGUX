@@ -83,6 +83,7 @@ XtPointer	call_data)
       return;
     }
   }
+
   XtPopdown( widget );
 }
 
