@@ -162,7 +162,7 @@ Widget HGU_XmBuildRadioMenu(
 	    XtVaSetValues( cascade, XmNmnemonic, menu_mnemonic, NULL );
     }
     else if( menu_type == XmMENU_OPTION ) {
-	cascade = XmCreateOptionMenu( parent, menu_name, NULL, 0 );
+      cascade = XmCreateOptionMenu( parent, menu_name, NULL, 0 );
     }
 
     /* get the visual explicitly */
