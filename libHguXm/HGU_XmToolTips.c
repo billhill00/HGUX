@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <XM/XmAll.h>
+#include <Xm/XmAll.h>
 
 /* default delays in milli-secs before tip popup and removal*/
 #define HGU_XmTOOLTIP_DELAY 500
