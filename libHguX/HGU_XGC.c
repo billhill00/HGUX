@@ -36,8 +36,8 @@ Window	win)
 	win = root;
 
     gcvalues.function	= GXcopy;
-    gcvalues.foreground	= (unsigned long) 255;
-    gcvalues.plane_mask	= (unsigned long) 255;
+    gcvalues.foreground	= (unsigned long) 0xffffff;
+    gcvalues.plane_mask	= (unsigned long) 0xffffff;
     gcvalues.arc_mode	= ArcChord;
 
     gc = XCreateGC(dpy, win, (GCFunction | GCPlaneMask |
