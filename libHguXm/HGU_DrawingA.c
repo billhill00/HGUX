@@ -125,6 +125,10 @@ XSetWindowAttributes	*set_win_att)
     Display		*display = XtDisplay( w );
     Window		parent = XtWindow(w->core.parent);
     XWindowAttributes 	win_att;
+    Widget		parentShW;
+    Status		stat;
+    int			idx, returnCount;
+    Window		*returnWin;
 
     /* if the visual == NULL then use the parent class realize method */
     if( w->hgu_drawing_area.visual == NULL )
@@ -156,6 +160,45 @@ XSetWindowAttributes	*set_win_att)
 				   InputOutput,
 				   w->hgu_drawing_area.visual,
 				   *value_mask, set_win_att);
+
+    if( w->core.colormap != win_att.colormap ){
+      parentShW = XtParent(w);
+      while(parentShW && (XtIsShell(parentShW) == FALSE))
+      {
+	parentShW = XtParent(parentShW);
+      }
+      if(parentShW && XtWindow(parentShW))
+      {
+	stat = XGetWMColormapWindows(XtDisplay(parentShW),
+				     XtWindow(parentShW),
+				     &returnWin, &returnCount);
+      
+	if(!stat) 			  /* If no property, just create one */
+	{
+	  Window windows[2];
+	  windows[0] = XtWindow(w);
+	  windows[1] = XtWindow(parentShW);
+	  XSetWMColormapWindows(XtDisplay(parentShW),
+				XtWindow(parentShW),
+				windows, 2);
+	}
+	else 		    /* There is a property, add one to the beginning */
+	{
+	  Window *windows = (Window *)XtMalloc((sizeof(Window))*
+					       (returnCount + 1));
+	  windows[0] = XtWindow(w);
+	  for(idx = 0; idx < returnCount; ++idx)
+	  {
+	    windows[idx + 1] = returnWin[idx];
+	  }
+	  XSetWMColormapWindows(XtDisplay(parentShW),
+				XtWindow(parentShW),
+				windows, returnCount + 1);
+	  XtFree((char *)windows);
+	  XtFree((char *)returnWin);
+	}
+      }
+    }
 
     return;
 }
