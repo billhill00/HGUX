@@ -249,7 +249,7 @@ WlzObject		*ref_obj)
 		    domain_style.colour       =
 			(int) HGU_XColourFromName(dpy, win, "green");
 		    domain_style.plane_mask   = 255;
-		    domain_style.stipple      = NULL;
+		    domain_style.stipple      = 0;
 		    domain_style.stipple_file = NULL;
 
 		    /* undisplay the constraint region complement*/
