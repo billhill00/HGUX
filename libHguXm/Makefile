@@ -229,11 +229,6 @@ $(ARCHIVE):		$(OBJECTS)
 			$(AR) r $(ARCHIVE) $?
 
 $(OBJECTS):             %.o: %.c $(INCLUDES_ALL) 
-ifeq ($(UNIXTYPE), SUNOS5)
-			$(CC) -v  -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
-else
-			$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
-endif
 
 # Targets to create executables, just a dependencies (modify as required).
 
