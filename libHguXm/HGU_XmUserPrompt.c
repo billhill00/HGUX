@@ -609,9 +609,44 @@ String	pattern_str)
       XtVaSetValues(filename_dialog, XmNdirectory, text1, NULL);
       XmStringFree( text1 );
     }
+    else if( default_ans && (default_ans[0] == '/') ){
+      int i, n;
+      for(i=0; i < strlen(default_ans); i++){
+	if( default_ans[i] == '/' ){n = i;}
+      }
+      dir_str = AlcMalloc(sizeof(char) * (n+2));
+      strncpy(dir_str, default_ans, n);
+      text1 = XmStringCreateSimple( dir_str );
+      XtVaSetValues(filename_dialog, XmNdirectory, text1, NULL);
+      XmStringFree( text1 );
+      AlcFree(dir_str);
+      dir_str = NULL;
+    }
     if( pattern_str ){
       text1 = XmStringCreateSimple( pattern_str );
       XtVaSetValues(filename_dialog, XmNpattern, text1, NULL);
+      XmStringFree( text1 );
+    }
+    if( default_ans ){
+      if( default_ans[0] == '/' ){
+	text1 = XmStringCreateSimple(default_ans);
+      }
+      else {
+	char	*tmpStr;
+	if( dir_str ){
+	  tmpStr = AlcMalloc(sizeof(char)*(strlen(dir_str) +
+					   strlen(default_ans) + 2));
+	  sprintf(tmpStr, "%s/%s", dir_str, default_ans);
+	}
+	else {
+	  tmpStr = AlcMalloc(sizeof(char)*(strlen(default_ans) + 4));
+	  sprintf(tmpStr, "./%s", default_ans);
+	}
+	text1 = XmStringCreateSimple( tmpStr );
+	AlcFree(tmpStr);
+      }
+      XmFileSelectionDoSearch( filename_dialog, NULL );
+      XtVaSetValues(filename_dialog, XmNdirSpec, text1, NULL);
       XmStringFree( text1 );
     }
 
