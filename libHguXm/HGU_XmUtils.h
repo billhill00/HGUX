@@ -377,6 +377,10 @@ extern Boolean HGU_XmIsViewable(Widget	w);
 extern int HGU_XmGetShellOffsets(Widget		w,
 				 Position	*x_off,
 				 Position	*y_off);
+extern void HGU_XmSetHourGlassCursor(
+  Widget	w);
+extern void HGU_XmUnsetHourGlassCursor(
+  Widget	w);
 
 /* the help menu routines */
 extern  MenuItem		*HGU_XmHelpMenuItems;
@@ -666,6 +670,65 @@ extern void HGU_XmAddToolTip(
   Widget	topl,
   Widget	w,
   String	helpStr);
+
+/* woolz file-selection widget prototypes HGU_XmExtFF_FSBUtils.c */
+extern Widget HGU_XmCreateExtFFObjectFSB(
+  Widget	parent,
+  String	name,
+  XtCallbackProc	proc,
+  XtPointer		client_data);
+
+extern WlzObject *HGU_XmReadExtFFObject(
+  Widget				dialog,
+  XmFileSelectionBoxCallbackStruct	*cbs,
+  WlzEffFormat				*dstFmt,
+  WlzErrorNum				*dstErr);
+
+extern WlzErrorNum HGU_XmWriteExtFFObject(
+  WlzObject				*obj,
+  Widget				dialog,
+  XmFileSelectionBoxCallbackStruct	*cbs,
+  WlzEffFormat				*dstFmt);
+
+extern WlzErrorNum HGU_XmExtFFObjectFSBSetType(
+  Widget	dialog,
+  WlzEffFormat	format);
+
+extern WlzEffFormat HGU_XmExtFFObjectFSBGetType(
+  Widget	dialog,
+  WlzErrorNum	*dstErr);
+
+/* recent file-list for woolz image-data utitlity procedures */
+
+#define HGU_XMFILELIST_MAXNUMITEMS 15
+
+typedef struct _HGU_XmFileListCallbackStruct{
+  String	file;
+  WlzEffFormat	format;
+} HGU_XmFileListCallbackStruct;
+
+extern void HGU_XmFileListItemFree(
+  void	*entry);
+extern AlcDLPList *HGU_XmFileListCreateList(
+  String	resourceFile,
+  WlzErrorNum	*dstErr);
+extern MenuItem *HGU_XmFileListCreateMenuItems(
+  AlcDLPList	*fileList,
+  XtCallbackProc	callbackProc,
+  WlzErrorNum	*dstErr);
+extern WlzErrorNum HGU_XmFileListAddFile(
+  AlcDLPList	*fileList,
+  String	file,
+  WlzEffFormat	format);
+extern void HGU_XmFileListWriteHeader(
+  FILE	*fp);
+extern WlzErrorNum HGU_XmFileListWriteResourceFile(
+  AlcDLPList	*fileList,
+  String	resourceFile);
+extern WlzObject *HGU_XmFileListReadObject(
+  Widget			w,
+  HGU_XmFileListCallbackStruct	*cbs,
+  WlzErrorNum			*dstErr);
 
 #ifdef  __cplusplus
 }

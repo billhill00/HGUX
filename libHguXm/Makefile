@@ -28,6 +28,8 @@ EXECUTABLES		=
 CSOURCES		= \
 			HGU_XmDialogUtils.c \
 			HGU_DrawingA.c \
+			HGU_XmExtFF_FSBUtils.c \
+			HGU_XmFileList.c \
 			HGU_XmFileProcs.c \
 			HGU_XmGraph.c \
 			HGU_XmImageView.c \

@@ -24,6 +24,8 @@
 #include <X11/StringDefs.h>
 #include <X11/Intrinsic.h>
 #include <X11/Shell.h>
+#include <X11/cursorfont.h>
+#include <Xm/XmAll.h>
 
 Boolean HGU_XmIsViewable(
 Widget	w)
@@ -199,3 +201,82 @@ Visual *HGU_XmWidgetToVisual(Widget w)
   return visual;
 }
 
+void HGU_XmSetHourGlassCursor(
+  Widget	w)
+{
+  static Cursor	cursor;
+
+  if( !XtIsRealized(w) ){
+    return;
+  }
+
+  /* create the cursor */
+  if( !cursor ){
+    cursor = XCreateFontCursor( XtDisplayOfObject(w), XC_watch );
+  }
+
+  /* if a shell widget, set the cursor */
+  if( XtIsShell( w ) ){
+    XDefineCursor(XtDisplay(w), XtWindow(w), cursor);
+  }
+
+  /* get the children, call function on each */
+  if( XtIsComposite(w) ){
+    Cardinal	numChildren;
+    WidgetList	children;
+
+    XtVaGetValues(w,
+		  XmNchildren, &children,
+		  XmNnumChildren, &numChildren,
+		  NULL);
+    while( numChildren ){
+      numChildren--;
+      HGU_XmSetHourGlassCursor(children[numChildren]);
+    }
+  }
+  XFlush(XtDisplayOfObject(w));
+
+  return;
+}
+
+void HGU_XmUnsetHourGlassCursor(
+  Widget	w)
+{
+  XEvent	event;
+
+  if( !XtIsRealized(w) ){
+    return;
+  }
+
+  /* if a shell widget, unset the cursor */
+  if( XtIsShell( w ) ){
+    XUndefineCursor(XtDisplay(w), XtWindow(w));
+  }
+
+  /* get the children, call function on each */
+  if( XtIsComposite(w) ){
+    Cardinal	numChildren=0;
+    WidgetList	children=NULL;
+
+    XtVaGetValues(w,
+		  XmNchildren, &children,
+		  XmNnumChildren, &numChildren,
+		  NULL);
+    while( numChildren ){
+      numChildren--;
+      HGU_XmUnsetHourGlassCursor(children[numChildren]);
+    }
+  }
+  XFlush(XtDisplayOfObject(w));
+
+  /* clear pending events */
+  while( XCheckMaskEvent(XtDisplayOfObject(w),
+			 ButtonPressMask|ButtonReleaseMask|
+			 ButtonMotionMask|PointerMotionMask|
+			 KeyPressMask, &event) )
+  {
+    /* do nothing */
+  }
+
+  return;
+}
