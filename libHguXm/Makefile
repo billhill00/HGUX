@@ -85,6 +85,7 @@ INCDIRS			= .  \
 			../../Core/libWlzExtFF \
 			../../Core/libAlg \
 			../../Core/libAlc \
+			../../Core/libbibfile \
 			$(X11_INC_DIR) \
 			$(MOTIF_INC_DIR) \
 			$(HGU_INC_DIR)
