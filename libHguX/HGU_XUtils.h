@@ -64,7 +64,7 @@ typedef union _GTrans
 typedef struct {
     char	*srcstr;
     char	*errstr;
-    int		errno;
+    int		errnum;
 } HGU_XErrorStruct;
 
 /* function declarations */
@@ -72,7 +72,7 @@ extern int	HGU_XError	(Display	*dpy,
 				 Window		win,
 				 char		*srcstr,
 				 char		*errstr,
-				 int		errno);
+				 int		errnum);
 extern int	HGU_XErrorSetFunction	(HGU_XErrorFunc err_func,
 					 caddr_t	err_data);
 extern int	HGU_XErrorGetFunction	(HGU_XErrorFunc *err_func,

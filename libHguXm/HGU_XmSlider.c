@@ -479,8 +479,8 @@ void HGU_XmSetSliderRange(Widget	slider,
 {
     Widget	scale;
     short	points;
-    float	value;
-    int		minv, maxv;
+    float	value, val;
+    int		minv, maxv, ivalue;
 
     if( maxval <= minval )
 	return;
@@ -493,15 +493,18 @@ void HGU_XmSetSliderRange(Widget	slider,
 
     if( value > maxval ) value = maxval;
     if( value < minval ) value = minval;
+    val = value;
 
     while( points-- > 0 ){
 	minval *= 10.0;
 	maxval *= 10.0;
+        val *= 10.0;
     }
     minv = (int) minval;
     maxv = (int) maxval;
+    ivalue = (int) val; 
 
-    XtVaSetValues(scale, XmNminimum, minv, XmNmaximum, maxv, NULL);
+    XtVaSetValues(scale, XmNminimum, minv, XmNmaximum, maxv, XmNvalue, ivalue, NULL);
     HGU_XmSetSliderValue( slider, value );
     return;
 }

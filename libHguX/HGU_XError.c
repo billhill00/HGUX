@@ -32,19 +32,19 @@ Display	*dpy,
 Window	win,
 char	*srcstr,
 char	*errstr,
-int	errno)
+int	errnum)
 {
     HGU_XErrorStruct	errstruct;
 
     if( error_func == NULL ){
-	fprintf(stderr, "%s: %s\n\terrno = %d\n", srcstr, errstr, errno);
+	fprintf(stderr, "%s: %s\n\terrnum = %d\n", srcstr, errstr, errnum);
 	XBell( dpy, 100 );
 	return( 0 );
     }
 
     errstruct.srcstr = srcstr;
     errstruct.errstr = errstr;
-    errstruct.errno  = errno;
+    errstruct.errnum  = errnum;
     return( (*error_func)(dpy, win, error_data, (caddr_t) &errstruct) );
 }
 

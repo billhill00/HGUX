@@ -231,6 +231,7 @@ endif
 # Targets to create archives, dependencies and rules (modify as required).
 $(ARCHIVE):		$(OBJECTS)
 			$(AR) r $(ARCHIVE) $?
+			$(RANLIB) $(ARCHIVE)
 
 $(OBJECTS):             %.o: %.c $(INCLUDES_ALL) 
 
