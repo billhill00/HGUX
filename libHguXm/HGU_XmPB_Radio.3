@@ -1,0 +1,72 @@
+'\" t
+.TH HGU_XmPB_Radio 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmPB_Radio, HGU_XmCreatePB_Radio
+\- convenience routine to create a row-column widget with
+a set of push-button children that behave in toggle one-of-many fashion.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmCreatePB_Radio(
+String		name,
+Widget		parent,
+MenuItem	*items,
+int		def_item)
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBHGU_XmCreatePB_Radio\fR - Procedure to put together a Form widget with a
+Label, and radio button interface - RowColumn + Toggles.
+It is NOT a widget proper and setting specific resources to change the
+default appearence will require knowing the widget names. The container
+form widget and the label have the name given as the procedure argument.
+The radio box has the name "radio" and the individual toggles have the names
+given in the MenuItem array. The \fBMenuItem\fR is a convenience
+structure used for creating menus, see \fBHGU_XmMenuUtils(3)\fR and defined:
+.nf
+.sp
+typedef struct _MenuItem {
+    String		name;
+    WidgetClass		*wclass;
+    char		mnemonic;
+    String		accelerator;
+    String		accel_text;
+    Boolean		item_set;
+    XtCallbackProc	callback;
+    XtPointer		callback_data;
+    XtCallbackProc	help_callback;
+    XtPointer		help_callback_data;
+    unsigned char	tear_off_model;
+    Boolean		radio_behavior;
+    Boolean		always_one;
+    struct _MenuItem	*subitems;
+} MenuItem;
+.sp
+.fi
+For this application the structure members \fBclass, tear_off\fR and
+\fBsubitems\fR are ignored. The buttons created are all of class
+\fBxmToggleButtonWidgetClass\fR. When pressed the button background changes
+to the \fBXmNselectColor\fR colour and when deselected changes back to the
+original \fBXmNbackground\fR value. For this the XmNuserData resource
+is used and it is probably a serious error to try and use this resource for
+anything else. The radio-panel will have the \fBdef_item\fR set initially
+if it is a valid index, otherwise none will be set.
+.SH FILES
+.nf
+~richard/Motif/include          include directory
+~richard/Motif/lib/             library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

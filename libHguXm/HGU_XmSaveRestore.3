@@ -1,0 +1,141 @@
+'\" t
+.TH HGU_XmSaveRestore 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmSaveRestore, SaveStateCallback, RestoreStateCallback,
+HGU_XmSaveRestoreChangeDefault, HGU_XmSaveRestoreAddWidget,
+HGU_XmSaveRestoreRemoveWidget, HGU_XmSaveRestoreInit,
+\- procedures to enable a save/restore facility within
+a Motif application.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+typedef void (*SaveRestoreProc)(/* Widget w, XtPointer data, FILE *fp */);
+
+void SaveStateCallback(
+Widget		w,
+XtPointer	client_data,
+XtPointer	call_data)
+
+void RestoreStateCallback(
+Widget		w,
+XtPointer	client_data,
+XtPointer	call_data)
+
+void HGU_XmSaveRestoreChangeDefault(
+SaveRestoreProc	func,
+XtPointer	data)
+
+void HGU_XmSaveRestoreAddWidget(
+Widget		w,
+SaveRestoreProc	save_func,
+XtPointer	save_data,
+SaveRestoreProc	restore_func,
+XtPointer	restore_data)
+
+void HGU_XmSaveRestoreRemoveWidget(
+Widget		w)
+
+void HGU_XmSaveRestoreHelpCallback(
+Widget		topl,
+XtCallbackProc	help_cb,
+XtPointer	help_data)
+
+void HGU_XmSaveRestoreInit(
+Widget	topl,
+int	*argc,
+char	**argv)
+
+void HGU_XmFSD_SaveFunc(
+Widget		w,
+XtPointer	data,
+FILE		*fp)
+
+.fi
+.SH DESCRIPTION
+.LP
+These are a set of routines to enable a save/restore facility within
+a Motif application. The basic idea is that widgets can be "registered"
+and put onto a list of widgets for which current properties can be saved
+in the form of a standard Xt resource file. The restore facility allows this
+file to be read and will attempt to set the corresponding resources.
+The resources saved by default are just the position and size and in the case
+of a shell widget or an xmBulletinBoardWidget child of a shell widget then
+the mappedWhenManaged and defaultPosition resources will be set appropriately
+to make the dialog shells (extra top-level windows) be visible and positioned
+as required. For this process to work at start up then all dialog windows
+must be created at the start with the mappedWhenManaged resource set to
+False and the shell child widgets all managed. This is to avoid the usual
+Motif system of using the widget management function to provoke the mapping
+of the dialog widget. It is often the case that the main application shell
+must be realised and mapped before the dialog shells can determine their
+default positions. To do this put the creation and initialisation of the
+dialogs in an action procedure called when the top-level application window
+is mapped (see RAB if you want example code). The typical use of these
+procedures is to put the save/restore option into a menu, eg the file-menu
+which is usually the left-most menu on the top menu-bar of the main window.
+The initialisation routine must be called before the event loop is called
+and the two callbacks can be used to access the system. Each callback will
+cause a FileSelectionBox to be popped up and the user can define a file
+either for writing the current state or reading a new state.
+
+By default the geometry of the top-level widget is always written
+and then the save
+procedure will go down the list of registered widgets either calling the
+function given when the widget was registered or calling a default procedure
+which simply records the position and size. By registering a save function
+with the widget any number of resource settings can be saved. The default
+save function can be changed if required.
+.LP
+\fBSaveStateCallback\fR - a callback routine that will popup the save
+state file-selection dialog. Selecting a file will call the save-state
+procedure and write the state to that file.
+.LP
+\fBRestoreStateCallback\fR - callback that will popup the restore-state
+file-selection dialog. Selecting a file will cause that file to be read
+and the corresponding resources to be read.
+.LP
+\fBHGU_XmSaveRestoreChangeDefault\fR - change the default save procedure to
+\fBfunc\fR with data argument \fBdata\fR.
+.LP
+\fBHGU_XmSaveRestoreAddWidget\fR - add a widget to the save list, if \fBsave_func\fR
+is NULL then the default save procedure will apply otherwise \fBsave_func\fR will
+be called with data argument \fBdata\fR. To enable non-widget ie
+application resources then the restore state is combined with the
+application resource database and any non-null restore-functions
+are called.
+.LP
+\fBHGU_XmSaveRestoreRemoveWidget\fR - remove a widget from the save list.
+.LP
+\fBHGU_XmSaveRestoreHelpCallback()\fR - add a callback to the save-state
+and restore-state file-selection dialogs. This will superceed the default
+help callback.
+.LP
+\fBHGU_XmSaveRestoreInit\fR - initialise the save-restore system, this must
+be called to create the dialog widgets and the argument \fBtopl\fR must be
+the top-level application widget returned by XtAppInitialize otherwise the
+restore function may not work. If \fI*argc > 1\fR and \fIargv != NULL\fR
+then the command line arguments will be searched for the option
+\fB-state\fR in which case the following argument will be assumed
+to be a state file to be read in. The \fB-state\fR option and
+the following filename will be removed from the list and \fBargc\fR
+adjusted accordingly. Note the resources set in the state file
+will override all other resource sources including the command line.
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

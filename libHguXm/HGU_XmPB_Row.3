@@ -1,0 +1,68 @@
+'\" t
+.TH HGU_XmPB_Row 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmPB_Row, HGU_XmCreatePB_Row
+\- convenience routine to create a row of push buttons preceeded
+by a label.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmCreatePB_Row(
+String		name,
+Widget		parent,
+MenuItem	*items)
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBHGU_XmCreatePB_Row\fR - Procedure to put together a Form widget with a
+Label, and row button interface - RowColumn + PushButtons.
+It is NOT a widget proper and setting specific resources to change the
+default appearence will require knowing the widget names. The container
+form widget and the label have the name given as the procedure argument.
+The container for the push-buttons is a RowColumn widget with
+the name "row" and the individual toggles have the names
+given in the MenuItem array. The \fBMenuItem\fR is a convenience
+structure used for creating menus, see \fBHGU_XmMenuUtils(3)\fR and defined:
+.nf
+.sp
+typedef struct _MenuItem {
+    String		name;
+    WidgetClass		*wclass;
+    char		mnemonic;
+    String		accelerator;
+    String		accel_text;
+    Boolean		item_set;
+    XtCallbackProc	callback;
+    XtPointer		callback_data;
+    XtCallbackProc	help_callback;
+    XtPointer		help_callback_data;
+    unsigned char	tear_off_model;
+    Boolean		radio_behavior;
+    Boolean		always_one;
+    struct _MenuItem	*subitems;
+} MenuItem;
+.sp
+.fi
+For this application the structure members \fBclass, tear_off\fR and
+\fBsubitems\fR are ignored. The buttons created are all of class
+\fBxmPushButtonWidgetClass\fR. The returned widget is unmanaged. The
+push-button behave in the usual way.
+.SH FILES
+.nf
+~richard/Motif/include          include directory
+~richard/Motif/lib/             library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

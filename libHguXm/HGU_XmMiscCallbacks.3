@@ -1,0 +1,88 @@
+'\" t
+.TH HGU_XmMiscCallbacks 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmMiscCallbacks, Quit, PopupCallback, PopdownCallback,
+DestroyWidgetCallback, SetSensitiveCallback, UninstallTranslationsCallback
+\- miscellaneous useful callback routines
+.SH SYNOPSIS
+
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+void Quit(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+void PopupCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+void PopdownCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+void DestroyWidgetCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+void SetSensitiveCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+void UninstallTranslationsCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBQuit\fR - quit procedure which pops-up a widget requesting
+confirmation. If "Yes" then the widget passed as client_data
+is destroyed and exit called.
+.LP
+\fBPopupCallback\fR - if \fBwidget\fR is of class ShellWidgetClass then
+the widget passed as client_data will be popped-up.
+.LP
+\fBPopdownCallback\fR - popdown \fBwidget\fR passed as client_data,
+if \fBclient_data == NULL\fR
+then if \fBw\fR is of class ShellWidgetClass then it is popped down
+otherwise \fBPopdownCallback(XtParent(w), NULL, NULL)\fR is
+called.
+.LP
+\fBDestroyWidgetCallback\fR - if \fB(widget=(Widget) client_data) != NULL\fR
+then it is destroyed
+otherwise \fBw\fR is destroyed.
+.LP
+\fBSetSensitiveCallback\fR - if \fB(widget=(Widget) client_data) != NULL\fR
+then call
+\fBXtSetSensitive( widget, True )\fR otherwise call
+\fBXtSetSensitive( w, True )\fR.
+.LP
+\fBUninstallTranslationsCallback\fR -
+if \fB(widget=(Widget) client_data) != NULL\fR then
+uninstall all its translations otherwise uninstall translations
+from \fBw\fR.
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

@@ -1,0 +1,116 @@
+'\" t
+.TH HGU_XmUserPrompt 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmUserPrompt, HGU_XmUserConfirm, HGU_XmUserGetstr, HGU_XmUserInfo,
+HGU_XmUserMessage, HGU_XmUserError, HGU_XmUserWarning
+\- routines to display a window for immediate response
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+int HGU_XmUserConfirm(
+Widget	w,
+String	question,
+String	ans1,
+String	ans2,
+int	default_ans)
+
+String HGU_XmUserGetstr(
+Widget	w,
+String	question,
+String	ans1,
+String	ans2,
+String	default_ans)
+
+void HGU_XmUserInfo(
+Widget		w,
+String		str,
+unsigned char	modality)
+
+void HGU_XmUserMessage(
+Widget		w,
+String		str,
+unsigned char	modality)
+
+void HGU_XmUserError(
+Widget		w,
+String		str,
+unsigned char	modality)
+
+int HGU_XmUserWarning(
+Widget	w,
+String	warning,
+int	default_ans)
+
+.fi
+.SH DESCRIPTION
+.LP
+Routines that will return when the user has responded. Each routine
+displays a window and prevents input anywhere else within the application
+until the user has responded.
+.LP
+\fBHGU_XmUserConfirm\fR - Popup a window with the text of "question" and two
+buttons with labels "ans1" and "ans2". The window is
+destroyed and the routine returns when either button is
+pressed with values 1 for ans1 and 0 for ans2. This	
+procedure uses a standard Motif question dialog.
+.LP
+\fBHGU_XmUserGetstr\fR - Popup a window with the text of "question", an input
+text window and two buttons with labels "ans1" and
+"ans2". The window is destroyed and the routine return
+when either button or Return is pressed.
+If the OK button (ans1) is pressed then then the input
+string (or the default) is return otherwise NULL is
+returned. The returned string can be freed with XFree(). 
+.LP
+\fBGU_XmUserInfo\fR - Popup an information dialog with the text of "str"
+and modality \fBmodality\fR. The procedure returns immediately and the dialog
+widget is destroyed on pressing the Cancel button. The Help button
+is insensitive. For information on modal dialogs see "The Motif
+Programming Manual", the possible values are:
+.nf
+.sp
+0:                                  no modality
+XmDIALOG_FULL_APPLICATION_MODAL:    modal wrt full application
+XmDIALOG_PRIMARY_APPLICATION_MODEL: modal wrt primary application
+XmDIALOG_SYSTEM_MODAL:              system wide modality
+.sp
+.fi
+.LP
+\fBHGU_XmUserMessage\fR - Popup message dialog with the text of "str"
+and modality "modality". The procedure returns immediately and the dialog
+widget is destroyed on pressing the Ok button. The Help button
+is insensitive and inaccessible. Basically the same as the Info dialog
+to be used in a different context. The information dialog could act as a
+help window wheras the message dialog is most likely to be used
+when the user must by given some information.
+\fBHGU_XmUserError\fR - Popup error dialog with the text of "str"
+and modality "modality". The procedure returns immediately and the dialog
+widget is destroyed on pressing the Ok button. The Help button
+is insensitive and inaccessible. Basically the same as the Message dialog
+but used simply to report an error. The user is not given any options
+in terms of a response. If you require a response before continuing
+then use UserWarning.
+.LP
+\fBHGU_XmUserWarning\fR - popup a warning dialog to which the user must
+respond either "Ok" or "Cancel" before processing can continue. This
+could be used for a double check before doing something irreversible
+eg overwriting a file. 
+.SH FILES
+.nf
+~richard/Motif/src/lib          source directory
+~richard/Motif/include          include directory
+~richard/Motif/lib/             library directory
+~richard/Motif/lib/librichXm.a  library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

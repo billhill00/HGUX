@@ -1,0 +1,54 @@
+'\" t
+.TH HGU_XmFileProcs 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmFileProcs - procedures to check and return FILE pointers
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+String HGU_XmGetFileStr(
+Widget		w,
+XmString	filestr,
+XmString	dirstr)
+
+FILE *HGU_XmGetFilePointer(
+Widget		w,
+XmString	filestr,
+XmString	dirstr,
+char		*type)
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBHGU_XmGetFileStr\fR - a convenience routine to return the simple
+String version of a file-name given the Motif compound strings
+from the file-select widget. The returned string should be freed with
+XtFree();
+
+\fBHGU_XmGetFilePointer\fR - a convenience routine to check status and
+return a FILE pointer given the value and directory strings from
+an xmFileSelectionBoxWidget. The procedure will decode the XmString
+arguments then check that the file is a regular file and can be opened with
+the requested permissions as indicated by \fBtype\fR - see fopen(unix:3).
+On success the file pointer is returned. On failure NULL is returned.
+The procedure is a series of tests which will provoke a message dialog to be
+displayed on failure. The user must respond for processing to continue.
+.LP
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

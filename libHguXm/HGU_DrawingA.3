@@ -1,0 +1,61 @@
+.TH HGU_DrawingArea L "$Id$" "MRC HGU" "Xm library"
+.SH NAME
+HGU_DrawingArea \- The HGU DrawingArea widget class
+.SH SYNOPSIS
+#include <HGU_DrawingA.h>
+.SH DESCRIPTION
+This HGU_DrawingArea widget is a subclass of the Motif DrawingArea widget
+with a \fIvisual\fR as the single additional resource. The purpose is to
+allow application developers to conveniently have drawing areas with
+mixed depth and X11-visual windows on servers that can support it.
+In particular an 8-bit window can be used on an otherwise 24-bit
+default server or a 24-bit window on an otherwise 8-bit default.
+These are likely to be the most common applications of this widget.
+In all other respects the widget is identical to the Motif DrawingArea
+widget - callbacks, actions etc. although I suspect that the new widget
+will not be able to manage child widgets.
+.LP
+The widget is created in the usual way but if a non-default visual or
+depth is required then these must be set \fBbefore\fR the widget is
+realized. After realization the visual and depth can not be changed.
+The visual can be found using XtGetVisualInfo() or by setting the
+visual resource to one of: GrayScale, StaticGray, PseudoColor, StaticColor,
+DirectColor or TrueColor. If the visual resource is set and incompatible
+with the default depth then the program will fail when the widget
+is realized. Be sure to set compatible depth and visual resources.
+If the given visual is not the same as that for the parent widget window
+then the new window will have a new Colormap with no Colorcells
+allocated. Because the Colormap is non-default and the widget
+is not a shell widget, the colormap may not be installed
+automatically by the window-manager. In this version it is necessary
+for the application to install the colormap as required.
+It is the responsibility of the application program to check
+that the requested visual and depth are valid on a particular server.
+.SH CLASSES
+HGU_DrawingArea inherits behavior and resources from the Core, Composite,
+Constraint, XmManager and XmDrawingArea classes.
+.LP
+The class pointer is hgu_DrawingAreaWidgetClass.
+.LP
+The class name is HGU_DrawingArea.
+.SH NEW RESOURCES
+The widget has one new resource:
+.nf
+.sp
+ Name        Class        RepType      Default Value
+ ----        -----        -------      -------------
+ XtNvisual   XtCVisual    XtRVisual    CopyFromParent
+
+.fi
+See XmDrawingArea(3X) for the remaining resources and behavior.
+.SH FILES
+The HGU_DrawingArea widget is part of the  woolz libhguXm procedure library
+with the headers in ~woolz/include.
+.SH "SEE ALSO"
+XmDrawingArea(3X)
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1994, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.

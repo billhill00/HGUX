@@ -1,0 +1,70 @@
+'\" t
+.TH HGU_XmMiscProcs 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmMiscProcs,  HGU_XmIsViewable, HGU_XmGetShellOffsets,
+HGU_XGetVisual, HGU_XmWidgetToVisual
+
+\- miscellaneous useful procedures
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Boolean HGU_XmIsViewable(
+Widget	w)
+
+int HGU_XmGetShellOffsets(
+Widget		w,
+Position	*x_off,
+Position	*y_off)
+
+Visual *HGU_XGetVisual(
+  Display	*dpy,
+  int		screen,
+  int		class,
+  unsigned int	depth)
+
+Visual *HGU_XmWidgetToVisual(Widget w)
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBHGU_XmIsViewable\fR - test if a widget is realised and viewable which
+implies that it and all its ancestors are mapped. See XGetWindowAttributes
+X11 reference manual for definition of "IsViewable".
+.LP
+\fBHGU_XmGetShellOffsets\fR - if \fBw\fR is a shell widget then the procedure
+will attempt to determine the offset of the application window within the
+space occupied by the window the user can see which usually includes the
+window-manager windows. The procedure compares the root position of the
+shell widget with that of the ancestor window who's parent is the root window.
+This program is useful for recording the apparent widget position so that
+it can be restored without offset imposed by the window manager.
+.LP
+\fBHGU_XGetVisual\fR - get a visual of a specified class and depth,
+useful if the required visual is non-default. If there is a choice of
+visuals satisfying the constraints then the visual with the maximum
+number of colormap entries is returned.
+.LP
+\fBHGU_XmWidgetToVisual\fR - get the visual associated with a
+particular widget. This is useful if a child shell widget (eg a
+dialog) is to be created and the application does not have the default
+visual. The visual must be supplied as an argument at creation because
+it cannot be changed later.
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

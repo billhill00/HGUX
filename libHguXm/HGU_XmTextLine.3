@@ -1,0 +1,66 @@
+'\" t
+.TH HGU_XmTextLine 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmTextLine, HGU_XmCreateTextLine, HGU_XmSetTextLineValue,
+HGU_XmGetTextLineValue, GE_TextLineSetProc,  GE_Text_LineGetProc,
+\- routines to create and manipulate a text-line user interface
+element.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmCreateTextLine(
+String		name,
+Widget		parent,
+String		value,
+XtCallbackProc	cb_func,
+XtPointer	cb_data)
+
+void HGU_XmSetTextLineValue(
+Widget	text_line,
+String	value)
+
+String HGU_XmGetTextLineValue(
+Widget	text_line)
+
+void GE_TextLineSetProc(
+Widget	text_line,
+String	value)
+
+String GE_Text_LineGetProc(
+Widget	text_line)
+
+.fi
+.SH DESCRIPTION
+.LP
+Implement a text entry user interface element. This is
+not a widget implementation but a few convenience
+routines to return a composite widget (Form) with Label
+and Text widget children set up to allow text entry.
+The top-level and label widget have the widget name
+given as argument to CreateTextLine, the text widget
+has the name "text".
+The cb_func is added to the XmNactivateCallback.
+.LP
+\fBHGU_XmSetTextLineValue\fR and \fBHGU_XmGetTextLineValue\fR set and get
+the current text-line value, i.e. the current text, respectively. No
+callbacks are called. \fBGE_TextLineSetProc\fR and \fBGE_Text_LineGetProc\fR
+are the graphical element equivalents for use with scripts
+(see CreateGE_DataItem(3)).
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

@@ -1,0 +1,112 @@
+'\" t
+.TH HGU_XmDialogUtils 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmDialogUtils - routines to create and control dialogs.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmCreateActionArea(
+Widget		parent,
+ActionAreaItem	*actions,
+int		num_actions)
+
+Widget HGU_XmVaCreateActionArea(
+Widget 		parentW,
+		...)
+
+
+Widget HGU_XmCreateStdDialog(
+Widget		parent,
+String		name,
+WidgetClass	controlWidgetClass,
+ActionAreaItem	*actions,
+int		num_actions)
+
+Widget HGU_XmVaCreateStdDialog(
+Widget		parentW,
+String		name,
+WidgetClass	controlWidgetClass,
+		...)
+
+int HGU_XmDialogConfirm(
+Widget		dialog,
+Widget		confirm,
+Widget		cancel,
+unsigned char	modality)
+.sp
+.fi
+.SH DESCRIPTION
+.LP
+Routines for creating standard format dialogs, a standard format action
+area and a procedure that returns when the confirm or cancel button
+of the given dialog is pressed.
+.LP
+\fBHGU_XmCreateActionArea\fR - create an action area laid out in a standard
+way. The action-items will be equally sized and spaced along a form widget
+and will remain equally sized and spaced on resize. The action area buttons
+are all of type \fBxmPushButtonWidgetClass\fR with names and callbacks
+defined in the table \fBactions\fR:
+.nf
+.sp
+typedef struct _ActionAreaItem {
+    char                *name;
+    XtCallbackProc      callback;
+    XtPointer           client_data;
+} ActionAreaItem;
+.sp
+.fi
+.LP
+\fBHGU_XmVaCreateActionArea\fR - varargs wrapper for HGU_XmCreateActionArea
+which dynamically builds up an argument list and then passes
+it on to HGU_XmCreateActionArea(). The varargs arguments consist of
+argument triples (char *name, XtCallbackProc callback, XtPointer client_data)
+terminated by NULL.
+.LP
+\fBHGU_XmCreateStdDialog\fR - Convenience routine to create a dialog of
+standard appearence. The dialog will have two areas "control" and "action".
+The action area is created using \fBHGU_XmCreateActionArea\fR above and
+the actions table given. If \fBactions == NULL\fR then a default table
+is used which provides an "Ok", "Cancel" and "Help" buttons with those names.
+Pressing the default "Cancel" will popdown the dialog. The control area
+will be class \fBcontrolWidgetClass\fR attached to the base widget so that
+only it will resize vertically. On return the dialog is unmanaged
+and therefore not popped-up or visible. To maintain consistency with
+the Motif dialog widget convenience routines the returned widget is
+actually the child of the shell widget rather that the shell widget
+itself. The shell widget has the name: \fBname_popup\fR.
+.LP
+\fBHGU_XmVaCreateStdDialog\fR - varargs wrapper for HGU_XmCreateStdDialog
+which dynamically builds up an argument list and then passes
+it on to HGU_XmCreateStdDialog(). The varargs arguments consist of
+argument triples (char *name, XtCallbackProc callback, XtPointer client_data)
+terminated by NULL.
+.LP
+\fBHGU_XmDialogConfirm\fR - procedure that returns when one of the two
+buttons "confirm" or "cancel" is pressed and the return value will be
+1 or 0 repsectively. This is useful for putting up a dialog for
+which confirmation or a cancellation is required before processing can
+continue. Note that the dialog widget is as returned by the
+convenience creation routines, not the actual dialogshell widget.
+If any of the widgets \fBconfirm or cancel\fR are undefined then
+the procedure will search for children with the names "Ok"
+and "Cancel" respectively. These are the defaults created by
+\fBHGU_XmCreateStdDialog\fR.
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

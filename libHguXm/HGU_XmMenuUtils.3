@@ -1,0 +1,91 @@
+'\" t
+.TH HGU_XmMenuUtils 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmMenuUtils, HGU_XmBuildMenu \- convenience routine for creating menus.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmBuildMenu(
+Widget		parent,
+int		menu_type,
+char		*menu_name,
+char		menu_mnemonic,
+unsigned char	tear_off_model,
+MenuItem	*items)
+
+
+Widget HGU_XmBuildRadioMenu(
+Widget	parent,
+int		menu_type,
+char		*menu_name,
+char		menu_mnemonic,
+unsigned char	tear_off_model,
+Boolean		radio_behavior,
+Boolean		always_one,
+MenuItem	*items)
+
+.fi
+.SH DESCRIPTION
+.LP
+Convenience routine for creating menus, copied and modified from
+Heller - Motif Programming Manual. Hellers comments:
+Build popup, option and pulldown menus, depending on the menu type.
+It may be XmMENU_PULLDOWN, XmMENU_OPTION, or XmMENU_POPUP. Pulldowns
+return the CascadeButton that pops up the menu. Popups return the menu.
+Option menus are created, but the RowColumn that acts as the option
+"area" is returned unmanaged. (The user must manage it).
+Pulldown menus are built from cascade buttons, so this function also
+builds pullright menus. The function also adds the right callback for
+PushButton or ToggleButton menu items.
+.LP
+The created menu will have the resource \fBXmNtearOffModel\fR set to
+menu_tear_off. The argument \fBitems\fR is a table of \fBMenuItem\fR's
+defined by:
+.nf
+.sp
+typedef struct _MenuItem {
+    String		name;
+    WidgetClass		*wclass;
+    char		mnemonic;
+    String		accelerator;
+    String		accel_text;
+    Boolean		item_set;
+    XtCallbackProc	callback;
+    XtPointer		callback_data;
+    XtCallbackProc	help_callback;
+    XtPointer		help_callback_data;
+    unsigned char	tear_off_model;
+    Boolean		radio_behavior;
+    Boolean		always_one;
+    struct _MenuItem	*subitems;
+} MenuItem;
+.sp
+.fi
+If \fBsubitems != NULL\fR then a sub-menu will be built using the same
+procedure and will have \fBXmNtearOffModel\fR set to the \fBtear_off\fR value.
+.LP
+\fBHGU_XmBuildRadioMenu()\fR builds a menu in which the toggle buttons
+will behave in radio-button fashion. The parameter \fBalways_one\fB
+sets the XmNradioAlwaysOne resource of the menu widget and \fBset_item\fB
+determines the initially set item if any.
+.LP
+\fBHGU_XmBuildMenu()\fR simply calls \fBHGU_XmBuildRadioMenu()\fR with
+\fBradio_behavior\fR and \fBalways_one\fR set to False.
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

@@ -1,0 +1,177 @@
+'\" t
+.TH HGU_XmSlider 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XmSlider, HGU_XmCreateHorizontalSlider, HGU_XmCreateHorizontalLogSlider,
+HGU_XmCreateHorizontalExpSlider, HGU_XmCreateHorizontalFuncSlider,
+HGU_XmSetSliderValue, HGU_XmGetSliderValue, GE_SliderSetProc,
+GE_SliderGetProc \- routines to create and manipulate a slider user interface
+element.
+.SH SYNOPSIS
+.nf
+.sp
+#include <HGU_XmUtils.h>
+
+Widget HGU_XmCreateHorizontalSlider(
+String		name,
+Widget		parent,
+float		fvalue, 
+float        	fminval, 
+float        	fmaxval,
+int		decimalPoints,
+XtCallbackProc	cb_func,
+XtPointer	cb_data)
+
+Widget HGU_XmCreateHorizontalLogSlider(
+String		name,
+Widget		parent,
+float		fvalue, 
+float    	fminval,
+float    	fmaxval,
+int		decimalPoints,
+XtCallbackProc	cb_func,
+XtPointer	cb_data)
+
+Widget HGU_XmCreateHorizontalExpSlider(
+String		name,
+Widget		parent,
+float		fvalue, 
+float 		fminval, 
+float 		fmaxval,
+int		decimalPoints,
+XtCallbackProc	cb_func,
+XtPointer	cb_data)
+
+Widget HGU_XmCreateHorizontalFuncSlider(
+String		name,
+Widget		parent,
+float		fvalue, 
+float 		fminval, 
+float 		fmaxval,
+int		decimalPoints,
+XtCallbackProc	cb_func,
+XtPointer	cb_data,
+HGU_XmSliderFunc func)
+
+void HGU_XmSetSliderValue(
+Widget	slider,
+float		value)
+
+float HGU_XmGetSliderValue(
+Widget	slider)
+
+void HGU_XmSetSliderRange(
+Widget	slider,
+float		minval, 
+float 	maxval)
+
+void HGU_XmGetSliderRange(
+Widget	slider,
+float	*minval,
+float	*maxval)
+
+void GE_SliderSetProc(
+Widget	slider,
+String	value)
+
+String GE_SliderGetProc(
+Widget slider)
+
+.fi
+.SH DESCRIPTION
+.LP
+Implement a slider user interface element. This is not a widget
+implementation but a few convenience routines to return a composite
+widget (Form) with Label, Scale and Text widget children set up to
+behave as a slider.  The top-level and label widget have the widget
+name given as argument to CreateHorizontalSlider, the other children
+widgets have the names "scale" and "text" respectively. The slider
+values can be changed using all the usual Scale widget actions plus
+the setting of the text. The text value will update the scale value
+only on pressing <return>.  The cb_func is added to the
+XmNvalueChangedCallback only. If you want to get drag changes then
+install the callback on the scale XmNdragCallback list explicitly.
+.LP
+\fBHGU_XmCreateHorizontalSlider\fR - create a slider interface element.
+\fBfvalue, fminval, fmaxval\fR and \fBdecimalPoints\fR determine the
+range and number of decimal points of the scale. The label widget
+appears to the left of the scale widget and the text area to the right.
+This is a simple linear slider and actually created using
+\fBHGU_XmCreateHorizontalFuncSlider\fR with \fBslider_func\fR set to
+NULL.
+\fBHGU_XmCreateHorizontalFuncSlider\fR is a slider for which an arbitrary
+function can be used to map slider position to displayed value. This
+is useful when the slider should provide more sensitivity for different
+parts of the scale. With a non-linear scale it is possible that not
+all values will be obtainable. Within the slider the scale widget
+has the range \fIminval = fminval * 10**decimalPoints\fR to
+\fImaxval = fmaxval * 10**decimalPoints\fR. The mapping from the scale
+value, \fIVal\fR, to the string value \fIval\fR ie defined in terms
+of the proportional variables \fIVal' = (Val-minval)/(maxval-minval)\fR
+and \fIval' = (val*10**decimalPoints - minval)/(maxval-minval)\fR and
+given by the slider function: \fIval' = slider_func(Val', 0)\fR and
+\fIVal' = slider_func(val', 1)\fR. The second argument detemines whether
+the function or its inverse is required. The displayed value has the
+decimal point put back as required. If \fBslider_func==NULL\fR then the
+slider is linear.
+\fBHGU_XmCreateHorizontalLogSlider\fR a slider with the function:
+.nf
+.sp
+static float log_func(x, inverse)
+float	x;
+int	inverse;
+{
+    float value;
+
+    if( inverse )
+	value = expm1((double) x * log1p((double) 1.0));
+    else
+	value = log1p((double) x) / log1p((double) 1.0);
+
+    return(value);
+}
+
+.fi
+\fBHGU_XmCreateHorizontalExpSlider\fR a slider with the function:
+.nf
+.sp
+static float exp_func(x, inverse)
+float	x;
+int	inverse;
+{
+    float value;
+
+    if( inverse )
+	value = log1p((double) x * expm1((double) 1.0));
+    else
+	value = expm1((double) x) / expm1((double) 1.0);
+
+    return(value);
+}
+
+.fi
+.LP
+\fBHGU_XmSetSliderValue\fR and \fBHGU_XmGetSliderValue\fR set and get the
+slider value respectively. Setting the value does not provoke a call
+of the callbacks.
+.LP
+\fBGE_SliderSetProc\fR and \fBGE_SliderGetProc\fR set and get the
+slider value as a string. These routines are for use within the script
+mechanism for graphical elements (see CreateGE_DataItem(3)). Note using
+\fBGE_SliderSetProc\fR will cause the callbacks to be called.
+
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+
