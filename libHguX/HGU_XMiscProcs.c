@@ -18,7 +18,7 @@
 *****************************************************************************/
 #include <stdio.h>
 
-#include <X11/XProto.h>
+#include <X11/Xproto.h>
 #include <X11/Xlib.h>
 
 int QueryInWindow(
