@@ -166,6 +166,9 @@ extern Visual   *HGU_XVisualMatch(int 		*visualClassRtn,
 				Display		*display,
 				int		screenNum);
 
+extern char *HGU_XRequestToString(
+  char	request_code); 
+
 #ifdef  __cplusplus
 }
 #endif
