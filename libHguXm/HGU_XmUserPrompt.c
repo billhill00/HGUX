@@ -34,6 +34,7 @@
 #include <Xm/FileSB.h>
 #include <Xm/MessageB.h>
 #include <Xm/SelectioB.h>
+#include <Xm/PushBG.h>
 
 #include <HGU_XmUtils.h>
 
@@ -59,6 +60,120 @@ XtPointer	call_data)
 	*answer = 0;
 }
 
+static void confirm3_callback(
+  Widget		w,
+  XtPointer	client_data,
+  XtPointer	call_data)
+{
+  XmAnyCallbackStruct	*cbs = (XmAnyCallbackStruct *) call_data;
+  int			*answer = (int *) client_data;
+
+  if( w ){/* to satisfy IRIX646 compiler */}
+
+  if( !strcmp(XtName(w), "button2") ){
+    *answer = 1;
+  }
+  else if( cbs->reason == XmCR_OK ){
+    *answer = 0;
+  }
+  else if( cbs->reason == XmCR_CANCEL ){
+    *answer = 2;
+  }
+
+  return;
+}
+
+/************************************************************************
+* Function:     HGU_XmUserConfirm3	                                *
+* Returns:      int:                    0, 1, 2				*
+* Global Refs:  -                                                       *
+* Purpose:      Popup a window with the text of "question" and three	*
+*		buttons with labels "ans1", "ans2 and "ans2".		*
+*		The window is destroyed and the routine returns when	*
+*		either button is pressed with values 			*
+*		 0 for ans1 and 1 for ans2 and 2 for ans3. This		*
+*		procedure uses a standard Motif question dialog.	*
+* Parameters:   Widget	w		a valid widget pointer		*
+*               String	question	the question text		*
+*			ans1		answer 1 button text		*
+*		       	ans2		answer 2 button text		*
+*			ans3		answer 3 button text		*
+*		int	default_ans	!=0 then ans1 default else ans1	*
+************************************************************************/
+int HGU_XmUserConfirm3(
+  Widget	w,
+  String	question,
+  String	ans1,
+  String	ans2,
+  String	ans3,
+  int		default_ans)
+{
+  XtAppContext	app_con = XtWidgetToApplicationContext( w );
+  Widget	dialog, button;
+  XmString	text, str1, str2, str3, title;
+  int		answer = -1;
+  Visual	*visual;
+  Arg		arg[1];
+
+  /* get the visual explicitly */
+  visual = HGU_XmWidgetToVisual(w);
+  XtSetArg(arg[0], XmNvisual, visual);
+
+    /* create the dialog widget */
+  dialog = XmCreateQuestionDialog(w, "HGU_XmUserConfirm", arg, 1);
+  XtVaSetValues(dialog,
+		XmNdialogStyle,	XmDIALOG_FULL_APPLICATION_MODAL,
+		NULL);
+  XtSetSensitive(XmMessageBoxGetChild(dialog, XmDIALOG_HELP_BUTTON),
+		 False);
+  XtAddCallback(dialog, XmNokCallback, confirm3_callback, &answer);
+  XtAddCallback(dialog, XmNcancelCallback, confirm3_callback, &answer);
+
+  /* add an extra button */
+  button = XtVaCreateManagedWidget("button2", xmPushButtonGadgetClass,
+				   dialog, NULL);
+
+  /* set the resources */
+  text = XmStringCreateLtoR( question, XmSTRING_DEFAULT_CHARSET );
+  str1 = XmStringCreateSimple( ans1 );
+  str2 = XmStringCreateSimple( ans2 );
+  str3 = XmStringCreateSimple( ans3 );
+  title = XmStringCreateSimple( "Confirm Dialog" );
+
+  XtVaSetValues(dialog,
+		XmNmessageString,	text,
+		XmNokLabelString,	str1,
+		XmNcancelLabelString,	str3,
+		XmNdialogTitle,	title,
+		XmNdefaultButtonType,	default_ans?
+		XmDIALOG_OK_BUTTON : XmDIALOG_CANCEL_BUTTON,
+		NULL);
+  XtVaSetValues(button,
+		XmNlabelString,	str2,
+		NULL);
+  XtAddCallback(button, XmNactivateCallback, confirm3_callback, &answer);
+
+  XmStringFree( text );
+  XmStringFree( str1 );
+  XmStringFree( str2 );
+  XmStringFree( str3 );
+  XmStringFree( title );
+
+  /* popup widget and process events */
+  XtManageChild( dialog );
+  while( answer < 0 ){
+    XtAppProcessEvent( app_con, XtIMAll );
+    XSync( XtDisplay(dialog), 0 );
+  }
+
+  /* remove dialog, flush display and destroy resources */
+  XtUnmanageChild( dialog );
+  XSync( XtDisplay(dialog) , 0 );
+  XmUpdateDisplay( dialog );
+  XtDestroyWidget( dialog );
+
+  return( answer );
+}
 /************************************************************************
 * Function:     HGU_XmUserConfirm	                                *
 * Returns:      int:                    ONE or ZERO			*

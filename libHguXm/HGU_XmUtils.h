@@ -144,11 +144,17 @@ extern int HGU_XmUserConfirm(Widget	w,
 			     String     ans1,
 			     String     ans2,
 			     int	default_ans);
-extern String HGU_XmUserGetstr(  Widget	w,
+extern int HGU_XmUserConfirm3(Widget	w,
+			      String	question,
+			      String    ans1,
+			      String    ans2,
+			      String	ans3,
+			      int	default_ans);
+extern String HGU_XmUserGetstr(Widget	w,
 			       String	question, 
-			       String ans1, 
-			       String ans2, 
-			       String default_ans);
+			       String 	ans1, 
+			       String 	ans2, 
+			       String 	default_ans);
 extern String HGU_XmUserGetFilename(Widget	w,
 				    String	question,
 				    String	ans1,
@@ -329,6 +335,13 @@ extern FILE *HGU_XmGetFilePointerBck( Widget	w,
 				      XmString	dirstr,
 				      char	*type,
 				      char	*extension);
+
+extern FILE *HGU_XmGetFilePointerBckCnfm( Widget	w,
+					 XmString	filestr,
+					 XmString	dirstr,
+					 char		*type,
+					 char		*extension,	
+					 int		*confirmFlg);
 
 /* HGU_XmMiscProcs functions */
 extern Boolean HGU_XmIsViewable(Widget	w);
