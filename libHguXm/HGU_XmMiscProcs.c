@@ -148,6 +148,43 @@ Visual *HGU_XGetVisual(
   return visual;
 }
 
+XVisualInfo HGU_XGetVisualInfo(
+  Display	*dpy,
+  int		screen,
+  int		class,
+  unsigned int	depth)
+{
+  Visual	*visual=NULL;
+  XVisualInfo	visualTemplate, *visualList;
+  int		numVisuals;
+  int		i, numCells;
+
+  /* set up the template */
+  visualTemplate.screen = screen;
+  visualTemplate.class = class;
+  visualTemplate.depth = depth;
+
+  /* get matching visuals */
+  visualList = XGetVisualInfo(dpy,
+			      VisualScreenMask|VisualDepthMask|VisualClassMask,
+			      &visualTemplate, &numVisuals);
+  if( numVisuals < 1 ){
+    visualTemplate.visual = NULL;
+    visualTemplate.depth = -1;
+    return visualTemplate;
+  }
+
+  /* select visual with the maximum number of color cells */
+  for(i=0, numCells=0; i < numVisuals; i++){
+    if( numCells < visualList[i].visual->map_entries ){
+      visualTemplate = visualList[i];
+    }
+  }
+  XFree(visualList);
+  
+  return visualTemplate;
+}
+
 Visual *HGU_XmWidgetToVisual(Widget w)
 {
   Visual	*visual;

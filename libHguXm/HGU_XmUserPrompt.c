@@ -239,6 +239,8 @@ int	default_ans)
 
     /* popup widget and process events */
     XtManageChild( dialog );
+    XSync( XtDisplay(dialog), 0 );
+    XFlush(XtDisplay(dialog));
     while( answer < 0 ){
 	XtAppProcessEvent( app_con, XtIMAll );
 	XSync( XtDisplay(dialog), 0 );
