@@ -347,9 +347,9 @@ WlzPolygonDomain *HGU_XGetPolydmn(
   vtxs[nvtxs+1] = vtxs[0];
 
   /* return the new polygon */
-  return_polydmn = WlzMakePolyDmn(WLZ_POLYGON_FLOAT,
-				  (WlzIVertex2 *) vtxs,
-				  nvtxs+1, nvtxs+2, 1, NULL);
+  return_polydmn = WlzMakePolygonDomain(WLZ_POLYGON_FLOAT, nvtxs+1,
+					(WlzIVertex2 *) vtxs,
+					nvtxs+2, 1, NULL);
   AlcFree( (void *) vtxs );
   return return_polydmn;
 }

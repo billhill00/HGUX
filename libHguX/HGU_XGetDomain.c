@@ -498,9 +498,9 @@ WlzObject *HGU_XGetDomain(
 	/* create a start polyline */
 	start_vtx.vtX = x;
 	start_vtx.vtY = y;
-	old_pdmn.poly = WlzMakePolyDmn(WLZ_POLYGON_FLOAT,
-				       (WlzIVertex2 *) &start_vtx,
-				       1, 1, 1, NULL);
+	old_pdmn.poly = WlzMakePolygonDomain(WLZ_POLYGON_FLOAT, 1,
+					     (WlzIVertex2 *) &start_vtx,
+					     1, 1, NULL);
 
 	/* edit or get new polyline */
 	HGU_XUngrabPointer(dpy, win);

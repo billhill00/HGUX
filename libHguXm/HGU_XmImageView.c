@@ -697,7 +697,7 @@ void HGU_XmImageViewReadImageFromParamsCb(
   case WLZEFF_FORMAT_BMP:
   case WLZEFF_FORMAT_TIFF:
     obj = WlzAssignObject(WlzEffReadObj(NULL, data->file,
-					data->type, NULL), NULL);
+					data->type, 0, NULL), NULL);
     break;
     
   case WLZEFF_FORMAT_RAW:
@@ -721,7 +721,7 @@ void HGU_XmImageViewReadImageFromParamsCb(
 	    data->width, data->height, intType, data->file);
     if( fp = popen(strBuf, "r") ){
       obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
-					  WLZEFF_FORMAT_WLZ, NULL), NULL);
+					  WLZEFF_FORMAT_WLZ, 0, NULL), NULL);
       pclose(fp);
     }
     AlcFree(strBuf);
@@ -792,7 +792,7 @@ void HGU_XmImageViewReadImageCb(
       return;
     }
     obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
-					      data->type, NULL), NULL);
+					      data->type, 0, NULL), NULL);
     fclose(fp);
     break;
 
@@ -804,7 +804,7 @@ void HGU_XmImageViewReadImageCb(
       return;
     }
     obj = WlzAssignObject(WlzEffReadObj(NULL, data->file,
-					      data->type, NULL), NULL);
+					      data->type, 0, NULL), NULL);
     break;
 
   case WLZEFF_FORMAT_RAW:
@@ -858,7 +858,7 @@ void HGU_XmImageViewReadImageCb(
 	    data->width, data->height, intType, data->file);
     if( fp = popen(strBuf, "r") ){
       obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
-					  WLZEFF_FORMAT_WLZ, NULL), NULL);
+					  WLZEFF_FORMAT_WLZ, 0, NULL), NULL);
       pclose(fp);
     }
     AlcFree(strBuf);

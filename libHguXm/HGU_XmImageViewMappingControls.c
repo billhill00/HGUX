@@ -144,7 +144,8 @@ void HGU_XmImageViewSetHistogramDisplayCb(
 
   /* calculate the histogram & reset the display */
   if( hist_polydmn == NULL ){
-    hist_polydmn = WlzMakePolyDmn(WLZ_POLYGON_INT, hist_vtx, 1024, 1024, 0, NULL);
+    hist_polydmn = WlzMakePolygonDomain(WLZ_POLYGON_INT, 1024,
+					hist_vtx, 1024, 0, NULL);
   }
   if( data->objHistogram = WlzHistogramObj(data->obj, nBins,
 					     binOrigin, binSize,
@@ -190,13 +191,15 @@ void HGU_XmImageViewSetTransformDisplay(
   win_vtx[1].vtX = win_vtx[2].vtX = data->max;
   win_vtx[2].vtY = win_vtx[3].vtY = data->Max;
   if( win_polydmn == NULL ){
-    win_polydmn = WlzMakePolyDmn(WLZ_POLYGON_INT, win_vtx, 5, 5, 0, NULL);
+    win_polydmn = WlzMakePolygonDomain(WLZ_POLYGON_INT, 5,
+				 win_vtx, 5, 0, NULL);
   }
   HGU_XmSetGraphPolyline(data->graph, win_polydmn, 1);
 
   /* display the transform */
   if( lut_polydmn == NULL ){
-    lut_polydmn = WlzMakePolyDmn(WLZ_POLYGON_INT, lut_vtx, 256, 256, 0, NULL);
+    lut_polydmn = WlzMakePolygonDomain(WLZ_POLYGON_INT, 256,
+				       lut_vtx, 256, 0, NULL);
   }
 
   lut_vtx[0].vtX = data->srcMin;
