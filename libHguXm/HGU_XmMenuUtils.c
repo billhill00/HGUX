@@ -150,7 +150,7 @@ Widget HGU_XmBuildRadioMenu(
     int		i, toggle;
     Boolean	one_toggle_set=False;
     Visual	*visual;
-    Arg		arg[1];
+    Arg		arg[4];
     
 
     /* pulldown menus require a cascade button to be made */
@@ -168,25 +168,23 @@ Widget HGU_XmBuildRadioMenu(
     /* get the visual explicitly */
     visual = HGU_XmWidgetToVisual(parent);
     XtSetArg(arg[0], XmNvisual, visual);
+    XtSetArg(arg[1], XmNtearOffModel, tear_off_model);
+    XtSetArg(arg[2], XmNradioBehavior, radio_behavior);
+    XtSetArg(arg[3], XmNradioAlwaysOne, always_one);
 
     /* create the menu */
     if( menu_type == XmMENU_PULLDOWN || menu_type == XmMENU_OPTION )
-      menu = XmCreatePulldownMenu( cascade, "_pulldown", arg, 1 );
+      menu = XmCreatePulldownMenu( cascade, "_pulldown", arg, 4 );
     else if( menu_type == XmMENU_POPUP ){
 	String	name_buf = (String) calloc(strlen(menu_name)+16, sizeof(char));
 	(void) sprintf(name_buf, "%s_popup", menu_name);
-	menu = XmCreatePopupMenu( parent, name_buf, arg, 1 );
+	menu = XmCreatePopupMenu( parent, name_buf, arg, 4 );
 	free(name_buf);
     } else {
 	XtWarning("Invalid menu type passed to BuildMenu()");
 	return( NULL );
     }
 
-    XtVaSetValues(menu,
-		  XmNtearOffModel,	tear_off_model,
-		  XmNradioBehavior,	radio_behavior,
-		  XmNradioAlwaysOne,	always_one,
-		  NULL);
     if( cascade != NULL )
 	XtVaSetValues(cascade, XmNsubMenuId, menu, NULL);
 
