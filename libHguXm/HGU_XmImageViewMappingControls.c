@@ -216,7 +216,7 @@ void HGU_XmImageViewSetTransformDisplay(
       lut_vtx[i].vtY = data->Max;
     }
     else {
-      lut_vtx[i].vtY = data->lut[lut_vtx[i].vtX - data->srcMin];
+      lut_vtx[i].vtY = data->lut.g->lut[lut_vtx[i].vtX - data->srcMin];
     }
   }
   lut_vtx[i].vtX = data->max;
@@ -636,7 +636,7 @@ void HGU_XmImageViewRemapImageCb(
   max.type = WLZ_GREY_INT;
   max.v.inv = data->max;
   lut.type = WLZ_GREY_UBYTE;
-  lut.p.ubp = data->lut;
+  lut.p.ubp = data->lut.g->lut;
   errNum = WlzGreySetRangeLut(data->obj, min, max, lut);
 
   /* convert to a UBYTE image and install */

@@ -53,75 +53,148 @@ static MenuItem file_type_menu_itemsP[] = {   /* file_menu items */
   NULL,
 };
 
-/* misc routines */
-XImage *HGU_XmObjToXImageLut(
-  Widget	w,
+int HGU_XmGetColorIndexFromMask24(
+  unsigned long mask,
+  int		order)
+{
+  int index;
+
+  switch( mask ){
+  case 0xff:
+    index = 0;
+    break;
+  case 0xff00:
+    index = 1;
+    break;
+  case 0xff0000:
+    index = 2;
+    break;
+  case 0xff000000:
+    index = 3;
+    break;
+  default:
+    index = 0;
+    break;
+  }
+  if( order == MSBFirst ){
+    index = 3 - index;
+  }
+
+  return index;
+}
+
+XImage *HGU_XmObjToXImageLut2D(
+  XWindowAttributes	*win_att,
   WlzObject	*obj,
-  UBYTE		*lut,
-  int		srcMin,
-  int		srcMax)
+  HGU_XmLut	lut,
+  WlzErrorNum	*dstErr)
 {
   XImage		*rtnImage=NULL;
-  XWindowAttributes	win_att;
   Dimension		width, height;
   UBYTE			*data, *dst_data;
   WlzGreyValueWSpace	*gVWSp = NULL;
   WlzErrorNum		errNum=WLZ_ERR_NONE;
   int			i, j;
-
-  /* get window properties */
-  if( XGetWindowAttributes(XtDisplay(w), XtWindow(w), &win_att) == 0 ){
-    return rtnImage;
-  }
-
-  /* check the object */
-  if( !obj ){
-    return rtnImage;
-  }
-  if( obj->type != WLZ_2D_DOMAINOBJ ){
-    return rtnImage;
-  }
-  if( !obj->domain.core || !obj->values.core ){
-    return rtnImage;
-  }
+  int			rIndx, gIndx, bIndx, aIndx;
+  UINT			r, g, b, a;
 
   /* allocate space for the data */
   width = obj->domain.i->lastkl - obj->domain.i->kol1 + 1;
   height = obj->domain.i->lastln - obj->domain.i->line1 + 1;
   if( gVWSp = WlzGreyValueMakeWSp(obj, &errNum) ){
-    if( data = (UBYTE *) AlcMalloc(((win_att.depth == 8)?1:4)
+    if( data = (UBYTE *) AlcMalloc(((win_att->depth == 8)?1:4)
 				   *width*height*sizeof(char)) ){
       dst_data = data;
-      /* fill in the values */
-      for(j=0; j < height; j++){
-	for(i=0; i < width; i++, data++){
-	  WlzGreyValueGet(gVWSp, 0, j + obj->domain.i->line1,
-			  i + obj->domain.i->kol1);
-	  switch( gVWSp->gType ){
-	  default:
-	  case WLZ_GREY_INT:
-	    *data = lut[(*(gVWSp->gPtr[0].inp))-srcMin];
-	    break;
-	  case WLZ_GREY_SHORT:
-	    *data = lut[(*(gVWSp->gPtr[0].shp))-srcMin];
-	    break;
-	  case WLZ_GREY_UBYTE:
-	    *data = lut[(*(gVWSp->gPtr[0].ubp))-srcMin];
-	    break;
-	  case WLZ_GREY_FLOAT:
-	    *data = *(gVWSp->gPtr[0].flp);
-	    break;
-	  case WLZ_GREY_DOUBLE:
-	    *data = *(gVWSp->gPtr[0].dbp);
-	    break;
-	  }
-	  if( win_att.depth == 24 ){
-	    data[1] = data[0];
-	    data[2] = data[0];
-	    data[3] = data[0];
-	    data += 3;
+      if( rtnImage = XCreateImage(DisplayOfScreen(win_att->screen),
+				  win_att->visual, win_att->depth,
+				  ZPixmap, 0, (char *) dst_data,
+				  width, height, 8, 0) ){
+
+	/* establish rgb index values if 24 bit */
+	if( win_att->depth == 24 ){
+	  rIndx = HGU_XmGetColorIndexFromMask24(win_att->visual->red_mask,
+					       rtnImage->byte_order);
+	  gIndx = HGU_XmGetColorIndexFromMask24(win_att->visual->green_mask,
+					       rtnImage->byte_order);
+	  bIndx = HGU_XmGetColorIndexFromMask24(win_att->visual->blue_mask,
+					       rtnImage->byte_order);
+	  aIndx = HGU_XmGetColorIndexFromMask24(~(win_att->visual->red_mask|
+						 win_att->visual->green_mask|
+						 win_att->visual->blue_mask),
+					       rtnImage->byte_order);
+	}
+
+	/* fill in the values */
+	a = 0xff;
+	for(j=0; j < height; j++){
+	  for(i=0; i < width; i++, data++){
+	    WlzGreyValueGet(gVWSp, 0, j + obj->domain.i->line1,
+			    i + obj->domain.i->kol1);
+	    switch( gVWSp->gType ){
+	    default:
+	    case WLZ_GREY_INT:
+	      r = *(gVWSp->gPtr[0].inp);
+	      g = b = r;
+	      break;
+	    case WLZ_GREY_SHORT:
+	      r = *(gVWSp->gPtr[0].shp);
+	      g = b = r;
+	      break;
+	    case WLZ_GREY_UBYTE:
+	      r = *(gVWSp->gPtr[0].ubp);
+	      g = b = r;
+	      break;
+	    case WLZ_GREY_FLOAT:
+	      r = *(gVWSp->gPtr[0].flp);
+	      g = b = r;
+	      break;
+	    case WLZ_GREY_DOUBLE:
+	      r = *(gVWSp->gPtr[0].dbp);
+	      g = b = r;
+	      break;
+	    case WLZ_GREY_RGBA:
+	      b = *(gVWSp->gPtr[0].rgbp);
+	      r = WLZ_RGBA_RED_GET(b);
+	      r = WLZ_RGBA_GREEN_GET(b);
+	      r = WLZ_RGBA_BLUE_GET(b);
+	      break;
+	    }
+
+	    switch( lut.core->type ){
+	    case HGU_XmLUT_GREY:
+	      r = lut.g->lut[r - lut.g->min];
+	      g = lut.g->lut[g - lut.g->min];
+	      b = lut.g->lut[b - lut.g->min];
+	      break;
+
+	    case HGU_XmLUT_RGB:
+	      r = lut.rgb->lut[0][r - lut.rgb->min[0]];
+	      g = lut.rgb->lut[1][g - lut.rgb->min[1]];
+	      b = lut.rgb->lut[2][b - lut.rgb->min[2]];
+	      break;
+
+	    case HGU_XmLUT_COMPOUND:
+	      break;
+	    }
+	    switch( win_att->depth ){
+	    case 24:
+	      data[rIndx] = r;
+	      data[gIndx] = g;
+	      data[bIndx] = b;
+	      data[aIndx] = a;
+	      data += 3;
+	      break;
+
+	    case 8:
+	      data[0] = r;
+	      break;
+	    }
 	  }
 	}
+      }
+      else {
+	errNum = WLZ_ERR_UNSPECIFIED;
+	AlcFree((void *) dst_data);
       }
     }	  
     else {
@@ -130,13 +203,92 @@ XImage *HGU_XmObjToXImageLut(
     WlzGreyValueFreeWSp(gVWSp);
   }
 
-  if( errNum == WLZ_ERR_NONE ){
-    rtnImage = XCreateImage(XtDisplay(w),
-			    win_att.visual, win_att.depth,
-			    ZPixmap, 0, (char *) dst_data,
-			    width, height, 8, 0);
+  if( dstErr ){
+    *dstErr = errNum;
   }
+  return rtnImage;
+}
 
+/* misc routines */
+/* assumption here that on mapping to an XImage then UBYTE values are
+   sufficient. Should really define a LUT object which could be of many
+   types including a function.
+
+   As a minimum the types should include an array for any pixel type,
+   the min and max of the table and an option for compound objects.
+
+   The simplest is for each pixel value the lut will return a grey or
+   rgb value. In addition need a compound version, i.e. a lut for each
+   element of a compound object. Must be fast.
+*/
+
+XImage *HGU_XmObjToXImageLut(
+  Widget	w,
+  WlzObject	*obj,
+  HGU_XmLut	lut,
+  WlzErrorNum	*dstErr)
+{
+  XImage		*rtnImage=NULL;
+  XWindowAttributes	win_att;
+  WlzCompoundArray	*cobj;
+  WlzErrorNum		errNum=WLZ_ERR_NONE;
+
+  /* check inputs */
+  if( w == NULL ){
+    errNum = WLZ_ERR_PARAM_NULL;
+  }
+  else if( XGetWindowAttributes(XtDisplay(w), XtWindow(w), &win_att) == 0 ){
+    errNum = WLZ_ERR_UNSPECIFIED;
+  }
+  else if( obj == NULL ){
+    errNum = WLZ_ERR_OBJECT_NULL;
+  }
+  else if( lut.core == NULL ){
+    errNum = WLZ_ERR_PARAM_DATA;
+  }
+  else switch( obj->type ){
+  case WLZ_2D_DOMAINOBJ:
+    if( obj->domain.core == NULL ){
+      errNum = WLZ_ERR_DOMAIN_NULL;
+    }
+    else if( obj->values.core == NULL ){
+      errNum = WLZ_ERR_VALUES_NULL;
+    }
+    else {
+      rtnImage = HGU_XmObjToXImageLut2D(&win_att, obj, lut, &errNum);
+    }
+    break;
+
+  case WLZ_EMPTY_OBJ:
+    break;
+
+  case WLZ_COMPOUND_ARR_1:
+  case WLZ_COMPOUND_ARR_2:
+    cobj = (WlzCompoundArray *) obj;
+    if( cobj->n < 1 ){
+      errNum = WLZ_ERR_OBJECT_DATA;
+    }
+    else {
+      switch(cobj->o[0]->type){
+      case WLZ_2D_DOMAINOBJ:
+	break;
+
+      default:
+	errNum = WLZ_ERR_OBJECT_TYPE;
+	break;
+      }
+    }
+    break;
+
+  default:
+    errNum = WLZ_ERR_OBJECT_TYPE;
+    break;
+  }
+    
+
+  if( dstErr ){
+    *dstErr = errNum;
+  }
   return rtnImage;
 }
 
@@ -221,10 +373,10 @@ void HGU_XmImageViewSetLutTransform(
   if( data == NULL ){
     return;
   }
-  if( data->lut ){
-    AlcFree(data->lut);
+  if( data->lut.g->lut ){
+    AlcFree(data->lut.g->lut);
   }
-  data->lut = (UBYTE *) AlcMalloc(sizeof(char)*
+  data->lut.g->lut = (UBYTE *) AlcMalloc(sizeof(char)*
 				(data->srcMax - data->srcMin + 1));
 
   /* set new lut */
@@ -233,44 +385,44 @@ void HGU_XmImageViewSetLutTransform(
   default:
   case WLZ_GREYTRANSFORMTYPE_LINEAR:
     for(i=0, gi=data->srcMin; gi <= data->min; i++, gi++){
-      data->lut[i] = data->Min;
+      data->lut.g->lut[i] = data->Min;
     }
     A = ((double) (data->Max - data->Min)) / (data->max - data->min + 1);
     B = data->Min - A*data->min;
     for(; gi <= data->srcMax; i++, gi++){
-      data->lut[i] = (int) (A*gi + B);
+      data->lut.g->lut[i] = (int) (A*gi + B);
       if( gi == data->max ){
 	break;
       }
     }
     for(; gi <= data->srcMax; i++, gi++){
-      data->lut[i] = data->Max;
+      data->lut.g->lut[i] = data->Max;
     }
     break;
 
   case WLZ_GREYTRANSFORMTYPE_GAMMA:
     for(i=0, gi=data->srcMin; gi <= data->min; i++, gi++){
-      data->lut[i] = data->Min;
+      data->lut.g->lut[i] = data->Min;
     }
     A = (data->Max - data->Min) / 
       pow((data->max - data->min + 1), data->gamma);
     B = data->Min;
     for(; gi <= data->srcMax; i++, gi++){
       g = gi;
-      data->lut[i] = (int) (A * pow(g - data->min, data->gamma) +
+      data->lut.g->lut[i] = (int) (A * pow(g - data->min, data->gamma) +
 			      B);
       if( gi == data->max ){
 	break;
       }
     }
     for(; gi <= data->srcMax; i++, gi++){
-      data->lut[i] = data->Max;
+      data->lut.g->lut[i] = data->Max;
     }
     break;
 
   case WLZ_GREYTRANSFORMTYPE_SIGMOID:
     for(i=0, gi=data->srcMin; gi <= data->min; i++, gi++){
-      data->lut[i] = data->Min;
+      data->lut.g->lut[i] = data->Min;
     }
     mu = data->mean + data->min;
     sig = data->sigma;
@@ -280,13 +432,13 @@ void HGU_XmImageViewSetLutTransform(
     B = data->Min - A * fmin;
     for(; gi <= data->srcMax; i++, gi++){
       g = gi;
-      data->lut[i] = (int) (A / (1.0 + exp(-(g - mu)/sig)) + B);
+      data->lut.g->lut[i] = (int) (A / (1.0 + exp(-(g - mu)/sig)) + B);
       if( gi == data->max ){
 	break;
       }
     }
     for(; gi < data->srcMax; i++, gi++){
-      data->lut[i] = data->Max;
+      data->lut.g->lut[i] = data->Max;
     }
     break;
 
@@ -295,7 +447,7 @@ void HGU_XmImageViewSetLutTransform(
   if( data->invert ){
     for(; i >0;){
       i--;
-      data->lut[i] = (data->Max + data->Min - data->lut[i]);
+      data->lut.g->lut[i] = (data->Max + data->Min - data->lut.g->lut[i]);
     }
   }
 
@@ -415,6 +567,7 @@ void HGU_XmImageViewCanvasExposeCb(
   int	xImg, yImg, wImg, hImg;
   Dimension	width, height, rW, rH;
   XWindowAttributes	win_att;
+  WlzErrorNum	errNum=WLZ_ERR_NONE;
 
   /* check object */
   if((viewData == NULL) || (viewData->obj == NULL)){
@@ -423,8 +576,9 @@ void HGU_XmImageViewCanvasExposeCb(
 
   /* check ximage re-generate as required */
   if( viewData->ximage == NULL ){
-    if( (viewData->ximage = HGU_XmObjToXImageLut(w, viewData->obj, viewData->lut,
-					     viewData->srcMin, viewData->srcMax)) == NULL ){
+    if( (viewData->ximage = 
+	 HGU_XmObjToXImageLut(w, viewData->obj, viewData->lut,
+			      &errNum)) == NULL ){
       return;
     }
   }
@@ -978,6 +1132,10 @@ Widget HGU_XmCreateImageView(
   data->transType = WLZ_GREYTRANSFORMTYPE_LINEAR;
   data->gamma = 1.0;
   data->invert = 0;
+  data->lut.g = (HGU_XmLutGrey *) AlcMalloc(sizeof(HGU_XmLutGrey));
+  data->lut.g->lut = NULL;
+  data->lut.g->min = data->Min;
+  data->lut.g->max = data->Max;
 
   /* create file-selector dialog */
   XtGetApplicationResources(image_form, &titleStr,

@@ -481,6 +481,46 @@ extern int HGU_XmSetSetIntValue(
   int		val);
 
 /* HGU_XmImageView.c & HGU_XmImageGreyTransform.c */
+typedef enum {
+  HGU_XmLUT_GREY,
+  HGU_XmLUT_RGB,
+  HGU_XmLUT_COMPOUND
+} HGU_XmLutType;
+typedef struct _HGU_XmLutCore {
+  int		type;
+  void		*freePtr;
+} HGU_XmLutCore;
+
+typedef struct _HGU_XmLutGrey {
+  int		type;
+  void		*freePtr;
+  int		min;
+  int		max;
+  UBYTE		*lut;
+} HGU_XmLutGrey;
+
+typedef struct _HGU_XmLutRGB {
+  int		type;
+  void		*freePtr;
+  int		min[3];
+  int		max[3];
+  UBYTE		*lut[3];
+} HGU_XmLutRGB;
+
+typedef struct _HGU_XmLutCompound {
+  int		type;
+  void		*freePtr;
+  int		n;
+  union _HGU_XmLut	*luts;
+} HGU_XmLutCompound;
+
+typedef union _HGU_XmLut {
+  HGU_XmLutCore		*core;
+  HGU_XmLutGrey		*g;
+  HGU_XmLutRGB		*rgb;
+  HGU_XmLutCompound	*c;
+} HGU_XmLut;
+
 typedef struct _HGU_XmImageViewDataStruct{
   Widget		imageForm;
   Widget		canvas;
@@ -511,7 +551,7 @@ typedef struct _HGU_XmImageViewDataStruct{
   double		mean;
   double		sigma;
   int			invert;
-  unsigned char		*lut;
+  HGU_XmLut		lut;
 } HGU_XmImageViewDataStruct;
 
 typedef enum
@@ -530,9 +570,8 @@ extern Widget HGU_XmCreateGreyMappingDialog(
 extern XImage *HGU_XmObjToXImageLut(
   Widget	w,
   WlzObject	*obj,
-  UBYTE		*lut,
-  int		srcMin,
-  int		srcMax);
+  HGU_XmLut	lut,
+  WlzErrorNum	*dstErr);
 extern void HGU_XmMapDialogCb(
   Widget	w,
   XtPointer	client_data,
