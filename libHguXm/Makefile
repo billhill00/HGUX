@@ -110,7 +110,7 @@ OBJECTS			= $(CSOURCES:%.c=%.o)
 #COPTIMISE		=
 
 # un-comment these lines to make a 32-bit library for the IRIX 6
-DEFINES			= -D$(UNIXTYPE) $(UNIXFLAGS)
+DEFINES			= -D$(UNIXTYPE) $(UNIXFLAGS) -DXTHREADS
 CPPFLAGS		= $(INCDIRS:%=-I%) $(DEFINES)
 CFLAGS			= $(CDEBUG) $(COPTIMISE) $(ANSI_CONFORMANCE)
 

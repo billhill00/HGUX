@@ -237,10 +237,13 @@ void HGU_XmImageViewSetLutTransform(
     }
     A = ((double) (data->Max - data->Min)) / (data->max - data->min + 1);
     B = data->Min - A*data->min;
-    for(; gi <= data->max; i++, gi++){
+    for(; gi <= data->srcMax; i++, gi++){
       data->lut[i] = (int) (A*gi + B);
+      if( gi == data->max ){
+	break;
+      }
     }
-    for(; gi < data->srcMax; i++, gi++){
+    for(; gi <= data->srcMax; i++, gi++){
       data->lut[i] = data->Max;
     }
     break;
@@ -252,12 +255,15 @@ void HGU_XmImageViewSetLutTransform(
     A = (data->Max - data->Min) / 
       pow((data->max - data->min + 1), data->gamma);
     B = data->Min;
-    for(; gi <= data->max; i++, gi++){
+    for(; gi <= data->srcMax; i++, gi++){
       g = gi;
       data->lut[i] = (int) (A * pow(g - data->min, data->gamma) +
 			      B);
+      if( gi == data->max ){
+	break;
+      }
     }
-    for(; gi < data->srcMax; i++, gi++){
+    for(; gi <= data->srcMax; i++, gi++){
       data->lut[i] = data->Max;
     }
     break;
@@ -272,9 +278,12 @@ void HGU_XmImageViewSetLutTransform(
     fmax = 1.0/(1.0 + exp(-(data->max + 1 - mu)/sig));
     A = (data->Max - data->Min) / (fmax - fmin);
     B = data->Min - A * fmin;
-    for(; gi <= data->max; i++, gi++){
+    for(; gi <= data->srcMax; i++, gi++){
       g = gi;
       data->lut[i] = (int) (A / (1.0 + exp(-(g - mu)/sig)) + B);
+      if( gi == data->max ){
+	break;
+      }
     }
     for(; gi < data->srcMax; i++, gi++){
       data->lut[i] = data->Max;
@@ -591,18 +600,21 @@ void HGU_XmImageViewCanvasExposeCb(
   return;
 }
 
-void HGU_XmImageViewInstallImage(
+void HGU_XmImageViewControlledInstallImage(
   WlzObject			*obj,
-  HGU_XmImageViewDataStruct	*data)
+  HGU_XmImageViewDataStruct	*data,
+  unsigned int			cntrlMask)
 {
   if( data == NULL ){
     return;
   }
-  if( obj == NULL ){
-    return;
-  }
-  if( obj->type != WLZ_2D_DOMAINOBJ ){
-    return;
+  if( obj == NULL || (obj->type != WLZ_2D_DOMAINOBJ) ){
+    if( cntrlMask & HGU_XmIMAGEVIEW_CLEARONINVALID ){
+      obj = NULL;
+    }
+    else {
+      return;
+    }
   }
 
   /* clear old object and ximage */
@@ -618,21 +630,124 @@ void HGU_XmImageViewInstallImage(
     XDestroyImage(data->ximage);
     data->ximage = NULL;
   }
-  data->obj = WlzAssignObject(obj, NULL);
 
-  /* reset the LUT */
-  HGU_XmImageViewResetGreyRange(data);
-  HGU_XmImageViewResetLutControlValues(data);
-  HGU_XmImageViewSetLutTransform(data);
-  HGU_XmImageViewSetLutControls(data);
+  if( obj ){
+    Dimension	width, height;
+    data->obj = WlzAssignObject(obj, NULL);
 
-  /* call canvas expose to provoke display */
-  data->magVal = 1.0;
-  data->width = data->obj->domain.i->lastkl - data->obj->domain.i->kol1 + 1;
-  data->height = data->obj->domain.i->lastln - data->obj->domain.i->line1 + 1;
-  XtVaSetValues(data->canvas, XmNwidth, data->width,
-		XmNheight, data->height, NULL);
-  XtCallCallbacks(data->canvas, XmNexposeCallback, NULL);
+    /* reset the LUT */
+    HGU_XmImageViewResetGreyRange(data);
+    if( !(cntrlMask & HGU_XmIMAGEVIEW_KEEPLUTCONTROLVALUES) ){
+      HGU_XmImageViewResetLutControlValues(data);
+    }
+    HGU_XmImageViewSetLutTransform(data);
+    HGU_XmImageViewSetLutControls(data);
+
+    /* call canvas expose to provoke display */
+    if( !(cntrlMask & HGU_XmIMAGEVIEW_KEEPMAGVALUE) ){
+      data->magVal = 1.0;
+    }
+    data->width = data->obj->domain.i->lastkl - data->obj->domain.i->kol1 + 1;
+    data->height = data->obj->domain.i->lastln - data->obj->domain.i->line1 + 1;
+    width = data->width * data->magVal;
+    height = data->height * data->magVal;
+    XtVaSetValues(data->canvas, XmNwidth, width,
+		  XmNheight, height, NULL);
+    XtCallCallbacks(data->canvas, XmNexposeCallback, NULL);
+  }
+  else {
+    /* clear the canvas, leave data etc unchanged */
+    XClearWindow(XtDisplay(data->canvas), XtWindow(data->canvas));
+  }
+
+  return;
+}
+
+void HGU_XmImageViewInstallImage(
+  WlzObject			*obj,
+  HGU_XmImageViewDataStruct	*data)
+{
+  HGU_XmImageViewControlledInstallImage(obj, data, 0x0);
+  return;
+}
+
+void HGU_XmImageViewReadImageFromParamsCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data)
+{
+  HGU_XmImageViewDataStruct
+    *data=(HGU_XmImageViewDataStruct *) client_data;
+  XmFileSelectionBoxCallbackStruct
+    *cbs=(XmFileSelectionBoxCallbackStruct *) call_data;
+  int			intType;
+  String		strBuf, tmpBuf;
+  FILE			*fp;
+  WlzObject		*obj;
+
+  /* check image file, read image */
+  if( data->file == NULL ){
+    /* report error */
+    return;
+  }
+
+  switch( data->type ){
+  case WLZEFF_FORMAT_WLZ:
+  case WLZEFF_FORMAT_PNM:
+  case WLZEFF_FORMAT_BMP:
+  case WLZEFF_FORMAT_TIFF:
+    obj = WlzAssignObject(WlzEffReadObj(NULL, data->file,
+					data->type, NULL), NULL);
+    break;
+    
+  case WLZEFF_FORMAT_RAW:
+    strBuf = AlcMalloc(sizeof(char) *
+		       (strlen(data->file) + 48));
+    switch( data->depth ){
+    case 8:
+      intType = 3;
+      break;
+    case 12:
+      intType = 2;
+      break;
+    case 16:
+      intType = 7;
+      break;
+    case 32:
+      intType = 1;
+      break;
+    }
+    sprintf(strBuf, "WlzRawToWlz -%s %d %d %d %s", data->byteOrder?"b":"l",
+	    data->width, data->height, intType, data->file);
+    if( fp = popen(strBuf, "r") ){
+      obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
+					  WLZEFF_FORMAT_WLZ, NULL), NULL);
+      pclose(fp);
+    }
+    AlcFree(strBuf);
+    break;
+
+  default:
+    /* report error */
+    return;
+  }
+
+  if( obj == NULL ){
+    HGU_XmUserError(data->canvas,
+		    "Failed to read the image, please\n"
+		    "check the file, permissions and the\n"
+		    "image format and try again.\n",
+		    XmDIALOG_FULL_APPLICATION_MODAL);
+    return;
+  }
+  if( obj->type != WLZ_2D_DOMAINOBJ ){
+    WlzFreeObj(obj);
+    return;
+  }
+
+  /* install the object */
+  HGU_XmImageViewInstallImage(obj, data);
+  WlzFreeObj(obj);
 
   return;
 }
@@ -870,7 +985,6 @@ Widget HGU_XmCreateImageView(
   data->fileSelector = XmCreateFileSelectionDialog(image_form,
 						   "image_select", NULL, 0);
   XtVaSetValues(XtParent(data->fileSelector), XmNtitle, titleStr, NULL);
-  AlcFree(titleStr);
   XtAddCallback(data->fileSelector, XmNokCallback, 
 		HGU_XmImageViewReadImageCb, (XtPointer) data);
   XtAddCallback(data->fileSelector, XmNokCallback, 
@@ -896,7 +1010,6 @@ Widget HGU_XmCreateImageView(
 		XmNlabelString, 	choiceStr,
 		NULL);
   XtManageChild(data->typeMenu);
-  XmStringFree(choiceStr);
 
   /* create the mapping dialog */
   XtGetApplicationResources(parent, &titleStr,
@@ -904,7 +1017,6 @@ Widget HGU_XmCreateImageView(
   data->greyMapping = HGU_XmCreateGreyMappingDialog("grey_mapping", parent,
 						    data);
   XtVaSetValues(XtParent(data->greyMapping), XmNtitle, titleStr, NULL);
-  AlcFree(titleStr);
 
   /* add the button row for mag+, mag-, I/O and re-mapping */
   form = XtVaCreateManagedWidget("image_buttons_form", xmFormWidgetClass,

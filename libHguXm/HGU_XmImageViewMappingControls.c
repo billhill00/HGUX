@@ -206,7 +206,15 @@ void HGU_XmImageViewSetTransformDisplay(
   for(i=2; i < 200; i++){
     g = data->min + (i-2) * (data->max - data->min + 1) / 198;
     lut_vtx[i].vtX = (int) g;
-    lut_vtx[i].vtY = data->lut[lut_vtx[i].vtX - data->srcMin];
+    if( lut_vtx[i].vtX < data->srcMin ){
+      lut_vtx[0].vtY = data->Min;
+    }
+    else if( lut_vtx[i].vtX > data->srcMax ){
+      lut_vtx[i].vtY = data->Max;
+    }
+    else {
+      lut_vtx[i].vtY = data->lut[lut_vtx[i].vtX - data->srcMin];
+    }
   }
   lut_vtx[i].vtX = data->max;
   lut_vtx[i++].vtY = data->Max;

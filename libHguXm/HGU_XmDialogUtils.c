@@ -247,12 +247,11 @@ unsigned char	modality)
     PopupCallback( XtParent(dialog), (XtPointer) XtParent(dialog), NULL );
     while( answer < 0 ){
         XtAppProcessEvent( app_con, XtIMAll );
-        XSync( XtDisplay(dialog), 0 );
+        XFlush( XtDisplay(dialog) );
     }
 
     /* remove dialog, flush display and destroy resources */
     PopdownCallback( XtParent(dialog), (XtPointer)XtParent(dialog), NULL );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
 
     /* remove callbacks */

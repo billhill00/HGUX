@@ -502,6 +502,15 @@ typedef struct _HGU_XmImageViewDataStruct{
   unsigned char		*lut;
 } HGU_XmImageViewDataStruct;
 
+typedef enum
+{
+  HGU_XmIMAGEVIEW_NONE			= (0),
+  HGU_XmIMAGEVIEW_CLEARONINVALID	= (1),
+  HGU_XmIMAGEVIEW_KEEPLUTCONTROLVALUES	= (1<<1),
+  HGU_XmIMAGEVIEW_KEEPMAGVALUE		= (1<<2),
+  HGU_XmIMAGEVIEW_All			= (0xff)
+} HGU_XmImageViewMaskType;
+
 extern Widget HGU_XmCreateGreyMappingDialog(
   String			name,
   Widget			parent,
@@ -527,6 +536,14 @@ extern void HGU_XmImageViewCanvasExposeCb(
 extern void HGU_XmImageViewInstallImage(
   WlzObject			*obj,
   HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewControlledInstallImage(
+  WlzObject			*obj,
+  HGU_XmImageViewDataStruct	*data,
+  unsigned int			cntrlMask);
+extern void HGU_XmImageViewReadImageFromParamsCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
 extern void HGU_XmImageViewReadImageCb(
   Widget	w,
   XtPointer	client_data,

@@ -734,7 +734,7 @@ float 		yu)
     xmstr = XmStringCreateSimple( str );
     XtVaSetValues(graph_res->y_maxW, XmNlabelString, xmstr, NULL);
     XmStringFree( xmstr );
-    XSync(XtDisplay(w), False);
+    XFlush(XtDisplay(w));
 
     GraphUpdate(w, (XtPointer) graph_res, NULL);
     return( 0 );

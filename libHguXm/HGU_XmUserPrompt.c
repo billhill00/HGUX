@@ -168,7 +168,6 @@ int HGU_XmUserConfirm3(
 
   /* remove dialog, flush display and destroy resources */
   XtUnmanageChild( dialog );
-  XSync( XtDisplay(dialog) , 0 );
   XmUpdateDisplay( dialog );
   XtDestroyWidget( dialog );
 
@@ -239,7 +238,6 @@ int	default_ans)
 
     /* popup widget and process events */
     XtManageChild( dialog );
-    XSync( XtDisplay(dialog), 0 );
     XFlush(XtDisplay(dialog));
     while( answer < 0 ){
 	XtAppProcessEvent( app_con, XtIMAll );
@@ -248,7 +246,6 @@ int	default_ans)
 
     /* remove dialog, flush display and destroy resources */
     XtUnmanageChild( dialog );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
     XtDestroyWidget( dialog );
 
@@ -345,7 +342,6 @@ void HGU_XmUserContinue(
 
     /* remove dialog, flush display and destroy resources */
     XtUnmanageChild( dialog );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
     XtDestroyWidget( dialog );
 
@@ -462,7 +458,6 @@ String	default_ans)
 
     /* remove dialog, flush display and destroy resources */
     XtUnmanageChild( dialog );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
     XtDestroyWidget( dialog );
 
@@ -629,7 +624,6 @@ String	pattern_str)
 
     /* remove dialog, flush display and destroy resources */
     XtUnmanageChild( dialog );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
     XtDestroyWidget( dialog );
 
@@ -852,7 +846,6 @@ int	default_ans)
 
     /* remove dialog, flush display and destroy resources */
     XtUnmanageChild( dialog );
-    XSync( XtDisplay(dialog) , 0 );
     XmUpdateDisplay( dialog );
     XtDestroyWidget( dialog );
 

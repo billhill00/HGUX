@@ -170,6 +170,7 @@ static void update_slider_text(Widget		scale,
     char	string[128];
     int		position;
     int		min, max;
+    short	len;
     HGU_XmSliderFunc	func;
 
     XtVaGetValues(scale, XmNdecimalPoints, &decimalPoints,
@@ -179,6 +180,7 @@ static void update_slider_text(Widget		scale,
     (void) slider_text_string( string, cbs->value, decimalPoints,
 				   min, max, func);
     position = (int) strlen( string ) + 1;
+    XtVaGetValues(text, XmNcolumns, &len, NULL);
     XtVaSetValues(text, XmNvalue, string, XmNcursorPosition, position, NULL);
 }
 /************************************************************************
