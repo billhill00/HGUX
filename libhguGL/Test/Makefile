@@ -50,9 +50,11 @@ MANPAGES		=
 DEPENDDIRS		= \
 			  . \
 			  .. \
-			  ../../Core/libAlc \
-			  ../../Core/libAlg \
-			  ../../Core/libWlz
+			  ../../../Core/libAlc \
+			  ../../../Core/libAlg \
+			  ../../../Core/libWlz \
+			  ../../libHguX \
+			  ../../libHguXm
 
 # List of all header file directories to be searched (modify as required).
 INCDIRS			= \
@@ -102,11 +104,11 @@ MOTIFLIBS       	= Xm
 X11LIBS         	= Xt Xmu X11 Xext
 
 LIBRARIES		= hguGL \
-			  hguXm \
-			  hguX \
-			  wlz \
-			  nalgs \
-			  typealloc \
+			  HguXm \
+			  HguX \
+			  Wlz \
+			  Alg \
+			  Alc \
 			  $(OPENGLLIBS) $(MOTIFLIBS) $(X11LIBS) \
 			  $(EXTRA_LIBS)
 
