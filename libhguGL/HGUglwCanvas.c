@@ -291,7 +291,7 @@ static XtResource otherColorResources[] =
     XmNhighlightPixmap, XmCHighlightPixmap,
     XmRPrimHighlightPixmap, sizeof(Pixmap),
     HGUglw_OFFSET(primitive.highlight_pixmap),
-    XmRCallProc, (XtPointer )_XmPrimitiveHighlightPixmapDefault
+    XmRCallProc, (XtPointer )_XmHighlightColorDefault
   },
 };
 
