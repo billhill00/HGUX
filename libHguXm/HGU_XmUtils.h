@@ -131,6 +131,10 @@ extern void SetSensitiveCallback(Widget		w,
 				 XtPointer      client_data,
 				 XtPointer	call_data);
 
+extern void FSBPopupCallback(Widget		w,
+			     XtPointer     client_data,
+			     XtPointer	call_data);
+
 extern void UninstallTranslationsCallback( Widget		w,
 					  XtPointer    client_data,
 					  XtPointer	call_data);

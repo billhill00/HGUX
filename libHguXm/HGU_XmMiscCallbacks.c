@@ -21,6 +21,7 @@
 
 #include <X11/StringDefs.h>
 #include <X11/Intrinsic.h>
+#include <Xm/FileSB.h>
 
 #include <HGU_XmUtils.h>
 
@@ -130,5 +131,27 @@ XtPointer	call_data)
     XtUninstallTranslations( widget );
   else
     XtUninstallTranslations( w );
+  return;
+}
+
+void FSBPopupCallback(
+Widget		w,
+XtPointer       client_data,
+XtPointer	call_data)
+{
+  XmString	dirSpec;
+
+  /* confirm we have been given a file selection box widget */
+  if( XmIsFileSelectionBox(w) ){
+    /* get the current value so it can be reset */
+    XtVaGetValues(w, XmNdirSpec, &dirSpec, NULL);
+
+    /* update the selection */
+    XmFileSelectionDoSearch( w, NULL );
+
+    /* reset the value */
+    XtVaSetValues(w, XmNdirSpec, dirSpec, NULL);
+  }
+
   return;
 }
