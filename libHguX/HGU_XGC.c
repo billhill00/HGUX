@@ -51,7 +51,7 @@ Display	*dpy,
 GC	gc,
 int	col)
 {
-    gcvalues.plane_mask = col;
+    gcvalues.plane_mask = 0xffffff;
     gcvalues.foreground = col;
     XChangeGC(dpy, gc, (GCPlaneMask|GCForeground), &gcvalues);
 
@@ -74,7 +74,7 @@ char		*colstr)
 	return( HGU_XColourGC(dpy, gc,
 			      (int) BlackPixel(dpy, DefaultScreen(dpy))) );
 
-    gcvalues.plane_mask = 255;
+    gcvalues.plane_mask = 0xffffff;
     gcvalues.foreground = colorcell_def.pixel;
     XChangeGC(dpy, gc, (GCPlaneMask|GCForeground), &gcvalues);
 

@@ -311,7 +311,7 @@ XtPointer	data)
     XtAddCallback(graph_res->graphicsW, XmNexposeCallback, GraphUpdate,
 		  graph_res);
     XtAddCallback(graph_res->graphicsW, XmNresizeCallback, GraphUpdate,
-		  graph_res);
+      graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, X_Hair, graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, Y_Hair, graph_res);
 
@@ -370,8 +370,9 @@ XtPointer	call_data)
     if( call_data ){ /* to satisfy IRIX646 */ }
 
     /* check if realized */
-    if( XtIsRealized(graph_res->graphicsW) != True )
+    if( XtIsRealized(graph_res->graphicsW) != True ){
 	return;
+    }
     SetCrossCursor( XtDisplay(w), XtWindow(graph_res->graphicsW) );
 
     /* clear the graphics window */
@@ -471,14 +472,16 @@ XtPointer	call_data)
 	      x, 0, x, h);
 
     /* update the value widgets */
-    X = ((float) x) / (int) w * (graph_res->x_max - graph_res->x_min) +
+    if( cbs ){
+      X = ((float) x) / (int) w * (graph_res->x_max - graph_res->x_min) +
 	graph_res->x_min;
-    X =  (X < graph_res->x_min) ? graph_res->x_min : X;
-    X =  (X > graph_res->x_max) ? graph_res->x_max : X;
-    sprintf(str, graph_res->x_format, X);
-    xmstr = XmStringCreateSimple( str );
-    XtVaSetValues(graph_res->x_valW, XmNlabelString, xmstr, NULL);
-    XmStringFree( xmstr );
+      X =  (X < graph_res->x_min) ? graph_res->x_min : X;
+      X =  (X > graph_res->x_max) ? graph_res->x_max : X;
+      sprintf(str, graph_res->x_format, X);
+      xmstr = XmStringCreateSimple( str );
+      XtVaSetValues(graph_res->x_valW, XmNlabelString, xmstr, NULL);
+      XmStringFree( xmstr );
+    }
 }
 
 static void Y_Hair(
@@ -522,14 +525,16 @@ XtPointer	call_data)
 	      0, y, w, y);
 
     /* update the value widgets */
-    Y = ((float) y) / (int) h * (graph_res->y_min - graph_res->y_max) +
+    if( cbs ){
+      Y = ((float) y) / (int) h * (graph_res->y_min - graph_res->y_max) +
 	graph_res->y_max;
-    Y =  (Y < graph_res->y_min) ? graph_res->y_min : Y;
-    Y =  (Y > graph_res->y_max) ? graph_res->y_max : Y;
-    sprintf(str, graph_res->y_format, Y);
-    xmstr = XmStringCreateSimple( str );
-    XtVaSetValues(graph_res->y_valW, XmNlabelString, xmstr, NULL);
-    XmStringFree( xmstr );
+      Y =  (Y < graph_res->y_min) ? graph_res->y_min : Y;
+      Y =  (Y > graph_res->y_max) ? graph_res->y_max : Y;
+      sprintf(str, graph_res->y_format, Y);
+      xmstr = XmStringCreateSimple( str );
+      XtVaSetValues(graph_res->y_valW, XmNlabelString, xmstr, NULL);
+      XmStringFree( xmstr );
+    }
 }
 
 /* miscellaneous procedures */
@@ -674,6 +679,7 @@ float 		yu)
     xmstr = XmStringCreateSimple( str );
     XtVaSetValues(graph_res->y_maxW, XmNlabelString, xmstr, NULL);
     XmStringFree( xmstr );
+    XSync(XtDisplay(w), False);
 
     GraphUpdate(w, (XtPointer) graph_res, NULL);
     return( 0 );
