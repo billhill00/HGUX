@@ -1,0 +1,92 @@
+'\" t
+.TH HGU_XGC 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XGC, HGU_XCreateGC, HGU_XColourGC, HGU_XColourFromNameGC,
+HGU_XLwidthGC, HGU_XIntensGC \- routines to manipulate an X11 graphics context.
+.SH SYNOPSIS
+.nf
+.sp
+#include <X11/Xlib.h>
+#include <disp_utilsX.h>
+
+GC HGU_XCreateGC( dpy, win )
+Display	*dpy;
+Window	win;
+
+GC HGU_XColourGC( dpy, gc, col )
+Display	*dpy;
+GC	gc;
+int	col;
+
+GC HGU_XColourFromNameGC( dpy, cmap, gc, colstr )
+Display		*dpy;
+Colormap	cmap;
+GC		gc;
+char		*colstr;
+
+GC HGU_XLwidthGC( dpy, gc, w )
+Display	*dpy;
+GC	gc;
+int	w;
+
+GC HGU_XIntensGC( dpy, gc, intensity )
+Display	*dpy;
+GC	gc;
+int	intensity;
+
+.fi
+.SH DESCRIPTION
+.LP
+Procedures to create and modify a graphics context. These are really
+convenience routines to provide the most common varieties of graphics
+context changes namely change the colour, linewidth and "intensity"
+which allows selective clearing of display planes by redisplaying
+an image or graphical object. In future manipulation of text size, font
+etc. should be included.
+.LP
+.B HGU_XCreateGC()
+- create a graphics context of the right depth and screen as the \fBwin\fR
+argument. The context function, foreground, plane_mask and arc_mode are
+set to GXcopy, 255, 255 and ArcChord respectively.
+.LP
+.B HGU_XColourGC()
+- set the foreground value and plane mask of a graphics context to
+\fBcol\fR and \fBcol\fR respectively. This means that graphics (lines, points
+etc.) will display in the colour associated with pixel value \fBcol\fR
+and images values will be masked with \fBcol\fR before transferring to the
+screen value. The return value is the given graphics context.
+.LP
+.B HGU_XColourFromNameGC()
+- set the current colour to a named colour. \fBcolstr\fR can be the name of
+any colour from the X11 database (see Xlib programming manual chapter on
+colour) and can be as a name or in hexadecimal notation. If the colour is
+found in the existing colormap then it will be used otherwise a new colorcell
+is allocated. If the colour cannot be allocated then the colour is set
+to BlackPixel() (X11-3).
+.LP
+.B HGU_XLwidthGC()
+- set the linewidth of the graphics context to \fBw\fR in X11 coordinates.
+.LP
+.B HGU_XIntensGC()
+- set the "intensity" to \fBintens\fR. If \fBintens\fR is non-zero then the
+graphics context function is set to GXcopy otherwise to GXclear. This
+means that selected bit-planes and selected regions can be cleared by
+choosing the colour, setting the intensity to zero and then display
+and object (image, polyline etc.) This is especially useful for clearing
+graphics from a displayed image when an overlay plane has been set.
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+

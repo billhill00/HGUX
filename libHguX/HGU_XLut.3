@@ -1,0 +1,91 @@
+'\" t
+.TH HGU_XLut 3 "$Id$" "MRC HGU" "RICHARD\'S MOTIF-LIBRARY"
+.SH NAME
+HGU_XLut, HGU_XSetLut, HGU_XGtransSetLut, HGU_XGtransSetGreys,
+HGU_XGtransSetOverlay, HGU_XGtransSetDefaultLut
+\- routines to manipulate X11 window colourmaps with respect to
+the grey-transfer function of a PframeX structure.
+.SH SYNOPSIS
+These are convenience routines usually used in conjuction with the
+woolz display procedure picframeX(3) and provide a means of setting
+X11 window colourmaps compatible with the grey-level transfer function.
+.nf
+.sp
+#include <X11/Xlib.h>
+#include <disp_utilsX.h>
+
+int HGU_XSetLut( dpy, win, cols, ncols )
+Display		*dpy;
+Window		win;
+XColor		*cols;
+int		ncols;
+
+int HGU_XGtransSetLut( dpy, win, colormap, gtrans )
+Display		*dpy;
+Window		win;
+unsigned char	colormap[3][256];
+GTrans		*gtrans;
+
+int HGU_XGtransSetGreys( dpy, win, colormap, planes, gtrans )
+Display		*dpy;
+Window		win;
+unsigned char	colormap[3][256];
+unsigned long	planes;
+GTrans		*gtrans;
+
+int HGU_XGtransSetOverlay( dpy, win, plane, r, g, b, gtrans )
+Display		*dpy;
+Window		win;
+unsigned long	plane;
+int		r, g, b;
+GTrans		*gtrans;
+
+int HGU_XGtransSetDefaultLut( dpy, win, gtrans )
+Display		*dpy;
+Window		win;
+GTrans		*gtrans;
+
+.fi
+.SH DESCRIPTION
+.LP
+\fBHGU_XSetLut()\fR - set as many of the colours from the cols array
+as possible in the colormap of the given window. All allocated colorcells
+will be freed which means that other applications could change the same
+colormap entries.
+.LP
+\fBHGU_XGtransSetLut()\fR - set the window colormap to correspond to the
+given colormap and grey-level transform. The function calculates the
+colorcells that need changing and then calls \fBHGU_XSetLut\fR. Images
+displayed using \fBpicframeX()\fR will appear as if displayed using the
+given colormap even though the actual display values have been restricted
+to a smaller range. The colormap values are unsigned byte and are
+multiplied by 256 to convert to X11 values which are 16-bit. The colour
+values are transferred as implied by the grey-transfer function which will
+not in general respect overlay plane settings. If an overlay plane is
+required then use the procedures \fBHGU_XGtransSetGreys\fR and
+\fBHGU_XGtransSetOverlay\fR to set the grey-value colours and overlay plane
+respectively.
+.LP
+\fBHGU_XGtransSetGreys()\fR - set the grey-level colours from
+\fBcolormap\fR for all pixel values which do not set bits in the planes
+bitmask \fBplane\fR. The values are transferred as implied by \fBgtrans\fR.
+.LP
+\fBHGU_XGtransSetOverlay()\fR - set the colour of an overlay plane
+for values implied by the \fBgtrans\fR structure.
+.LP
+.SH FILES
+.nf
+~richard/Motif/include           include directory
+~richard/Motif/lib/              library directory
+~richard/Motif/lib/librichXm.a   library archive file
+.fi
+.SH "SEE ALSO"
+X11 & Motif documentation
+
+.SH BUGS
+
+.SH COPYRIGHT
+Copyright 1993, Medical Research Council, UK.
+.SH AUTHOR
+Richard Baldock, MRC Human Genetics Unit, Edinburgh, UK.
+
