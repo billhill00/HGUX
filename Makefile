@@ -61,7 +61,9 @@ LIBRARIES		=
 # List of all sub directories that contain makefiles. The subsystems will be
 # built in the order in which they are given here (modify as required).
 SUBSYSTEMS		= \
-			libhguGL
+			libhguGL \
+			libHguX \
+			libHguXm
 
 # Name of distribution tar file (modify as required).
 
