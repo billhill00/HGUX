@@ -61,22 +61,18 @@ Widget HGU_XmBuildPulldownMenu(
   int		i, toggle;
   Boolean	one_toggle_set=False;
   Visual	*visual;
-  Arg		arg[1];
+  Arg		arg[4];
     
   /* get the visual explicitly */
   visual = HGU_XmWidgetToVisual(menu_parent);
   XtSetArg(arg[0], XmNvisual, visual);
+  XtSetArg(arg[1], XmNtearOffModel, tear_off_model);
+  XtSetArg(arg[2], XmNradioBehavior, radio_behavior);
+  XtSetArg(arg[3], XmNradioAlwaysOne, always_one);
 
   /* create the menu */
-  menu = XmCreatePulldownMenu( menu_parent, "_pulldown", NULL, 0 );
+  menu = XmCreatePulldownMenu( menu_parent, "_pulldown", arg, 4 );
   XtVaSetValues(menu_parent, XmNsubMenuId, menu, NULL);
-
-  /* set behavior */
-  XtVaSetValues(menu,
-		XmNtearOffModel,	tear_off_model,
-		XmNradioBehavior,	radio_behavior,
-		XmNradioAlwaysOne,	always_one,
-		NULL);
 
   /* now the menu items */
   for( i=0; items[i].name != NULL; i++ ){
