@@ -31,34 +31,38 @@
 #include <HGU_XmUtils.h>
 
 typedef struct {
-    /* resources */
-    String	x_str;		/* string to display on y-axis		*/
-    String	y_str;		/* string to display on y-axis		*/
-    float	x_min;		/* minimum x value			*/
-    float	x_max;		/* maximum x value			*/
-    float	y_min;		/* minimum y value			*/
-    float	y_max;		/* maximum y value			*/
-    String	x_format;	/* value label format			*/
-    String	y_format;	/* value label format			*/
-    XtCallbackList	x_position;	/* callback on change of x	*/
-    XtCallbackList	y_position;	/* callback on change of y	*/
-    int		markers;	/* to distinguish different lines:
+  /* resources */
+  String	x_str;		/* string to display on y-axis		*/
+  String	y_str;		/* string to display on y-axis		*/
+  float	x_min;		/* minimum x value			*/
+  float	x_max;		/* maximum x value			*/
+  float	y_min;		/* minimum y value			*/
+  float	y_max;		/* maximum y value			*/
+  String	x_format;	/* value label format			*/
+  String	y_format;	/* value label format			*/
+  XtCallbackList	x_position;	/* callback on change of x	*/
+  XtCallbackList	y_position;	/* callback on change of y	*/
+  int		markers;	/* to distinguish different lines:
 					NONE|DASHES|COLOURS|MARKERS	*/
-    int		style;		/* graph style - GRAPH|HISTOGRAM	*/
-    Pixel	cols[6];       	/* line colours	*/
+  int		style;		/* graph style - GRAPH|HISTOGRAM	*/
+  Pixel	cols[6];       	/* line colours	*/
 
     /* private data */
-    Widget	x_strW;		/* widget to show x_str			*/
-    Widget	y_strW;		/* widget to show y_str			*/
-    Widget	x_valW;		/* widget to show current x value	*/
-    Widget	y_valW;		/* widget to show current y value	*/
-    Widget	x_minW;		/* widget to show min x value		*/
-    Widget	x_maxW;		/* widget to show max x value		*/
-    Widget	y_minW;		/* widget to show min y value		*/
-    Widget	y_maxW;		/* widget to show max y value		*/
-    Widget	graphicsW;	/* simple widget for the graphics	*/
-    WlzPolygonDomain **polys;	/* polyline list		*/
-    int		npolys;		/* number of polylines			*/
+  Widget	x_strW;		/* widget to show x_str			*/
+  Widget	y_strW;		/* widget to show y_str			*/
+  Widget	x_valW;		/* widget to show current x value	*/
+  Widget	y_valW;		/* widget to show current y value	*/
+  Widget	x_minW;		/* widget to show min x value		*/
+  Widget	x_maxW;		/* widget to show max x value		*/
+  Widget	y_minW;		/* widget to show min y value		*/
+  Widget	y_maxW;		/* widget to show max y value		*/
+  Widget	graphicsW;	/* simple widget for the graphics	*/
+  WlzPolygonDomain **polys;	/* polyline list		*/
+  int		npolys;		/* number of polylines			*/
+  int		x;		/* current x-hair pos */
+  float		X;		/* current x-hair pos */
+  int		y;		/* current y-hair pos */
+  float		Y;		/* current y-hair pos */
 } GraphResources;
     
 #define Offset(field) XtOffsetOf(GraphResources, field)
@@ -129,6 +133,18 @@ Widget HGU_XmCreateGraph(
 String		name,
 Widget		parent,
 XtPointer	data)
+{
+  Drawable	drawable;
+
+  drawable = RootWindowOfScreen(XtScreen(parent));
+  return HGU_XmCreateGraphD(name, parent, data, drawable);
+}
+
+Widget HGU_XmCreateGraphD(
+String		name,
+Widget		parent,
+XtPointer	data,
+Drawable	drawable)
 {
     Widget		graph, form_x, form_y, filler, frame;
     GraphResources	*graph_res;
@@ -314,18 +330,21 @@ XtPointer	data)
       graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, X_Hair, graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, Y_Hair, graph_res);
+    graph_res->x = -1;
+    graph_res->X = -1;
+    graph_res->y = -1;
+    graph_res->Y = -1;
 
     /* create the hair-line and graph graphics contexts */
+    /* use the passed window for the drawable  */
     gcvalues.function = GXinvert;
     valuemask = GCFunction;
-    hair_gc = XCreateGC(XtDisplay(graph),
-			RootWindowOfScreen(XtScreen(graph)),
+    hair_gc = XCreateGC(XtDisplay(graph), drawable,
 			valuemask, &gcvalues);
     gcvalues.function = GXcopy;
     gcvalues.foreground = graph_res->cols[0];
     valuemask = GCFunction| GCForeground;
-    line_gc = XCreateGC(XtDisplay(graph),
-			RootWindowOfScreen(XtScreen(graph)),
+    line_gc = XCreateGC(XtDisplay(graph), drawable,
 			valuemask, &gcvalues);
 
     /* initialise the polyline list */
@@ -363,7 +382,7 @@ XtPointer	client_data,
 XtPointer	call_data)
 {
     GraphResources	*graph_res = (GraphResources *) client_data;
-    int			i, j, k;
+    int			i, j, k=0;
     float		x_scale, x_offset, y_scale, y_offset;
     Dimension		width, height;
 
@@ -440,8 +459,8 @@ XtPointer	call_data)
 	*cbs = (XmDrawingAreaCallbackStruct *) call_data;
     GraphResources	*graph_res = (GraphResources *) client_data;
     Dimension		w, h;
-    static int		x;
-    static float	X=0.0;
+    int			x;
+    float		X;
     char		str[64];
     XmString		xmstr;
 
@@ -453,6 +472,8 @@ XtPointer	call_data)
 
     /* find graphics window size */
     XtVaGetValues(graph_res->graphicsW, XmNwidth, &w, XmNheight, &h, NULL);
+    x = graph_res->x;
+    X = graph_res->X;
 
     if( cbs == NULL )  
 	x = (X - graph_res->x_min) * (int) w / (graph_res->x_max - graph_res->x_min);
@@ -482,6 +503,8 @@ XtPointer	call_data)
       XtVaSetValues(graph_res->x_valW, XmNlabelString, xmstr, NULL);
       XmStringFree( xmstr );
     }
+    graph_res->x = x;
+    graph_res->X = X;
 }
 
 static void Y_Hair(
@@ -493,8 +516,8 @@ XtPointer	call_data)
 	*cbs = (XmDrawingAreaCallbackStruct *) call_data;
     GraphResources	*graph_res = (GraphResources *) client_data;
     Dimension		w, h;
-    static int		y;
-    static float	Y=0.0;
+    int			y;
+    float		Y;
     char		str[64];
     XmString		xmstr;
 
@@ -506,6 +529,8 @@ XtPointer	call_data)
 
     /* find graphics window size */
     XtVaGetValues(graph_res->graphicsW, XmNwidth, &w, XmNheight, &h, NULL);
+    y = graph_res->y;
+    Y = graph_res->Y;
 
     if( cbs == NULL )
 	y = (Y - graph_res->y_max) * (int) h / (graph_res->y_min - graph_res->y_max);
@@ -535,6 +560,8 @@ XtPointer	call_data)
       XtVaSetValues(graph_res->y_valW, XmNlabelString, xmstr, NULL);
       XmStringFree( xmstr );
     }
+    graph_res->y = y;
+    graph_res->Y = Y;
 }
 
 /* miscellaneous procedures */
@@ -685,4 +712,65 @@ float 		yu)
     return( 0 );
 }
 
+int HGU_XmGetGraphLimits(
+  Widget  	w,
+  float   	*xl, 
+  float 		*xu, 
+  float 		*yl, 
+  float 		*yu)
+{
+    GraphResources	*graph_res;
+ 
+    XtVaGetValues(w, XmNuserData, &graph_res, NULL);
+ 
+    if( graph_res == NULL ){
+      return 1;
+    }
 
+    *xl = graph_res->x_min;
+    *xu = graph_res->x_max;
+    *yl = graph_res->y_min;
+    *yu = graph_res->y_max;
+
+    return 0;
+}
+
+int HGU_XmSetHairCursor(
+  Widget  	w,
+  float		X,
+  float		Y)
+{
+    GraphResources	*graph_res;
+ 
+    XtVaGetValues(w, XmNuserData, &graph_res, NULL);
+ 
+    if( graph_res == NULL ){
+      return 1;
+    }
+
+    graph_res->X = X;
+    graph_res->Y = Y;
+    GraphUpdate(w, (XtPointer) graph_res, NULL);
+
+    return 0;
+}
+
+int HGU_XmGetHairCursor(
+  Widget  	w,
+  float		*X,
+  float		*Y)
+{
+    GraphResources	*graph_res;
+ 
+    XtVaGetValues(w, XmNuserData, &graph_res, NULL);
+ 
+    if( graph_res == NULL ){
+      return 1;
+    }
+
+    *X = graph_res->X;
+    *Y = graph_res->Y;
+    GraphUpdate(w, (XtPointer) graph_res, NULL);
+
+    return 0;
+}

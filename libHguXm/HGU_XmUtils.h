@@ -267,6 +267,11 @@ extern Widget HGU_XmCreateGraph(String		name,
 				Widget		parent,
 				XtPointer	data);
 
+extern Widget HGU_XmCreateGraphD(String		name,
+				 Widget		parent,
+				 XtPointer	data,
+				 Drawable	drawable);
+
 extern WlzPolygonDomain *HGU_XmGetGraphPolyline(Widget  w,
 						    int     n);
 
@@ -278,6 +283,20 @@ extern int HGU_XmSetGraphLimits(Widget  w,
 				float xu, 
 				float yl, 
 				float yu);
+extern int HGU_XmGetGraphLimits(
+  Widget  	w,
+  float   	*xl, 
+  float 	*xu, 
+  float 	*yl, 
+  float 	*yu);
+extern int HGU_XmSetHairCursor(
+  Widget  	w,
+  float		X,
+  float		Y);
+extern int HGU_XmGetHairCursor(
+  Widget  	w,
+  float		*X,
+  float		*Y);
 
 typedef enum {
     HGU_XmGRAPH,
