@@ -44,6 +44,7 @@ CSOURCES		= \
 			HGU_XmUserPrompt.c \
 			HGU_XmHelpMenu.c \
 			HGU_XmMacroMenu.c \
+			HGU_XmToolTips.c \
 			HGU_XmVarArgs.c
 
 # List of all header files that are available outside of either this archive

@@ -646,6 +646,19 @@ extern Widget HGU_XmCreateGreyMappingDialog(
   Widget			parent,
   HGU_XmImageViewDataStruct	*data);
 
+/* tool tip functions */
+extern Widget HGU_XmGetTopShell(
+  Widget 	w);
+extern void HGU_XmToolTipSetDelays(
+  int	delay,
+  int	longDelay);
+extern void HGU_XmToolTipSetTextBreak(
+  int	textBreak);
+extern void HGU_XmAddToolTip(
+  Widget	topl,
+  Widget	w,
+  String	helpStr);
+
 #ifdef  __cplusplus
 }
 #endif
