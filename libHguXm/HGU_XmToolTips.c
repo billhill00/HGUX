@@ -29,7 +29,7 @@
 
 /* default delays in milli-secs before tip popup and removal*/
 #define HGU_XmTOOLTIP_DELAY 500
-#define HGU_XmTOOLTIP_LONG_DELAY 3000
+#define HGU_XmTOOLTIP_LONG_DELAY 10000
 
 /* default num characters before first break */
 #define HGU_XmTOOTIP_TEXT_BREAK 20

@@ -524,14 +524,15 @@ XtPointer	call_data)
 *		       	ans2		CANCEL button text		*
 *			default_ans	!=0 then ans1 default else ans1	*
 ************************************************************************/
-String HGU_XmUserGetFilename(
-Widget	w,
-String	question,
-String	ans1,
-String	ans2,
-String	default_ans,
-String	dir_str,
-String	pattern_str)
+String HGU_XmUserGetFilenameT(
+  Widget	w,
+  String	question,
+  String	ans1,
+  String	ans2,
+  String	default_ans,
+  String	dir_str,
+  String	pattern_str,
+  String	title_str)
 {
     XtAppContext	app_con = XtWidgetToApplicationContext( w );
     Widget		dialog, button, filename_dialog;
@@ -558,7 +559,8 @@ String	pattern_str)
     filename_dialog = XmCreateFileSelectionDialog(dialog,
 						  "GetFilename_dialog",
 						  arg, 1);
-    XtSetSensitive(XmSelectionBoxGetChild(filename_dialog, XmDIALOG_HELP_BUTTON),
+    XtSetSensitive(XmSelectionBoxGetChild(filename_dialog,
+					  XmDIALOG_HELP_BUTTON),
 		   False);
     XtAddCallback(filename_dialog, XmNcancelCallback, podownGetFilenameCb,
 		  (XtPointer) filename_dialog);
@@ -579,7 +581,12 @@ String	pattern_str)
     yes = XmStringCreateSimple( ans1 );
     no = XmStringCreateSimple( ans2 );
     browse = XmStringCreateSimple( "Browse" );
-    title = XmStringCreateSimple( "Get Filename Dialog" );
+    if( title_str ){
+      title = XmStringCreateSimple(title_str);
+    }
+    else {
+      title = XmStringCreateSimple( "Get Filename Dialog" );
+    }
 
     XtVaSetValues(dialog,
 		  XmNselectionLabelString,	text1,
@@ -599,7 +606,12 @@ String	pattern_str)
     XmStringFree( title );
 
     /* set parameters of the file selection box */
-    title = XmStringCreateSimple( "Select Filename Dialog" );
+    if( title_str ){
+      title = XmStringCreateSimple(title_str);
+    }
+    else {
+      title = XmStringCreateSimple( "Select Filename Dialog" );
+    }
     XtVaSetValues(filename_dialog,
 		  XmNdialogTitle,		title,
 		  NULL);
@@ -663,6 +675,19 @@ String	pattern_str)
     XtDestroyWidget( dialog );
 
     return( return_string );
+}
+
+String HGU_XmUserGetFilename(
+Widget	w,
+String	question,
+String	ans1,
+String	ans2,
+String	default_ans,
+String	dir_str,
+String	pattern_str)
+{
+  return HGU_XmUserGetFilenameT(w, question, ans1, ans2, default_ans,
+				dir_str, pattern_str, NULL);
 }
 
 String notice_getstr(

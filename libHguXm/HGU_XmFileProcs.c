@@ -49,7 +49,7 @@ XmString	dirstr)
     }
 
     /* create full path */
-    if( *file != '/' ){
+    if( *file != '/' && dirstr ){
 	String dir, newfile;
 	if( XmStringGetLtoR( dirstr, XmSTRING_DEFAULT_CHARSET, &dir ) ){
 	    if( (newfile = XtMalloc( (unsigned int)
