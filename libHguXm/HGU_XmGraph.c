@@ -123,6 +123,7 @@ static void	GraphUpdate(Widget	widget,
 			    XtPointer	client_data,
 			    XtPointer	call_data);
 
+static int	get_event_incr(XEvent *event);
 static int	get_event_x(XEvent *event);
 static int	get_event_y(XEvent *event);
 
@@ -507,7 +508,12 @@ XtPointer	call_data)
 		  x, 0, x, h);
 
 	/* find position */
-	x = get_event_x( cbs->event );
+	if((cbs->event->type == KeyPress)||(cbs->event->type == KeyRelease)){
+	  x += get_event_incr( cbs->event );
+	}
+	else {
+	  x = get_event_x( cbs->event );
+	}
     }
 
     /* draw the new line */
@@ -593,6 +599,46 @@ XtPointer	call_data)
 }
 
 /* miscellaneous procedures */
+static int get_event_incr(XEvent *event)
+{
+  int 	incr = 0;
+
+  if( event ){
+    switch( event->type ){
+    case KeyPress:
+      switch(  XLookupKeysym(&(event->xkey), 0) ){
+
+      case XK_Right:
+      case XK_KP_Right:
+      case XK_f:
+      case XK_Up:
+      case XK_KP_Up:
+      case XK_p:
+	incr = 1;
+	break;
+
+      case XK_Left:
+      case XK_KP_Left:
+      case XK_b:
+      case XK_Down:
+      case XK_KP_Down:
+      case XK_n:
+	incr = -1;
+	break;
+
+      default:
+	incr = 0;
+	break;
+      }
+      break;
+	  
+    default:
+      incr = 0;
+    }
+  }
+
+  return incr;
+}
 static int get_event_x(XEvent *event)
 {
         switch( event->type ){
