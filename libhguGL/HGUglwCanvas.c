@@ -255,6 +255,11 @@ static XtResource initializeResources[] =
 /* reallocate colors needed in new cmap, background only obtained if
  * the allocateBackground resource is TRUE
  */
+#ifdef LINUX2
+#define _XmBackgroundColorDefault 0
+#define _XmForegroundColorDefault 1
+#define _XmHighlightColorDefault 2
+#endif
 static XtResource backgroundResources[] =
 {
   {
