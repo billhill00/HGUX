@@ -278,6 +278,10 @@ WlzPolygonDomain *HGU_XGetPolyDomain(
       break;
 	    
     default:
+      cb_struct.vtxs  = vtxs;
+      cb_struct.nvtxs = nvtxs;
+      finished = HGU_XInteractWindowEvent(dpy, win, mode, callbacks,
+					  (caddr_t) &cb_struct);
       break;
     }
   }
