@@ -24,10 +24,12 @@
 #include <stdio.h>
 
 #include <X11/Intrinsic.h>
+#include <X11/keysym.h>
 #include <Xm/BulletinB.h>
 
 #include <HGU_XmStrings.h>
 #include <Wlz.h>
+#include <WlzExtFF.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -465,6 +467,167 @@ extern int HGU_XmGetSetIntValue(
 extern int HGU_XmSetSetIntValue(
   Widget	w,
   int		val);
+
+/* HGU_XmImageView.c & HGU_XmImageGreyTransform.c */
+typedef struct _HGU_XmImageViewDataStruct{
+  Widget		imageForm;
+  Widget		canvas;
+  Widget		fileSelector;
+  Widget		greyMapping;
+  Widget		typeMenu;
+  Widget		histogram;
+  Widget		graph;
+  String		file;
+  WlzEffFormat		type;
+  int			width;
+  int			height;
+  int			depth;
+  int			byteOrder;
+  WlzObject		*obj;
+  XImage		*ximage;
+  GC			gc;
+  float			magVal;
+  WlzObject		*objHistogram;
+  int			srcMin;
+  int			srcMax;
+  WlzGreyTransformType	transType;
+  int			min;
+  int			max;
+  int			Min;
+  int			Max;
+  double		gamma;
+  double		mean;
+  double		sigma;
+  int			invert;
+  unsigned char		*lut;
+} HGU_XmImageViewDataStruct;
+
+extern Widget HGU_XmCreateGreyMappingDialog(
+  String			name,
+  Widget			parent,
+  HGU_XmImageViewDataStruct	*data);
+extern XImage *HGU_XmObjToXImageLut(
+  Widget	w,
+  WlzObject	*obj,
+  UBYTE		*lut,
+  int		srcMin,
+  int		srcMax);
+extern void HGU_XmMapDialogCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewResetGreyRange(
+  HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewSetLutTransform(
+  HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewCanvasExposeCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewInstallImage(
+  WlzObject			*obj,
+  HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewReadImageCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewMagPlusCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewMagMinusCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern Widget HGU_XmCreateImageView(
+  String	name,
+  Widget	parent,
+  int		mappingDialogFlg);
+extern void HGU_XmImageViewSetLutControls(
+  HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewResetLutControlValues(
+  HGU_XmImageViewDataStruct	*data);
+extern void HGU_XmImageViewSetHistogramDisplayCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewSetTransformDisplay(
+  HGU_XmImageViewDataStruct *data);
+extern void HGU_XmImageViewSetTransformDisplayCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewHistMagPlusCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewHistMagMinusCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewHistMagResetCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewInvertTransCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewTransformTypeLinearCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewTransformTypeGammaCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewTransformTypeSigmoidCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewGammaSetCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewMeanSetCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewSigmaSetCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewSrcSliderMinCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewSrcSliderMaxCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewDstSliderMinCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewDstSliderMaxCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewResetImageControlsCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmImageViewRemapImageCb(
+  Widget	w,
+  XtPointer	client_data,
+  XtPointer	call_data);
+extern void HGU_XmCreateGreyMappingControls(
+  Widget			control,
+  HGU_XmImageViewDataStruct	*data);
+extern Widget HGU_XmCreateGreyMappingDialog(
+  String			name,
+  Widget			parent,
+  HGU_XmImageViewDataStruct	*data);
 
 #ifdef  __cplusplus
 }

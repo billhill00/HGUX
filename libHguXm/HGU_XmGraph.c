@@ -126,8 +126,28 @@ static void	GraphUpdate(Widget	widget,
 static int	get_event_x(XEvent *event);
 static int	get_event_y(XEvent *event);
 
-static GC	hair_gc,
-		line_gc;
+static GC	hair_gc=(GC) 0,
+		line_gc=(GC) 0;
+
+static void HGU_XmCreateGraphGCs(
+  Display	*dpy,
+  Drawable	drawable)
+{
+  XGCValues       	gcvalues;
+  unsigned int    	valuemask;
+
+  /* create the hair-line and graph graphics contexts */
+  /* use the passed window for the drawable  */
+  gcvalues.function = GXinvert;
+  valuemask = GCFunction;
+  hair_gc = XCreateGC(dpy, drawable,
+		      valuemask, &gcvalues);
+  gcvalues.function = GXcopy;
+  line_gc = XCreateGC(dpy, drawable,
+		      valuemask, &gcvalues);
+
+  return;
+}
 
 Widget HGU_XmCreateGraph(
 String		name,
@@ -330,22 +350,16 @@ Drawable	drawable)
       graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, X_Hair, graph_res);
     XtAddCallback(graph_res->graphicsW, XmNinputCallback, Y_Hair, graph_res);
-    graph_res->x = -1;
-    graph_res->X = -1;
-    graph_res->y = -1;
-    graph_res->Y = -1;
+    graph_res->x = 0;
+    graph_res->X = graph_res->x_min;
+    graph_res->y = 0;
+    graph_res->Y = graph_res->y_min;
 
     /* create the hair-line and graph graphics contexts */
     /* use the passed window for the drawable  */
-    gcvalues.function = GXinvert;
-    valuemask = GCFunction;
-    hair_gc = XCreateGC(XtDisplay(graph), drawable,
-			valuemask, &gcvalues);
-    gcvalues.function = GXcopy;
-    gcvalues.foreground = graph_res->cols[0];
-    valuemask = GCFunction| GCForeground;
-    line_gc = XCreateGC(XtDisplay(graph), drawable,
-			valuemask, &gcvalues);
+    if( drawable && (hair_gc == (GC) 0) ){
+      HGU_XmCreateGraphGCs(XtDisplay(graph), drawable);
+    }
 
     /* initialise the polyline list */
     graph_res->polys  = NULL;
@@ -393,6 +407,10 @@ XtPointer	call_data)
 	return;
     }
     SetCrossCursor( XtDisplay(w), XtWindow(graph_res->graphicsW) );
+    if( hair_gc == (GC) 0 ){
+      HGU_XmCreateGraphGCs(XtDisplay(graph_res->graphicsW),
+			   XtWindow(graph_res->graphicsW));
+    }
 
     /* clear the graphics window */
     XClearWindow( XtDisplay(w), XtWindow(graph_res->graphicsW) );
@@ -470,6 +488,11 @@ XtPointer	call_data)
     if( XtIsRealized(graph_res->graphicsW) != True )
 	return;
 
+    if( hair_gc == (GC) 0 ){
+      HGU_XmCreateGraphGCs(XtDisplay(graph_res->graphicsW),
+			   XtWindow(graph_res->graphicsW));
+    }
+
     /* find graphics window size */
     XtVaGetValues(graph_res->graphicsW, XmNwidth, &w, XmNheight, &h, NULL);
     x = graph_res->x;
@@ -526,6 +549,11 @@ XtPointer	call_data)
     /* check if realized */
     if( XtIsRealized(graph_res->graphicsW) != True )
 	return;
+
+    if( hair_gc == (GC) 0 ){
+      HGU_XmCreateGraphGCs(XtDisplay(graph_res->graphicsW),
+			   XtWindow(graph_res->graphicsW));
+    }
 
     /* find graphics window size */
     XtVaGetValues(graph_res->graphicsW, XmNwidth, &w, XmNheight, &h, NULL);
