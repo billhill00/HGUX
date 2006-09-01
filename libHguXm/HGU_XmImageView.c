@@ -91,18 +91,18 @@ XImage *HGU_XmObjToXImageLut2D(
 {
   XImage		*rtnImage=NULL;
   Dimension		width, height;
-  UBYTE			*data, *dst_data;
+  WlzUByte			*data, *dst_data;
   WlzGreyValueWSpace	*gVWSp = NULL;
   WlzErrorNum		errNum=WLZ_ERR_NONE;
   int			i, j;
   int			rIndx, gIndx, bIndx, aIndx;
-  UINT			r, g, b, a;
+  WlzUInt		r, g, b, a;
 
   /* allocate space for the data */
   width = obj->domain.i->lastkl - obj->domain.i->kol1 + 1;
   height = obj->domain.i->lastln - obj->domain.i->line1 + 1;
   if( gVWSp = WlzGreyValueMakeWSp(obj, &errNum) ){
-    if( data = (UBYTE *) AlcMalloc(((win_att->depth == 8)?1:4)
+    if( data = (WlzUByte *) AlcMalloc(((win_att->depth == 8)?1:4)
 				   *width*height*sizeof(char)) ){
       dst_data = data;
       if( rtnImage = XCreateImage(DisplayOfScreen(win_att->screen),
@@ -210,7 +210,7 @@ XImage *HGU_XmObjToXImageLut2D(
 }
 
 /* misc routines */
-/* assumption here that on mapping to an XImage then UBYTE values are
+/* assumption here that on mapping to an XImage then WlzUByte values are
    sufficient. Should really define a LUT object which could be of many
    types including a function.
 
@@ -376,7 +376,7 @@ void HGU_XmImageViewSetLutTransform(
   if( data->lut.g->lut ){
     AlcFree(data->lut.g->lut);
   }
-  data->lut.g->lut = (UBYTE *) AlcMalloc(sizeof(char)*
+  data->lut.g->lut = (WlzUByte *) AlcMalloc(sizeof(char)*
 				(data->srcMax - data->srcMin + 1));
 
   /* set new lut */

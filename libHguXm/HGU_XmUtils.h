@@ -496,7 +496,7 @@ typedef struct _HGU_XmLutGrey {
   void		*freePtr;
   int		min;
   int		max;
-  UBYTE		*lut;
+  WlzUByte	*lut;
 } HGU_XmLutGrey;
 
 typedef struct _HGU_XmLutRGB {
@@ -504,7 +504,7 @@ typedef struct _HGU_XmLutRGB {
   void		*freePtr;
   int		min[3];
   int		max[3];
-  UBYTE		*lut[3];
+  WlzUByte	*lut[3];
 } HGU_XmLutRGB;
 
 typedef struct _HGU_XmLutCompound {

@@ -639,7 +639,7 @@ void HGU_XmImageViewRemapImageCb(
   lut.p.ubp = data->lut.g->lut;
   errNum = WlzGreySetRangeLut(data->obj, min, max, lut);
 
-  /* convert to a UBYTE image and install */
+  /* convert to a WlzUByte image and install */
   obj = WlzAssignObject(WlzConvertPix(data->obj, WLZ_GREY_UBYTE, &errNum),
 			NULL);
   HGU_XmImageViewInstallImage(obj, data);

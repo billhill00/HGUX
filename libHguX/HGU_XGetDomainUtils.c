@@ -277,7 +277,7 @@ WlzObject *HGU_XCheckConstraints(
   int		kmin, kmax, lmin, lmax, width;
   int		Kmin, Kmax, Lmin, Lmax;
   int		line, kol, i, j;
-  UBYTE		*vals;
+  WlzUByte		*vals;
   WlzPixelV	bckgrnd;
 
   /* check the object */
@@ -304,9 +304,9 @@ WlzObject *HGU_XCheckConstraints(
   kmin = obj->domain.i->kol1 - constraint->sx;
   kmax = obj->domain.i->lastkl + constraint->sx;
   width = kmax - kmin + 1;
-  vals = (UBYTE *) AlcCalloc((lmax - lmin + 1) * width, sizeof(char));
+  vals = (WlzUByte *) AlcCalloc((lmax - lmin + 1) * width, sizeof(char));
   bckgrnd.type = WLZ_GREY_UBYTE;
-  bckgrnd.v.ubv = (UBYTE) 0;
+  bckgrnd.v.ubv = (WlzUByte) 0;
   obj1 = WlzMakeRect(lmin, lmax, kmin, kmax, WLZ_GREY_UBYTE,
 		     (int *) vals, bckgrnd, NULL, NULL, NULL);
 
@@ -334,7 +334,7 @@ WlzObject *HGU_XCheckConstraints(
   }
 	
   /* threshold object */
-  bckgrnd.v.ubv = (UBYTE) 5;
+  bckgrnd.v.ubv = (WlzUByte) 5;
   obj2 = WlzThreshold( obj1, bckgrnd, WLZ_THRESH_HIGH, NULL );
   WlzFreeObj( obj1 );
   AlcFree( (void *) vals );
