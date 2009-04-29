@@ -1,22 +1,48 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id$"
+#ident "MRC HGU $Id:"
 #else
 #if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id$"
-#else
-static char  _HGU_XVisualMatch_c[] = "MRC HGU $Id$"
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XVisualMa_ch_c[] = "MRC HGU $Id:";
 #endif
 #endif
-
-/************************************************************************
-* Project:	libhguX - MRC HGU X11 Utilities				*
-* Title:	HGU_XVisualMatch.c					*
-* Date:		February 1995						*
-* Author:	Bill Hill (bill@hgu.mrc.ac.uk)				*
-* $Revision$
-* Purpose:	Provides a function for finding visuals.		*
-* Maintenance:	Log changes below, with most recent at top of list.	*
-************************************************************************/
+/*!
+* \file         HGU_XVisualMatch.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 08:15:27 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_X
+* \brief        Provides a function for finding visuals.
+*               
+* \todo         -
+* \bug          None known
+*
+* Maintenance log with most recent changes at top of list.
+*/
 #include <stdio.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

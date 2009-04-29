@@ -1,21 +1,49 @@
-#pragma ident "MRC HGU $Id$"
-/*****************************************************************************
-* Copyright   :    1994 Medical Research Council, UK.                        *
-*                  All rights reserved.                                      *
-******************************************************************************
-* Address     :    MRC Human Genetics Unit,                                  *
-*                  Western General Hospital,                                 *
-*                  Edinburgh, EH4 2XU, UK.                                   *
-******************************************************************************
-* Project     :    libhguX - MRC HGU X11 Utilities			     *
-* File        :    HGU_XGetDomain.c					     *
-* $Revision$
-******************************************************************************
-* Author Name :    Richard Baldock					     *
-* Author Login:    richard@hgu.mrc.ac.uk				     *
-* Date        :    Mon Sep 19 19:36:15 1994				     *
-* Synopsis    :    X interaction routine to modify / define a woolz domain   *
-*****************************************************************************/
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XGetDomain_c[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGU_XGetDomain.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 08:23:41 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_X
+* \brief        X interaction routine to modify / define a woolz domain
+*               
+* \todo         -
+* \bug          None known
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -87,6 +115,11 @@ static WlzFVertex2 first_vertex(
   case WLZ_POLYGON_DOUBLE:
     vtx.vtX = ((WlzDVertex2 *) pdmn->vtx)->vtX;
     vtx.vtY = ((WlzDVertex2 *) pdmn->vtx)->vtY;
+    break;
+
+  default:
+    vtx.vtX = 0;
+    vtx.vtY = 0;
     break;
 
   }
@@ -286,7 +319,7 @@ WlzObject *HGU_XGetDomain(
   WlzObject			*obj, *obj1, *blobj, *obj_incr;
   WlzDomain			old_pdmn, new_pdmn;
   WlzValues			values;
-  WlzFVertex2			start_vtx;
+  WlzFVertex2			start_vtx, *fVtxPtr;
   XWindowAttributes		win_att;
   HGU_XGetDomainCallbackStruct	cb_struct;
   HGU_XInteractCallbacks		getpoly_cbcks;
@@ -498,8 +531,9 @@ WlzObject *HGU_XGetDomain(
 	/* create a start polyline */
 	start_vtx.vtX = x;
 	start_vtx.vtY = y;
+	fVtxPtr = &start_vtx;
 	old_pdmn.poly = WlzMakePolygonDomain(WLZ_POLYGON_FLOAT, 1,
-					     (WlzIVertex2 *) &start_vtx,
+					     (WlzIVertex2 *) fVtxPtr,
 					     1, 1, NULL);
 
 	/* edit or get new polyline */
@@ -533,11 +567,10 @@ WlzObject *HGU_XGetDomain(
 
 	/* increment domain */
 	if( obj != NULL ){
-	  int		a;
 	  obj1 = WlzIntersect2( obj, obj_incr, NULL );
-	  if( obj1 == NULL || (a = WlzArea(obj1, NULL)) == 0 )
+	  if( (obj1 == NULL) || (WlzArea(obj1, NULL) == 0) )
 	    add_blob = 1;
-	  if( a == WlzArea(obj_incr, NULL) )
+	  if( WlzArea(obj_incr, NULL) )
 	    add_blob = 0;
 	  if( obj1 != NULL )
 	    WlzFreeObj( obj1 );

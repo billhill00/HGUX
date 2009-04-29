@@ -1,22 +1,49 @@
-#pragma ident "MRC HGU $Id$"
-/*****************************************************************************
-* Copyright   :    1994 Medical Research Council, UK.                        *
-*                  All rights reserved.                                      *
-******************************************************************************
-* Address     :    MRC Human Genetics Unit,                                  *
-*                  Western General Hospital,                                 *
-*                  Edinburgh, EH4 2XU, UK.                                   *
-******************************************************************************
-* Project     :    libhguX - MRC HGU X11 Utilities			     *
-* File        :    HGU_XGetThresholdDomain.c				     *
-* $Revision$
-******************************************************************************
-* Author Name :    Richard Baldock					     *
-* Author Login:    richard@hgu.mrc.ac.uk				     *
-* Date        :    Mon Nov 21 10:26:09 1994				     *
-* Synopsis    :    Use thresholding of the reference object modify the	     * 
-*		   given start domain.					     *
-*****************************************************************************/
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XGetThresholdDomain_c[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGU_XGetThresholdDomain.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 08:21:42 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_X
+* \brief        Use thresholding of the reference object modify the
+*               given start domain.
+* \todo         -
+* \bug          None known
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +66,6 @@ static WlzObject *get_thresh_obj(
     int		thresh_down)
 {
     WlzObject	*obj1, *obj2, **obj_list;
-    WlzGreyP	greyp;
     WlzPixelV	threshV;
     WlzGreyType	gtype;
     WlzGreyValueWSpace	*gVWSp = NULL;
@@ -52,6 +78,7 @@ static WlzObject *get_thresh_obj(
     WlzGreyValueGet(gVWSp, 0, (double) y, (double) x);
     switch(gtype)
     {
+    default:
     case WLZ_GREY_INT: 
       threshV.v.inv = (int) ((*(gVWSp->gVal)).inv);
       break;
@@ -147,7 +174,6 @@ WlzObject		*ref_obj)
     UndoObjectList		undo_list;
     WlzObject			*obj, *obj1=NULL, *obj2=NULL, *thresh_obj=NULL;
     WlzObject			*new_ref_obj;
-    WlzGreyP			greyp;
     int				finished=0;
     int				x, y;
     static int			x1=0, y1=0;
@@ -305,9 +331,9 @@ WlzObject		*ref_obj)
 		}
 
 		/* get the current grey-value and threshold domain */
-		if( thresh_obj = get_thresh_obj(new_ref_obj, x, y,
-						style->thresh_width,
-						style->thresh_width) ){
+		if( (thresh_obj = get_thresh_obj(new_ref_obj, x, y,
+						 style->thresh_width,
+						 style->thresh_width)) ){
 		    if( event.xbutton.state&Mod1Mask ){
 			HGU_XUndispDomain(dpy, win, pixmap, gc_copy,
 					  thresh_obj);
@@ -459,13 +485,13 @@ WlzObject		*ref_obj)
 
 		/* update the display - don't delete previous to avoid
 		   flashing */
-		if( obj1 = get_thresh_obj(new_ref_obj, x1, y1, t, t) ){
+		if( (obj1 = get_thresh_obj(new_ref_obj, x1, y1, t, t)) ){
 		    WlzObject	*obj3;
 
 		    if( (t < thresh) && 
 		       (obj2 = WlzDiffDomain(thresh_obj, obj1, NULL)) ){
 			if( !add_domain ){
-			    if( obj3 = WlzIntersect2(obj2, obj, NULL) ){
+			  if( (obj3 = WlzIntersect2(obj2, obj, NULL)) ){
 				HGU_XDispDomain(dpy, win, gc, obj3);
 				WlzFreeObj( obj3 );
 			    }
@@ -500,6 +526,7 @@ WlzObject		*ref_obj)
 		switch( WlzGreyTableTypeToGreyType(
 		  ref_obj->values.core->type, NULL) )
 		{
+		default:
 		case WLZ_GREY_INT: 
 		  (void) sprintf(&g_str[0], " %d ",
 				 (int) ((*(gVWSp->gVal)).inv));
