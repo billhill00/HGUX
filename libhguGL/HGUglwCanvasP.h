@@ -1,23 +1,52 @@
 #ifndef HGUGL_GLWCANVASP_H
 #define HGUGL_GLWCANVASP_H
-#pragma ident "MRC HGU $Id"
-/************************************************************************
-* Project:	Mouse Atlas
-* Title:	HGUglwCanvasP.h
-* Date: 	April 1999
-* Author:	Bill Hill
-* Copyright:	1999 Medical Research Council, UK.
-*		All rights reserved.
-* Address:	MRC Human Genetics Unit,
-*		Western General Hospital,
-*		Edinburgh, EH4 2XU, UK.
-* Purpose:	Private include file for the HGUglCanvas MRC HGU OpenGL
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGUgl_canvasP.h[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGUglwCanvasP.h
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 11:08:55 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_GL
+* \brief        Private include file for the HGUglCanvas MRC HGU OpenGL
 *		widget. The HGUglCanvas widget is descended from the
 *		Motif primitive widget. See the manual page
 *		HGUglCanvas(3) for a description of the widget.
-* $Revision$
-* Maintenance:	Log changes below, with most recent at top of list.
-************************************************************************/
+*               
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <HGUglwCanvas.h>
 
 #ifdef __cplusplus

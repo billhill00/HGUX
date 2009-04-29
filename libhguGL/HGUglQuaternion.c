@@ -1,15 +1,42 @@
-#pragma ident "MRC HGU $Id"
-/************************************************************************
-* Project:	Mouse Atlas
-* Title:	HGUglQuaternion.c
-* Date: 	April 1999
-* Author:	Bill Hill
-* Copyright:	1999 Medical Research Council, UK.
-*		All rights reserved.
-* Address:	MRC Human Genetics Unit,
-*		Western General Hospital,
-*		Edinburgh, EH4 2XU, UK.
-* Purpose:	Data structures, macros and function prototypes for
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGUglQuaternion_c[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGUglQuaternion.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 11:15:40 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_GL
+* \brief        Data structures, macros and function prototypes for
 *		manipulating quaternions in the MRC HGU OpenGL
 *		library. Quaternions are used to encode rotations
 *		about an axis in the HGUglwCanvasTb widget. In
@@ -20,9 +47,11 @@
 *		    Curves, SIGRAPH (1985) 19 245-254.
 *		  * Birkhoff G, MacLane S. A survey of Modern
 *		    Algebra, Macmillan (1966).
-* $Revision$
-* Maintenance:	Log changes below, with most recent at top of list.
-************************************************************************/
+*               
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <math.h>
 #include <float.h>
 #include <Wlz.h>
@@ -67,7 +96,6 @@ HGUglQuaternion	HGUglQuatProduct(HGUglQuaternion given1,
 ************************************************************************/
 void		HGUglQuatToMatrixGL(double matrix[4][4], HGUglQuaternion quat)
 {
-  WlzDVertex3	tVtx2;
   double	t2X,
 		t2Y,
 		t2Z,
