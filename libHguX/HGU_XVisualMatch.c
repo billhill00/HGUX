@@ -1,5 +1,13 @@
+#if defined(__GNUC__)
+#ident "MRC HGU $Id$"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 #pragma ident "MRC HGU $Id$"
-#define _HGU_XVisualMatch_c
+#else
+static char  _HGU_XVisualMatch_c[] = "MRC HGU $Id$"
+#endif
+#endif
+
 /************************************************************************
 * Project:	libhguX - MRC HGU X11 Utilities				*
 * Title:	HGU_XVisualMatch.c					*
