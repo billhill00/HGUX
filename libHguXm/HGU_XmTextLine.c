@@ -1,20 +1,42 @@
-#pragma ident "MRC HGU $Id$"
-/*****************************************************************************
-* Copyright   :    1994 Medical Research Council, UK.                        *
-*                  All rights reserved.                                      *
-******************************************************************************
-* Address     :    MRC Human Genetics Unit,                                  *
-*                  Western General Hospital,                                 *
-*                  Edinburgh, EH4 2XU, UK.                                   *
-******************************************************************************
-* Project     :    libhguXm: Motif Library				     *
-* File        :    HGU_XmTextLine.c					     *
-* $Revision$
-******************************************************************************
-* Author Name :     Richard Baldock					     *
-* Author Login:    richard@hgu.mrc.ac.uk				     *
-* Date        :    Thu Aug 25 10:00:31 1994				     *
-* Synopsis:	Implement a text entry user interface element. This is	     *
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmTextLine_c[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGU_XmTextLine.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 09:13:52 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_Xm
+* \brief        Implement a text entry user interface element. This is	     *
 *		not a widget implementation but a few convenience	     *
 *		routines to return a composite widget (Form) with Label	     *
 *		and Text widget children set up to allow text entry.	     *
@@ -30,7 +52,13 @@
 *									     *
 *		See the Motif manual for more details on the Text	     *
 *		widget.							     *
-*****************************************************************************/
+*               
+* \todo         -
+* \bug          None known
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <stdio.h>
 
 #include <Xm/Form.h>

@@ -1,18 +1,40 @@
-#pragma ident "MRC HGU $Id$"
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmImageView_c[] = "MRC HGU $Id:";
+#endif
+#endif
 /*!
 * \file         HGU_XmImageView.c
 * \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Mon Feb 25 14:25:22 2002
+* \date         Wed Apr 29 09:18:20 2009
 * \version      MRC HGU $Id$
 *               $Revision$
 *               $Name$
-* \par Copyright:
-*               1994-2001 Medical Research Council, UK.
-*               All rights reserved.
 * \par Address:
 *               MRC Human Genetics Unit,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
 * \brief        Procedures to create a widget for image viewing
  including grey-level re-mapping.
@@ -50,7 +72,7 @@ static MenuItem file_type_menu_itemsP[] = {   /* file_menu items */
    NULL, (XtPointer) WLZEFF_FORMAT_RAW,
    HGU_XmHelpStandardCb, NULL,
    XmTEAR_OFF_DISABLED, False, False, NULL},
-  NULL,
+  {NULL},
 };
 
 int HGU_XmGetColorIndexFromMask24(
@@ -95,20 +117,20 @@ XImage *HGU_XmObjToXImageLut2D(
   WlzGreyValueWSpace	*gVWSp = NULL;
   WlzErrorNum		errNum=WLZ_ERR_NONE;
   int			i, j;
-  int			rIndx, gIndx, bIndx, aIndx;
+  int			rIndx=0, gIndx=0, bIndx=0, aIndx=0;
   WlzUInt		r, g, b, a;
 
   /* allocate space for the data */
   width = obj->domain.i->lastkl - obj->domain.i->kol1 + 1;
   height = obj->domain.i->lastln - obj->domain.i->line1 + 1;
-  if( gVWSp = WlzGreyValueMakeWSp(obj, &errNum) ){
-    if( data = (WlzUByte *) AlcMalloc(((win_att->depth == 8)?1:4)
-				   *width*height*sizeof(char)) ){
+  if( (gVWSp = WlzGreyValueMakeWSp(obj, &errNum)) ){
+    if( (data = (WlzUByte *) AlcMalloc(((win_att->depth == 8)?1:4)
+				       *width*height*sizeof(char))) ){
       dst_data = data;
-      if( rtnImage = XCreateImage(DisplayOfScreen(win_att->screen),
-				  win_att->visual, win_att->depth,
-				  ZPixmap, 0, (char *) dst_data,
-				  width, height, 8, 0) ){
+      if( (rtnImage = XCreateImage(DisplayOfScreen(win_att->screen),
+				   win_att->visual, win_att->depth,
+				   ZPixmap, 0, (char *) dst_data,
+				   width, height, 8, 0)) ){
 
 	/* establish rgb index values if 24 bit */
 	if( win_att->depth == 24 ){
@@ -155,8 +177,8 @@ XImage *HGU_XmObjToXImageLut2D(
 	    case WLZ_GREY_RGBA:
 	      b = *(gVWSp->gPtr[0].rgbp);
 	      r = WLZ_RGBA_RED_GET(b);
-	      r = WLZ_RGBA_GREEN_GET(b);
-	      r = WLZ_RGBA_BLUE_GET(b);
+	      g = WLZ_RGBA_GREEN_GET(b);
+	      b = WLZ_RGBA_BLUE_GET(b);
 	      break;
 	    }
 
@@ -459,8 +481,6 @@ static void HGU_XmImageViewCanvasInputCb(
   XtPointer	client_data,
   XtPointer	call_data)
 {
-  HGU_XmImageViewDataStruct
-    *data=(HGU_XmImageViewDataStruct *) client_data;
   XmAnyCallbackStruct	*cbs = (XmAnyCallbackStruct *) call_data;
   int			x, y;
 
@@ -565,7 +585,7 @@ void HGU_XmImageViewCanvasExposeCb(
     *cbs=(XmDrawingAreaCallbackStruct *) call_data;
   int	xExp, yExp, wExp, hExp;
   int	xImg, yImg, wImg, hImg;
-  Dimension	width, height, rW, rH;
+  Dimension	width, height;
   XWindowAttributes	win_att;
   WlzErrorNum	errNum=WLZ_ERR_NONE;
 
@@ -717,7 +737,7 @@ void HGU_XmImageViewCanvasExposeCb(
     /* create a temporary ximage  - assume 24 bit */
     unsigned int	*data, *orig_data, *toPtr, *fromPtr;
     int		intMag = WLZ_NINT(1.0/viewData->magVal);
-    int		i, j, k, w, h;
+    int		i, j, w, h;
     XImage	*tmpImage;
 
     w = wImg / intMag;
@@ -832,12 +852,10 @@ void HGU_XmImageViewReadImageFromParamsCb(
 {
   HGU_XmImageViewDataStruct
     *data=(HGU_XmImageViewDataStruct *) client_data;
-  XmFileSelectionBoxCallbackStruct
-    *cbs=(XmFileSelectionBoxCallbackStruct *) call_data;
   int			intType;
-  String		strBuf, tmpBuf;
+  String		strBuf;
   FILE			*fp;
-  WlzObject		*obj;
+  WlzObject		*obj=NULL;
 
   /* check image file, read image */
   if( data->file == NULL ){
@@ -858,6 +876,7 @@ void HGU_XmImageViewReadImageFromParamsCb(
     strBuf = AlcMalloc(sizeof(char) *
 		       (strlen(data->file) + 48));
     switch( data->depth ){
+    default:
     case 8:
       intType = 3;
       break;
@@ -873,7 +892,7 @@ void HGU_XmImageViewReadImageFromParamsCb(
     }
     sprintf(strBuf, "WlzRawToWlz -%s %d %d %d %s", data->byteOrder?"b":"l",
 	    data->width, data->height, intType, data->file);
-    if( fp = popen(strBuf, "r") ){
+    if( (fp = popen(strBuf, "r")) ){
       obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
 					  WLZEFF_FORMAT_WLZ, 0, NULL), NULL);
       pclose(fp);
@@ -919,7 +938,7 @@ void HGU_XmImageViewReadImageCb(
   int			intType;
   String		strBuf, tmpBuf;
   FILE			*fp;
-  WlzObject		*obj;
+  WlzObject		*obj=NULL;
 
   /* get image type and file */
   XtVaGetValues(data->typeMenu, XmNmenuHistory, &option, NULL);
@@ -939,6 +958,9 @@ void HGU_XmImageViewReadImageCb(
 
   /* read the image */
   switch( data->type ){
+  default:
+    return;
+
   case WLZEFF_FORMAT_WLZ:
     if( (fp = HGU_XmGetFilePointer(data->imageForm, cbs->value,
 				   cbs->dir, "r")) == NULL )
@@ -970,7 +992,7 @@ void HGU_XmImageViewReadImageCb(
     tmpBuf = (String) AlcMalloc(sizeof(char) * 32);
     sprintf(tmpBuf, "%d,%d,%d,%d", data->width, data->height,
 	    data->depth, data->byteOrder? 1 : 0);
-    if( strBuf = HGU_XmUserGetstr(w,
+    if( (strBuf = HGU_XmUserGetstr(w,
 				  "Please type in: w, h, d, o where:\n"
 				  "\n"
 				  "\tw = image width in pixels\n"
@@ -979,7 +1001,7 @@ void HGU_XmImageViewReadImageCb(
 				  "\to = byte order:\n"
 				  "      1 - big-endian\n"
 				  "      0 - small-endian",
-				  "Ok", "Cancel", tmpBuf) ){
+				   "Ok", "Cancel", tmpBuf)) ){
       if( sscanf(strBuf, "%d,%d,%d,%d", &(data->width), &(data->height),
 		 &(data->depth), &(data->byteOrder)) < 4 ){
 	AlcFree(strBuf);
@@ -1010,7 +1032,7 @@ void HGU_XmImageViewReadImageCb(
     }
     sprintf(strBuf, "WlzRawToWlz -%s %d %d %d %s", data->byteOrder?"b":"l",
 	    data->width, data->height, intType, data->file);
-    if( fp = popen(strBuf, "r") ){
+    if( (fp = popen(strBuf, "r")) ){
       obj = WlzAssignObject(WlzEffReadObj(fp, NULL,
 					  WLZEFF_FORMAT_WLZ, 0, NULL), NULL);
       pclose(fp);
@@ -1103,7 +1125,7 @@ Widget HGU_XmCreateImageView(
   Widget	parent,
   int		mappingDialogFlg)
 {
-  Widget	image_form, form, button, text, scrolled_window, canvas, label;
+  Widget	image_form, form, button, text, scrolled_window, canvas;
   HGU_XmImageViewDataStruct	*data;
   String			titleStr;
   XmString			choiceStr;

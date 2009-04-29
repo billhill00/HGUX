@@ -1,19 +1,41 @@
-#pragma ident "MRC HGU $Id$"
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmToolTips_c[] = "MRC HGU $Id:";
+#endif
+#endif
 /*!
 * \file         HGU_XmToolTips.c
-* \author       richard <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Tue Dec  9 08:13:25 2003
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 09:13:18 2009
 * \version      MRC HGU $Id$
 *               $Revision$
 *               $Name$
-* \par Copyright:
-*               1994-2002 Medical Research Council, UK.
-*               All rights reserved.
 * \par Address:
 *               MRC Human Genetics Unit,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \ingroup      XmUtils
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_Xm
 * \brief        Functions to support tool tips in Motif GUI applications.
 *               
 * \todo         -
@@ -26,6 +48,8 @@
 #include <stdlib.h>
 
 #include <Xm/XmAll.h>
+
+#include <Alc.h>
 
 /* default delays in milli-secs before tip popup and removal*/
 #define HGU_XmTOOLTIP_DELAY 500
@@ -294,7 +318,7 @@ void HGU_XmAddToolTip(
   }
 
   /* create a structure to pass to the event handler */
-  if( data = (HGU_XmToolTipData *) XtNew(HGU_XmToolTipData) ){
+  if( (data = (HGU_XmToolTipData *) XtNew(HGU_XmToolTipData)) ){
     String	tmpStr;
     data->widget = w;
     tmpStr = HGU_XmToolTipStringBreak(helpStr);

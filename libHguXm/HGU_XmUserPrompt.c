@@ -1,20 +1,42 @@
-#pragma ident "MRC HGU $Id$"
-/*****************************************************************************
-* Copyright   :    1994 Medical Research Council, UK.                        *
-*                  All rights reserved.                                      *
-******************************************************************************
-* Address     :    MRC Human Genetics Unit,                                  *
-*                  Western General Hospital,                                 *
-*                  Edinburgh, EH4 2XU, UK.                                   *
-******************************************************************************
-* Project     :    libhguXm: Motif Library				     *
-* File        :    HGU_XmUserPrompt.c					     *
-* $Revision$
-******************************************************************************
-* Author Name :     Richard Baldock					     *
-* Author Login:    richard@hgu.mrc.ac.uk				     *
-* Date        :    Thu Aug 25 10:01:23 1994				     *
-* Synopsis:	Motif versions of HGU_notice procedures plus convenience     *
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmUserPrompt_c[] = "MRC HGU $Id:";
+#endif
+#endif
+/*!
+* \file         HGU_XmUserPrompt.c
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 09:12:44 2009
+* \version      MRC HGU $Id$
+*               $Revision$
+*               $Name$
+* \par Address:
+*               MRC Human Genetics Unit,
+*               Western General Hospital,
+*               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_Xm
+* \brief        Motif versions of HGU_notice procedures plus convenience     *
 *		procedures to the standard Motif dialogs		     *
 *									     *
 *	HGU_XmUserConfirm():	prompts for a yes/no answer and returns	     *
@@ -28,7 +50,13 @@
 *	HGU_XmUserMessage():	put up a message dialog with settable	     *
 *				modality. Not very different from	     *
 *				HGU_XmUserInfo(). Returns immediately.	     *
-*****************************************************************************/
+*               
+* \todo         -
+* \bug          None known
+*
+* Maintenance log with most recent changes at top of list.
+*/
+
 #include <stdio.h>
 
 #include <Xm/FileSB.h>
@@ -622,7 +650,7 @@ String HGU_XmUserGetFilenameT(
       XmStringFree( text1 );
     }
     else if( default_ans && (default_ans[0] == '/') ){
-      int i, n;
+      int i, n=0;
       for(i=0; i < strlen(default_ans); i++){
 	if( default_ans[i] == '/' ){n = i;}
       }

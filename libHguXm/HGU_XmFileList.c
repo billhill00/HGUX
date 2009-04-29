@@ -1,18 +1,40 @@
-#pragma ident "MRC HGU $Id$"
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmFileList_c[] = "MRC HGU $Id:";
+#endif
+#endif
 /*!
 * \file         HGU_XmFileList.c
-* \author       richard <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Thu Apr  8 15:32:47 2004
+* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \date         Wed Apr 29 09:26:23 2009
 * \version      MRC HGU $Id$
 *               $Revision$
 *               $Name$
-* \par Copyright:
-*               1994-2002 Medical Research Council, UK.
-*               All rights reserved.
 * \par Address:
 *               MRC Human Genetics Unit,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
 * \brief        Utilities to manage a recent file-list in Motif applications.
 *               
@@ -21,6 +43,7 @@
 *
 * Maintenance log with most recent changes at top of list.
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -94,7 +117,7 @@ AlcDLPList *HGU_XmFileListCreateList(
 
   /* read file to get menu items */
   if( errNum == WLZ_ERR_NONE ){
-    if( fp = fopen(resourceFile, "r") ){
+    if( (fp = fopen(resourceFile, "r")) ){
       BibFileRecord	*bibfileRecord;
       BibFileError	bibFileErr;
 
@@ -132,13 +155,14 @@ MenuItem *HGU_XmFileListCreateMenuItems(
   XtCallbackProc	callbackProc,
   WlzErrorNum	*dstErr)
 {
-  MenuItem	*items;
+  MenuItem	*items=NULL;
   int		i, p, numItems;
   AlcDLPItem	*listItem;
   
   WlzErrorNum	errNum=WLZ_ERR_NONE;
   AlcErrno	alcErrno;
   HGU_XmFileListCallbackStruct	*cbs;
+
   /* check inputs */
   if( fileList == NULL ){
     errNum = WLZ_ERR_PARAM_NULL;
@@ -273,12 +297,12 @@ WlzErrorNum HGU_XmFileListResetMenu(
 				   False, False, items);
     /* add tool-tips */
     for(i=0; items[i].name != NULL; i++){
-      if( cbs = (HGU_XmFileListCallbackStruct *) items[i].callback_data ){
+      if( (cbs = (HGU_XmFileListCallbackStruct *) items[i].callback_data) ){
 	if(strcmp(items[i].name, "separator") &&
 	   strcmp(items[i].name, "Clear list")){
 	  strbuf = AlcMalloc(sizeof(char)*(strlen(cbs->file)+4));
 	  sprintf(strbuf, "*%s", cbs->file);
-	  if(widget = XtNameToWidget(menu, strbuf)){
+	  if((widget = XtNameToWidget(menu, strbuf))){
 	    HGU_XmAddToolTip(HGU_XmGetTopShell(cascade), widget,
 			     cbs->file);
 	  }
@@ -354,7 +378,6 @@ void HGU_XmFileListWriteHeader(
   BibFileRecord		*bibfileRecord;
   time_t		tmpTime;
   char			*tmpS, tmpBuf[256];
-  char  		*idxS = NULL;
   char  		*dateS = NULL;
   char  		*hostS = NULL;
   char  		*userS = NULL;
@@ -419,7 +442,7 @@ WlzErrorNum HGU_XmFileListWriteResourceFile(
 
     /* currently assume only these entries are written to the
        resource file */
-    if( fp = fopen(resourceFile, "w") ){
+    if( (fp = fopen(resourceFile, "w")) ){
       /* write a file header */
       HGU_XmFileListWriteHeader(fp);
       item = fileList->head;

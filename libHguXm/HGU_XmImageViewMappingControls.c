@@ -1,19 +1,41 @@
-#pragma ident "MRC HGU $Id$"
+#if defined(__GNUC__)
+#ident "MRC HGU $Id:"
+#else
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#pragma ident "MRC HGU $Id:"
+#else static char _HGU_XmImageViewMappin_controls_c[] = "MRC HGU $Id:";
+#endif
+#endif
 /*!
 * \file         HGU_XmImageViewMappingControls.c
 * \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Mon Mar  4 13:53:33 2002
+* \date         Wed Apr 29 09:17:28 2009
 * \version      MRC HGU $Id$
 *               $Revision$
 *               $Name$
-* \par Copyright:
-*               1994-2001 Medical Research Council, UK.
-*               All rights reserved.
 * \par Address:
 *               MRC Human Genetics Unit,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \ingroup      libHguXm
+* \par Copyright:
+* Copyright (C) 2005 Medical research Council, UK.
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be
+* useful but WITHOUT ANY WARRANTY; without even the implied
+* warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE.  See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA  02110-1301, USA.
+* \ingroup      HGU_Xm
 * \brief        Build a set of grey-level mapping controls plus associated functions.
 *               
 * \todo         -
@@ -38,38 +60,38 @@ void HGU_XmImageViewSetLutControls(
 		       (float) 0, (float) 255);
 
   /* now reset the sliders */
-  if( slider = XtNameToWidget(data->greyMapping, "*src_grey_min") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*src_grey_min")) ){
     HGU_XmSetSliderRange(slider, (float) data->srcMin,
 			 (float) data->srcMax);
     HGU_XmSetSliderValue(slider, (float) data->min);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*src_grey_max") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*src_grey_max")) ){
     HGU_XmSetSliderRange(slider, (float) data->srcMin,
 			 (float) data->srcMax);
     HGU_XmSetSliderValue(slider, (float) data->max);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*dst_grey_min") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*dst_grey_min")) ){
     HGU_XmSetSliderValue(slider, (float) data->Min);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*dst_grey_max") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*dst_grey_max")) ){
     HGU_XmSetSliderValue(slider, (float) data->Max);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*gamma") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*gamma")) ){
     HGU_XmSetSliderValue(slider, (float) data->gamma);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*mean") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*mean")) ){
     HGU_XmSetSliderRange(slider, (float) data->srcMin,
 			 (float) data->srcMax);
     HGU_XmSetSliderValue(slider, (float) data->mean);
   }
-  if( slider = XtNameToWidget(data->greyMapping, "*sigma") ){
+  if( (slider = XtNameToWidget(data->greyMapping, "*sigma")) ){
     HGU_XmSetSliderRange(slider, (float) 0,
 			 (float) data->srcMax);
     HGU_XmSetSliderValue(slider, (float) data->sigma);
   }
 
   /* reset the transform type and invert toggle */
-  if( option = XtNameToWidget(data->greyMapping, "*transformType") ){
+  if( (option = XtNameToWidget(data->greyMapping, "*transformType")) ){
     switch( data->transType ){
     default:
     case WLZ_GREYTRANSFORMTYPE_LINEAR:
@@ -88,7 +110,7 @@ void HGU_XmImageViewSetLutControls(
       XtVaSetValues(option, XmNmenuHistory, widget, NULL);
     }
   }
-  if( toggle = XtNameToWidget(data->greyMapping, "*invert") ){
+  if( (toggle = XtNameToWidget(data->greyMapping, "*invert")) ){
     XtVaSetValues(toggle, XmNset, data->invert, NULL);
   }
   
@@ -126,10 +148,9 @@ void HGU_XmImageViewSetHistogramDisplayCb(
   XtPointer	call_data)
 {
   HGU_XmImageViewDataStruct *data=(HGU_XmImageViewDataStruct *) client_data;
-  int		i, min, max, nBins, nMax;
+  int		i, min, max, nBins, nMax=0;
   double	binOrigin, binSize;
   WlzErrorNum	errNum=WLZ_ERR_NONE;
-  Widget	widget;
 
   if( (data->obj == NULL) || data->objHistogram ){
     return;
@@ -147,9 +168,9 @@ void HGU_XmImageViewSetHistogramDisplayCb(
     hist_polydmn = WlzMakePolygonDomain(WLZ_POLYGON_INT, 1024,
 					hist_vtx, 1024, 0, NULL);
   }
-  if( data->objHistogram = WlzHistogramObj(data->obj, nBins,
+  if( (data->objHistogram = WlzHistogramObj(data->obj, nBins,
 					     binOrigin, binSize,
-					     &errNum) ){
+					    &errNum)) ){
     data->objHistogram = WlzAssignObject(data->objHistogram, NULL);
     switch( data->objHistogram->domain.hist->type ){
     case WLZ_HISTOGRAMDOMAIN_INT:
@@ -167,6 +188,10 @@ void HGU_XmImageViewSetHistogramDisplayCb(
 	nMax = WLZ_MAX(nMax, hist_vtx[i].vtY);
       }
       break;
+
+    default:
+      return;
+
     }
   }
   HGU_XmSetGraphLimits(data->histogram, (float) min, (float) max,
@@ -183,7 +208,7 @@ void HGU_XmImageViewSetTransformDisplay(
   HGU_XmImageViewDataStruct *data)
 {
   int		i;
-  double	g, A, B, fmin, fmax, mu, sig;
+  double	g;
 
   /* display the transform window */
   win_vtx[0].vtX = win_vtx[3].vtX = win_vtx[4].vtX = data->min;
@@ -344,6 +369,10 @@ void HGU_XmImageViewHistMagResetCb(
       }
     }
     break;
+
+  default:
+    return;
+
   }
   HGU_XmSetGraphLimits(data->histogram, xl, xu, yl, yu);
 
@@ -590,7 +619,6 @@ void HGU_XmImageViewResetImageControlsCb(
   XtPointer	call_data)
 {
   HGU_XmImageViewDataStruct *data=(HGU_XmImageViewDataStruct *) client_data;
-  Widget	slider;
 
   /* reset all the values
      leave type selection and invert alone
@@ -668,7 +696,7 @@ static MenuItem transformTypeItems[] = {
    HGU_XmImageViewTransformTypeSigmoidCb, NULL,
    HGU_XmHelpStandardCb, NULL,
    XmTEAR_OFF_DISABLED, False, False, NULL},
-  NULL,
+  {NULL},
 };
 
 typedef struct _HGU_XmGreyMappingDialogResourcesStruct {
@@ -737,8 +765,8 @@ void HGU_XmCreateGreyMappingControls(
   Widget			control,
   HGU_XmImageViewDataStruct	*data)
 {
-  Widget	form, frame, title, title_form;
-  Widget	rowcolumn, button, option, toggle, widget, rc;
+  Widget	form, frame, title;
+  Widget	button, option, widget, rc;
   Widget	graph, graphics, slider, scale, label;
   Widget	histogram_frame, transform_frame, grey_bounds_frame;
   Widget	transform_params_frame;
