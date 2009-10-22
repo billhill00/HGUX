@@ -531,6 +531,10 @@ HGU_XGCType	gc_type)
 {
     XGCValues        	gcvalues;
     unsigned long	mask;
+    int			depth=8;
+
+    /* get depth */
+    depth = DefaultDepthOfScreen(DefaultScreenOfDisplay(dpy));
 
     /* check initialisation */
     if( !gcs_initialised ){
@@ -547,12 +551,26 @@ HGU_XGCType	gc_type)
     switch( gc_type ){
     case HGU_XGC_INTERACT:
         gcvalues.function       = GXxor;
-        gcvalues.foreground     = (unsigned long) 0277;
-        gcvalues.background     = (unsigned long) 0;
-        gcvalues.plane_mask     = (unsigned long) 255;
+	switch( depth ){
+	case 24:
+	  gcvalues.foreground     = (unsigned long) 0x00ffff;
+	  gcvalues.background     = (unsigned long) 0;
+	  gcvalues.plane_mask     = (unsigned long) 0xffffff;
+	  break;
+
+	case 8:
+	default:
+	  gcvalues.foreground     = (unsigned long) 0277;
+	  gcvalues.background     = (unsigned long) 0;
+	  gcvalues.plane_mask     = (unsigned long) 255;
+	  break;
+
+	}
+	gcvalues.line_width	= 2;
+	gcvalues.join_style	= JoinMiter;
         gcvalues.subwindow_mode = IncludeInferiors;
 	mask = (GCFunction | GCPlaneMask | GCSubwindowMode |
-		GCForeground|GCBackground);
+		GCForeground | GCBackground| GCLineWidth | GCJoinStyle);
 	break;
     case HGU_XGC_CONFIRMED:
         gcvalues.function       = GXxor;
