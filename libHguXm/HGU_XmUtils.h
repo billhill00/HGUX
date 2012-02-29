@@ -794,6 +794,12 @@ extern WlzObject *HGU_XmFileListReadObject(
   Widget			w,
   HGU_XmFileListCallbackStruct	*cbs,
   WlzErrorNum			*dstErr);
+extern WlzErrorNum HGU_XmFileListClearList(
+  AlcDLPList	*fileList);
+extern WlzErrorNum HGU_XmFileListResetMenu(
+  AlcDLPList	*fileList,
+  Widget	cascade,
+  XtCallbackProc	callbackProc);
 
 #ifdef  __cplusplus
 }
