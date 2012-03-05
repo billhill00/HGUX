@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUglQuaternion_c[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglQuaternion_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglQuaternion.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 11:15:40 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author       Bill Hill
+* \date         April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -47,9 +47,6 @@
 *		    Curves, SIGRAPH (1985) 19 245-254.
 *		  * Birkhoff G, MacLane S. A survey of Modern
 *		    Algebra, Macmillan (1966).
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <math.h>
@@ -58,16 +55,14 @@
 #include <HGUglQuaternion.h>
 
 
-/************************************************************************
-* Function:	HGUglQuatProduct				
-* Returns:	HGUglQuaternion:	Product of the two given
-*					quaternions.		
-* Purpose:	Calculates and returns the product of the two given
-*		quaternions.					
-* Global refs:	-						
-* Parameters:	HGUglQuaternion given1:	First quaternion.	
-*		HGUglQuaternion given2:	Second quaternion.	
-************************************************************************/
+/*!
+* \return	Product of the two given quaternions.
+* \ingroup	HGU_GL
+* \brief	Calculates and returns the product of the two given
+* 		quaternions.
+* \param	given1			First quaternion.
+* \param	given2			Second quaternion.
+*/
 HGUglQuaternion	HGUglQuatProduct(HGUglQuaternion given1,
 				 HGUglQuaternion given2)
 {
@@ -84,16 +79,13 @@ HGUglQuaternion	HGUglQuatProduct(HGUglQuaternion given1,
   return(prod);
 }
 
-/************************************************************************
-* Function:	HGUglQuatToMatrixGL				
-* Returns:	void						
-* Purpose:	Converts the given quaternion into an (Open GL)	
-*		transformation matrix.				
-*		Efficiency: 14 additions, 9 multiplies.		
-* Global refs:	-						
-* Parameters:	double matrix[4][4]:	Given (Open GL) matrix.	
-* 		HGUglQuaternion quat:	Given quaternion.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Converts the given quaternion into an (Open GL) transformation
+* 		matrix.
+* \param	matrix			Given (Open GL) matrix.
+* \param	quat			Given quaternion.
+*/
 void		HGUglQuatToMatrixGL(double matrix[4][4], HGUglQuaternion quat)
 {
   double	t2X,
@@ -139,14 +131,13 @@ void		HGUglQuatToMatrixGL(double matrix[4][4], HGUglQuaternion quat)
   matrix[3][3] = 1.0;
 }
 
-/************************************************************************
-* Function:	HGUglQuatNormalise				
-* Returns:	HGUglQuaternion:	Normalised quaternion.	
-* Purpose:	Normalises the given quaternion (so that it lies on the
-*		unit sphere).					
-* Global refs:	-						
-* Parameters:	HGUglQuaternion quat:	Given quaternion.	
-************************************************************************/
+/*!
+* \return	Normalised quaternion.
+* \ingroup	HGU_GL
+* \brief	Normalises the given quaternion (so that it lies on the
+* 		unit sphere).
+* \param	quat			Given quaternion.
+*/
 HGUglQuaternion	HGUglQuatNormalise(HGUglQuaternion quat)
 {
   double	tNorm;
@@ -160,17 +151,15 @@ HGUglQuaternion	HGUglQuatNormalise(HGUglQuaternion quat)
   return(quat);
 }
 
-/************************************************************************
-* Function:	HGUglQuatFromAxis				
-* Returns:	HGUglQuaternion:	Calculated quaternion.	
-* Purpose:	Calculates a rotation quaternion (which lies on the
-*		unit sphere) using the given axis and rotation about
-*		that axis.					
-* Global refs:	-						
-* Parameters:	WlzDVertex3 axis:	Axis defined by vector throgh
-*					(0, 0, 0) and this vertex.
-*		double phi:		Rotation about the given axis.
-************************************************************************/
+/*!
+* \return	Calculated quaternion.
+* \ingroup	HGU_GL
+* \brief	Calculates a rotation quaternion (which lies on the unit
+* 		sphere) using the given axis and rotation about that axis.
+* \param	axis			Axis defined by vector throgh
+* 					(0, 0, 0) and this vertex.
+* \param	phi			Rotation about the given axis.
+*/
 HGUglQuaternion	HGUglQuatFromAxis(WlzDVertex3 axis, double phi)
 {
   double	halfPhi,

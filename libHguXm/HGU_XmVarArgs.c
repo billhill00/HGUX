@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmVarArgs_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmVarArgs_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmVarArgs.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:12:14 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,15 +36,10 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Varargs wrappers for various libhguXm functions. These	*
-*		ARE wrappers and NOT re-implementations, this has a 	*
-*		small cost in terms of efficiency but should make code	*
+* \brief        Varargs wrappers for various libhguXm functions. These
+*		*are* wrappers and *not* re-implementations, this has a
+*		small cost in terms of efficiency but should make code
 *		maintenance much easier in the long run.	
-*               
-* \todo         -
-* \bug          None known
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <stdlib.h>
@@ -64,21 +59,19 @@ typedef enum	       /* Used to check for errors within this module (file) */
 
 #define HGU_XmVA_LIST_INC 64 	/* Increment for dynamically built arg lists */
 
-/************************************************************************
-* Function:	HGU_XmVaCreateActionArea				*
-* Returns:	Widget:			Action area composite widget.	*
-* Purpose:	A varargs wrapper for HGU_XmCreateActionArea() which	*
-*		dynamically builds up an argument list and then passes	*
-*		it on to HGU_XmCreateActionArea().			*
-* Global refs:	-							*
-* Parameters:	Widget parentW:		The composite widget's parent.	*
-*		...			A NULL terminated varargs	*
-*					argument list consisting of 	*
-*					argument triples:		*
-*					  char *name,			*
-*					  XtCallbackProc callback and	*
-*					  XtPointer client_data.	*
-************************************************************************/
+/*!
+* \return	Action area composite widget.
+* \ingroup	HGU_Xm
+* \brief	A varargs wrapper for HGU_XmCreateActionArea() which    *
+*               dynamically builds up an argument list and then passes  *
+*               it on to HGU_XmCreateActionArea().
+* \param	parentW			The composite widget's parent.
+* \param	 ...                    A NULL terminated varargs argument
+* 					list consisting of argument triples:
+* 					  char *name,
+* 					  XtCallbackProc callback and
+* 					  XtPointer client_data.
+*/
 #ifdef __STDC__
 Widget		HGU_XmVaCreateActionArea(Widget parentW, ...)
 #else /* ! __STDC__ ][ */
@@ -131,24 +124,21 @@ Widget		parentW;
   return(actAreaW);
 }
 
-/************************************************************************
-* Function:	HGU_XmVaCreateStdDialog					*
-* Returns:	Widget:			Action area composite widget.	*
-* Purpose:	A varargs wrapper for HGU_XmCreateStdDialog() which	*
-*		dynamically builds up an argument list and then passes	*
-*		it on to HGU_XmCreateStdDialog().			*
-* Global refs:	-							*
-* Parameters:	Widget parentW:		The composite widget's parent.	*
-*		String name:		The composite widget's name.	*
-*		WidgetClass controlWidgetClass: Manager widget for the	*
-*					composite widget.		*
-*		...			A NULL terminated varargs	*
-*					argument list consisting of 	*
-*					argument triples:		*
-*					  char *name,			*
-*					  XtCallbackProc callback and	*
-*					  XtPointer client_data.	*
-************************************************************************/
+/*!
+* \return	Action area composite widget.
+* \ingroup	HGU_Xm
+* \brief	A varargs wrapper for HGU_XmCreateStdDialog() which
+*		dynamically builds up an argument list and then passes
+*		it on to HGU_XmCreateStdDialog().
+* \param	parentW			The composite widget's parent.
+* \param	name:			The composite widget's name.
+* \param	controlWidgetClass: 	Manager widget for the composite widget.
+* \param	...			A NULL terminated varargs argument list
+* 					consisting of argument triples:
+*				          char *name,
+*				          XtCallbackProc callback and
+*				          XtPointer client_data.
+*/
 #ifdef __STDC__
 Widget		HGU_XmVaCreateStdDialog(Widget parentW, String name,
 					WidgetClass controlWidgetClass, ...)

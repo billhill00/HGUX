@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmPB_Radio_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmPB_Radio_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmPB_Radio.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:15:46 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,18 +36,12 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Implement a push-button radio box with label. This	     *
-*		is a convenience routine to provide a simple interface	     *
-*		for a push button style interface. If toggle buttons	     *
-*		with the indicators visible are required then either	     *
-*		reset the appropriate resource or usr the Motif		     *
-*		procedures.						     *
-* Functions:								     *
-*               
-* \todo         -
-* \bug          None known
-*
-* Maintenance log with most recent changes at top of list.
+* \brief        Implement a push-button radio box with label. This
+*		is a convenience routine to provide a simple interface
+*		for a push button style interface. If toggle buttons
+*		with the indicators visible are required then either
+*		reset the appropriate resource or usr the Motif
+*		procedures.
 */
 
 #include <stdio.h>

@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmUserPrompt_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmUserPrompt_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmUserPrompt.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:12:44 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,25 +36,19 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Motif versions of HGU_notice procedures plus convenience     *
-*		procedures to the standard Motif dialogs		     *
-*									     *
-*	HGU_XmUserConfirm():	prompts for a yes/no answer and returns	     *
-*				1/0 respectively.			     *
-*	HGU_XmUserContinue():	prompts for a continue (ie no switch)	     *
-*				modeless and prcesses events.		     *
-*	HGU_XmUserGetstr():	prompts for an input string and returns	     *
-*				either a string pointer or NULL.	     *
-*	HGU_XmUserInfo():	put up an infomation dialog with	     *
-*				settable modality. Returns immediately.	     *
-*	HGU_XmUserMessage():	put up a message dialog with settable	     *
-*				modality. Not very different from	     *
-*				HGU_XmUserInfo(). Returns immediately.	     *
-*               
-* \todo         -
-* \bug          None known
+* \brief        Motif versions of HGU_notice procedures plus convenience
+*		procedures to the standard Motif dialogs
 *
-* Maintenance log with most recent changes at top of list.
+*	HGU_XmUserConfirm():	prompts for a yes/no answer and returns
+*				1/0 respectively.
+*	HGU_XmUserContinue():	prompts for a continue (ie no switch)
+*				modeless and prcesses events.
+*	HGU_XmUserGetstr():	prompts for an input string and returns
+*				either a string pointer or NULL.
+*	HGU_XmUserInfo():	put up an infomation dialog with
+*				settable modality. Returns immediately.
+*	HGU_XmUserMessage():	put up a message dialog with settable
+*				modality. Not very different from
 */
 
 #include <stdio.h>
@@ -66,12 +60,13 @@
 
 #include <HGU_XmUtils.h>
 
-/************************************************************************
-* Function:     confirm_callback					*
-* Returns:      void:		                    			*
-* Global Refs:  -                                                       *
-* Purpose:      Private callback for HGU_XmUserConfirm			*
-************************************************************************/
+/*!
+* \ingroup	HGU_Xm
+* \brief	Private callback for HGU_XmUserConfirm.
+* \param	w
+* \param	client_data
+* \param	call_data
+*/
 static void confirm_callback(
 Widget		w,
 XtPointer	client_data,

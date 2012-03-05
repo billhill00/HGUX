@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmPB_Row_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmPB_Row_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmPB_Row.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:15:22 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,17 +36,11 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Implement a push-button row with label. This		     *
-*		is a convenience routine to provide a simple interface	     *
-*		for a push button style interface. This is to provide	     *
-*		a graphical element with a row of push buttons preceded	     *
-*		by a label.						     *
-* Functions:								     *
-*               
-* \todo         -
-* \bug          None known
-*
-* Maintenance log with most recent changes at top of list.
+* \brief        Implement a push-button row with label. This
+*		is a convenience routine to provide a simple interface
+*		for a push button style interface. This is to provide
+*		a graphical element with a row of push buttons preceded
+*		by a label.
 */
 
 #include <stdio.h>
@@ -59,19 +53,18 @@
 
 #include <HGU_XmUtils.h>
 
-/************************************************************************
-* Function:	Widget HGU_XmCreatePB_Row()				*
-* Purpose:	Procedure to put together a Form widget with a Label,	*
-*	       	and push button interface - RowColumn + PushButtons	*
-*		It is NOT a widget proper and setting			*
-*		specific resource to change the default appearence	*
-*		will require knowing the widget names (see above).	*
-* Returns:	The pointer to the parent (Form) widget			*
-* Arguments:								*
-*	name		the top-level and label widget name		*
-*	parent		the parent widget				*
-*	items		the toggle button items				*
-************************************************************************/
+/*!
+* \return	The pointer to the parent (Form) widget.
+* \ingroup	HGU_Xm
+* \brie		Procedure to put together a Form widget with a Label,
+*	       	and push button interface - RowColumn + PushButtons
+*		It is NOT a widget proper and setting
+*		specific resource to change the default appearence
+*		will require knowing the widget namesf
+* \param	name			The top-level and label widget name.
+* \param	parent			The parent widget.
+* \param	items			The toggle button items.
+*/
 Widget HGU_XmCreatePB_Row(
 String		name,
 Widget		parent,

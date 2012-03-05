@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XVisualMa_ch_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XVisualMatch_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XVisualMatch.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 08:15:27 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author       Bill Hill
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -37,36 +37,28 @@
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_X
 * \brief        Provides a function for finding visuals.
-*               
-* \todo         -
-* \bug          None known
-*
-* Maintenance log with most recent changes at top of list.
 */
 #include <stdio.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
  
-/************************************************************************
-* Function:	HGU_XVisualMatch					*
-* Returns:	Visual *:			Matched visual (maybe	*
-*						NULL).			*
-* Purpose:	Given a visual class (eg: PseudoColor, TrueColor, ...)	*
-*		and a visual depth (eg: 8, 24, ...) an attempt is made	*
-*		to find a matching visual for the given display and	*
-*		and screen.						*
-* Global refs:	-							*
-* Parameters:	int *visualClassRtn:	Return pointer for the matched	*
-*					visual class.			*
-*		int *visualDepthRtn:	Return pointer for the matched	*
-*					visual depth.			*
-*		int visualClass:	Requested visual class.		*
-*		int visualDepth:	Requested visualDepth depth.	*
-*		Display *display:	X11 display pointer.		*
-*		int screenNum:		X11 screen number (NOT screen	*
-*					pointer).			*
-************************************************************************/
+/*!
+* \return	Matched visual (maybe 
+* \ingroup	HGU_X
+* \brief	Given a visual class (eg: PseudoColor, TrueColor, ...)
+*		and a visual depth (eg: 8, 24, ...) an attempt is made
+*		to find a matching visual for the given display and
+*		and screen.
+* \param	visualClassRtn		Return pointer for the matched visual
+* 					class.
+* \param	visualDepthRtn		Return pointer for the matched visual
+* 					depth.
+* \param	visualClass		Requested visual class.
+* \param	visualDepth		Requested visualDepth depth.
+* \param	display			X11 display pointer.
+* \param	screenNum		X11 screen number (NOT screen pointer).
+*/
 Visual		*HGU_XVisualMatch(int *visualClassRtn, int *visualDepthRtn,
 				  int visualClass, int visualDepth,
 				  Display *display, int screenNum)

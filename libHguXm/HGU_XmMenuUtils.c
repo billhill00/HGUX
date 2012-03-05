@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmMenuUtils_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmMenuUtils_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmMenuUtils.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:16:50 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,23 +36,19 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Convenience routine for creating menus, copied		     *
-*		from Heller - Motif Programming Manual, with some	     *
-*		modifications, Heller's	comments:			     *
-*                                                                            *
-* Build popup, option and pulldown menus, depending on the menu type.        *
-* It may be XmMENU_PULLDOWN, XmMENU_OPTION, or XmMENU_POPUP. Pulldowns       *
-* return the CascadeButton that pops up the menu. Popups return the menu.    *
-* Option menus are created, but the RowColumn that acts as the option        *
-* "area" is returned unmanaged. (The user must manage it).                   *
-* Pulldown menus are built from cascade buttons, so this function also       *
-* builds pullright menus. The function also adds the right callback for      *
-* PushButton or ToggleButton menu items                                      *
-*               
-* \todo         -
-* \bug          None known
+* \brief        Convenience routine for creating menus, copied
+*		from Heller - Motif Programming Manual, with some
+*		modifications, Heller's	comments:
 *
-* Maintenance log with most recent changes at top of list.
+*		Build popup, option and pulldown menus, depending on the menu
+*		type. It may be XmMENU_PULLDOWN, XmMENU_OPTION, or
+*		XmMENU_POPUP. Pulldowns return the CascadeButton that pops up
+*		the menu. Popups return the menu. Option menus are created,
+*		but the RowColumn that acts as the option "area" is returned
+*		unmanaged. (The user must manage it). Pulldown menus are
+*		built from cascade buttons, so this function also builds
+*		pullright menus. The function also adds the right callback
+*		for PushButton or ToggleButton menu items
 */
 
 #include <stdio.h>

@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUglText_c[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglText_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglText.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:14:56 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -38,9 +38,6 @@
 * \ingroup      HGU_GL
 * \brief        Functions for handling text within the MRC HGU OpenGL
 *		library.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <stdlib.h>
@@ -52,14 +49,12 @@
 #include <Wlz.h>
 #include <HGUgl.h>
 
-/************************************************************************
-* Function:	HGUglTextFontCreate				
-* Returns:	void						
-* Purpose:	Creates an HGUgl text font instance using the given X11
-*		font.						
-* Global refs:	-						
-* Parameters:	Font xFont:		Given X11 font.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Creates an HGUgl text font instance using the given X11
+* 		font.
+* \param	xFont			Given X11 font.
+*/
 HGUglTextFont	*HGUglTextFontCreate(Font xFont)
 {
   HGUglTextFont	*newFnt;
@@ -74,13 +69,11 @@ HGUglTextFont	*HGUglTextFontCreate(Font xFont)
   return(newFnt);
 }
 
-/************************************************************************
-* Function:	HGUglTextFontDestroy				
-* Returns:	void						
-* Purpose:	Destroys the given HGUgl text font instance.	
-* Global refs:	-						
-* Parameters:	HGUglTextFont *fnt:	Given HGUgl text font instance.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Destroys the given HGUgl text font instance.
+* \param	fnt			Given HGUgl text font instance.
+*/
 void		HGUglTextFontDestroy(HGUglTextFont *fnt)
 {
   if(fnt)
@@ -90,15 +83,13 @@ void		HGUglTextFontDestroy(HGUglTextFont *fnt)
   }
 }
 
-/************************************************************************
-* Function:	HGUglTextFontChar				
-* Returns:	void						
-* Purpose:	Draws the pixmap for the given character using the
-*		given HGUgl text font instance.			
-* Global refs:	-						
-* Parameters:	HGUglTextFont *fnt:	Given HGUgl text font instance.
-*		char charCode:		Given character.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Draws the pixmap for the given character using the
+* 		given HGUgl text font instance.
+* \param	fnt			Given HGUgl text font instance.
+* \param	charCode		Given character.
+*/
 void		HGUglTextFontChar(HGUglTextFont *fnt, char charCode)
 {
   if(fnt)
@@ -107,15 +98,13 @@ void		HGUglTextFontChar(HGUglTextFont *fnt, char charCode)
   }
 }
 
-/************************************************************************
-* Function:	HGUglTextFontStr				
-* Returns:	void						
-* Purpose:	Draws the pixmaps for the given character string using
-*		the given HGUgl text font instance.		
-* Global refs:	-						
-* Parameters:	HGUglTextFont *fnt:	Given HGUgl text font instance.
-*		char *str:		Given character string.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Draws the pixmaps for the given character string using
+* 		the given HGUgl text font instance.
+* \param	fnt			Given HGUgl text font instance.
+* \param	str			Given character string.
+*/
 void		HGUglTextFontStr(HGUglTextFont *fnt, char *str)
 {
   if(fnt && str)

@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGU_XmTextLine_c[] = "MRC HGU $Id:";
-#endif
+static char _HGU_XmTextLine_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGU_XmTextLine.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
-* \date         Wed Apr 29 09:13:52 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \author	Richard Baldock
+* \date		April 2009
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -36,22 +36,22 @@
 * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA  02110-1301, USA.
 * \ingroup      HGU_Xm
-* \brief        Implement a text entry user interface element. This is	     *
-*		not a widget implementation but a few convenience	     *
-*		routines to return a composite widget (Form) with Label	     *
-*		and Text widget children set up to allow text entry.	     *
-*		The top-level and label widget have the widget name	     *
-*		given as argument to CreateTextLine, the text widget	     *
-*		has the name "text".					     *
-*		The cb_func is added to the XmNactivateCallback		     *
-* Functions:								     *
-*	HGU_XmCreateTextLine() - create a text-line element		     *
-*	HGU_XmSetTextLineValue - set the text-line value, this will	     *
-*		update the display but will not call the callbacks.	     *
-*	HGU_XmGetTextLineValue - returns the text-line value.		     *
-*									     *
-*		See the Motif manual for more details on the Text	     *
-*		widget.							     *
+* \brief        Implement a text entry user interface element. This is
+*		not a widget implementation but a few convenience
+*		routines to return a composite widget (Form) with Label
+*		and Text widget children set up to allow text entry.
+*		The top-level and label widget have the widget name
+*		given as argument to CreateTextLine, the text widget
+*		has the name "text".
+*		The cb_func is added to the XmNactivateCallback
+* Functions:
+*	HGU_XmCreateTextLine() - create a text-line element
+*	HGU_XmSetTextLineValue - set the text-line value, this will
+*		update the display but will not call the callbacks.
+*	HGU_XmGetTextLineValue - returns the text-line value.
+*
+*		See the Motif manual for more details on the Text
+*		widget.
 *               
 * \todo         -
 * \bug          None known
@@ -67,22 +67,22 @@
 
 #include <HGU_XmUtils.h>
 
-/************************************************************************
-* Function:	Widget HGU_XmCreateTextLine()				*
-* Purpose:	Procedure to put together a Form widget with a Label,	*
-*	       	and Text children set up to act as a text-line		*
-*		graphical element. It is NOT a widget proper and setting*
-*		specific resource to change the default appearence	*
-*		will require knowing the widget names (see above).	*
-* Returns:	The pointer to the parent (Form) widget			*
-* Arguments:								*
-*	name		the top-level and label widget name		*
-*	parent		the parent widget				*
-*	value		the initial value				*
-*	cb_func		a callback function to be put on the activate	*
-*			callback list.					*
-*	cb_data		the client data for the callback		*
-************************************************************************/
+/*!
+* \return	Pointer to the parent (Form) widget.
+* \ingroup	HGU_GL
+* \brief	Procedure to put together a Form widget with a Label,
+*	       	and Text children set up to act as a text-line
+*		graphical element. It is NOT a widget proper and setting
+*		specific resource to change the default appearence
+*		will require knowing the widget names (see above).
+* Returns:	The pointer to the parent (Form) widget
+* \param	name			Top-level and label widget name.
+* \param	parent			Parent widget.
+* \param	value			Initial value.
+* \param	cb_func			Callback function to be put on the
+* 					activate callback list.	
+* \param	cb_data			Client data for the callback.
+*/
 Widget HGU_XmCreateTextLine(
 String		name,
 Widget		parent,

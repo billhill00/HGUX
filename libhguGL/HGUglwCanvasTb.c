@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUgl_canvasTb_c[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglwCanvasTb_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglwCanvasTb.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:11:31 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -41,9 +41,6 @@
 *		drawing area and a 3D virtual trackball, it is descended
 *		from the HGUglCanvas OpenGL widget. See the manual page
 *		HGUglCanvasTb(3) for a description of the widget.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <stdio.h>
@@ -60,36 +57,75 @@
 #include <HGUglwCanvasTbP.h>
 
 /* Widget methods: */
-static void	Initialize(Widget, Widget, ArgList, Cardinal *),
-		Destroy(Widget);
-static Boolean	SetValues(Widget,  Widget, Widget, ArgList, Cardinal *);
+static void			Initialize(
+				  Widget,
+				  Widget,
+				  ArgList,
+				  Cardinal *);
+static void			Destroy(
+				  Widget);
+static Boolean			SetValues(
+				  Widget,
+				  Widget,
+				  Widget,
+				  ArgList,
+				  Cardinal *);
 /* Action procedures: */
-void		HGUglwCanvasTbMotionBeginRotate(Widget, XEvent *, String *,
-						Cardinal *),
-		HGUglwCanvasTbMotionBeginXY(Widget, XEvent *, String *,
-					    Cardinal *),
-		HGUglwCanvasTbMotionBeginZ(Widget, XEvent *, String *,
-					   Cardinal *),
-		HGUglwCanvasTbMotionRotate(Widget, XEvent *, String *, 
-					   Cardinal *),
-		HGUglwCanvasTbMotionXY(Widget, XEvent *, String *,
-				       Cardinal *),
-		HGUglwCanvasTbMotionZ(Widget, XEvent *, String *,
-				      Cardinal *),
-		HGUglwCanvasTbMotionEnd(Widget, XEvent *, String *,
-				        Cardinal *);
+void				HGUglwCanvasTbMotionBeginRotate(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionBeginXY(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionBeginZ(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionRotate(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionXY(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionZ(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+void				HGUglwCanvasTbMotionEnd(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
 /* Timeout procedures: */
-static void	HGUglwCanvasTbAnimateFn(XtPointer, XtIntervalId *);
+static void			HGUglwCanvasTbAnimateFn(
+				  XtPointer,
+				  XtIntervalId *);
 /* And the rest: */
-static void	HGUglwCanvasTbMotionBeginFn(HGUglwCanvasTbWidget,
-					    XEvent *, HGUglwTrackballMode),
-		HGUglwCanvasTbCalculateRotate(HGUglwCanvasTbWidget,
-					      WlzIVertex2),
-		HGUglwCanvasTbCalculateXY(HGUglwCanvasTbWidget, 
-					  WlzIVertex2),
-		HGUglwCanvasTbCalculateZ(HGUglwCanvasTbWidget,
-					 WlzIVertex2);
-static double	HGUglwCanvasTbProjectToZ(double, WlzDVertex2);
+static void			HGUglwCanvasTbMotionBeginFn(
+				  HGUglwCanvasTbWidget,
+				  XEvent *,
+				  HGUglwTrackballMode);
+static void			HGUglwCanvasTbCalculateRotate(
+				  HGUglwCanvasTbWidget,
+				  WlzIVertex2);
+static void			HGUglwCanvasTbCalculateXY(
+				  HGUglwCanvasTbWidget,
+				  WlzIVertex2);
+static void			HGUglwCanvasTbCalculateZ(
+				  HGUglwCanvasTbWidget,
+				  WlzIVertex2);
+static double			HGUglwCanvasTbProjectToZ(
+				  double, WlzDVertex2);
 
 static char		defaultTranslations[] =
   "Shift<Btn1Down>:			hguGLw-motion-begin-z()\n"
@@ -216,16 +252,14 @@ HGUglwCanvasTbClassRec hguGLwCanvasTbClassRec =
 WidgetClass     hguGLwCanvasTbWidgetClass =
 					 (WidgetClass )&hguGLwCanvasTbClassRec;
 
-/************************************************************************
-* Function:     Initialize                                             
-* Returns:      void                                                   
-* Purpose:      Widget Method: Initialises the trackball.	
-* Global refs:  -                                                      
-* Parameters:   Widget reqW:		NOT USED
-*               Widget newW:
-*               ArgList args:		NOT USED.		
-*               Cardinal *numArgs:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Widget Method: Initialises the trackball.
+* \param	reqW			Unused.
+* \param	newW			The new widget.
+* \param	args			Unused.
+* \param	numArgs			Unused.
+*/
 static void     Initialize(Widget reqW, Widget newW,
                            ArgList args, Cardinal *numArgs)
 {
@@ -240,31 +274,27 @@ static void     Initialize(Widget reqW, Widget newW,
   HGUglwCanvasTbReset(newW);
 }
 
-/************************************************************************
-* Function:	Destroy						
-* Returns:      void                                                   
-* Purpose:      Destroy Method: Destroys/frees trackball stuff.	
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Destroy Method: Destroys/frees trackball stuff.
+* \param	givenW			Given widget.
+*/
 static void     Destroy(Widget givenW)
 {
   XtRemoveAllCallbacks(givenW, HGUglwNtrackballCallback);
 }
 
-/************************************************************************
-* Function:     SetValues					
-* Returns:      Boolean:		TRUE if an expose event is
-*					required (always FALSE).
-* Purpose:      Widget SetValues: Checks validity of some of the
-*		trackball resources.				
-* Global refs:  -                                                      
-* Parameters:   Widget curW:
-*		Widget reqW:		NOT USED.		
-*               Widget newW:		NOT USED.		
-*               ArgList args:		NOT USED.		
-*               Cardinal *numArgs:	NOT USED.		
-************************************************************************/
+/*!
+* \return	TRUE if an expose event is required (always FALSE).
+* \ingroup	HGU_GL
+* \brief	Widget SetValues: Checks validity of some of the trackball
+* 		resources.
+* \param	curW			The current widget.
+* \param	reqW			Unused.
+* \param	newW			Unused.
+* \param	args			Unused.
+* \param	numArgs			Unused.
+*/
 static Boolean	SetValues(Widget curW, Widget reqW, Widget newW,
                           ArgList args, Cardinal *numArgs)
 {
@@ -279,16 +309,14 @@ static Boolean	SetValues(Widget curW, Widget reqW, Widget newW,
   return(FALSE);
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionBeginRotate			
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Start of trackball rotation.	
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Start of trackball rotation.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unsed.
+* \param	argCount		Unsed.
+*/
 void		HGUglwCanvasTbMotionBeginRotate(Widget givenW, XEvent *event,
 				  		String *args,
 						Cardinal *argCount)
@@ -297,16 +325,14 @@ void		HGUglwCanvasTbMotionBeginRotate(Widget givenW, XEvent *event,
   		      HGUglwCANVASTB_MODE_ROTATE);
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionBeginXY			
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Start of trackball x-y translation.
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Start of trackball x-y translation.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount		Unused.q
+*/
 void		HGUglwCanvasTbMotionBeginXY(Widget givenW, XEvent *event,
 				    	    String *args, Cardinal *argCount)
 {
@@ -314,16 +340,14 @@ void		HGUglwCanvasTbMotionBeginXY(Widget givenW, XEvent *event,
   		      HGUglwCANVASTB_MODE_XY);
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionBeginZ			
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Start of trackball z translation.
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Start of trackball z translation.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount		Unused.
+*/
 void		HGUglwCanvasTbMotionBeginZ(Widget givenW, XEvent *event,
 				    	   String *args, Cardinal *argCount)
 {
@@ -331,17 +355,14 @@ void		HGUglwCanvasTbMotionBeginZ(Widget givenW, XEvent *event,
   		      HGUglwCANVASTB_MODE_Z);
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionBeginFn			
-* Returns:      void                                                   
-* Purpose:      Function used by the HGUglwCanvasTbMotionBegin.*()'s to
-*		do most things.					
-* Global refs:  -                                                      
-* Parameters:   HGUglwCanvasTbWidget tbW: Canvas / trackball widget
-*					instance.		
-*		XEvent *event:		Event to be processed.	
-*		HGUglwTrackballMode newMode: New mode for trackball.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Function used by the HGUglwCanvasTbMotionBegin.*()'s to
+*		do most things.
+* \param	tbW			Canvas / trackball widget instance.
+* \param	event			Event to be processed.
+* \param	newMode			New mode for trackball.
+*/
 static void	HGUglwCanvasTbMotionBeginFn(HGUglwCanvasTbWidget tbW,
 					    XEvent *event,
 				    	    HGUglwTrackballMode newMode)
@@ -368,16 +389,14 @@ static void	HGUglwCanvasTbMotionBeginFn(HGUglwCanvasTbWidget tbW,
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionRotate			
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Rotate trackball.		
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Rotate trackball.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount			Unused.
+*/
 void		HGUglwCanvasTbMotionRotate(Widget givenW, XEvent *event,
 			  	   	   String *args, Cardinal *argCount)
 {
@@ -409,20 +428,17 @@ void		HGUglwCanvasTbMotionRotate(Widget givenW, XEvent *event,
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbCalculateRotate			
-* Returns:	void						
-* Purpose:	Update the trackball rotation for the given current
+/*!
+* \ingroup	HGU_GL
+* \brief	Update the trackball rotation for the given current
 *		position. The current and last positions are then used
 *		two calculate two normalised points (ie [-1.0, +1.0]).
 *		The axis of rotation is	then the cross product of the
 *		two vectors through the	normalised points and the
-*		trackball's origin.				
-* Global refs:	-						
-* Parameters:   HGUglwCanvasTbWidget tbW: Canvas / trackball widget
-*					instance.		
-*		WlzIVertex2 curPos:	New position.		
-************************************************************************/
+*		trackball's origin.
+* \param	tbW			Canvas / trackball widget instance.
+* \param	curPos			New position.
+*/
 void		HGUglwCanvasTbCalculateRotate(HGUglwCanvasTbWidget tbW,
 				     	      WlzIVertex2 curPos)
 {
@@ -467,16 +483,14 @@ void		HGUglwCanvasTbCalculateRotate(HGUglwCanvasTbWidget tbW,
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionXY				
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Translate trackball in x-y plane.
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Translate trackball in x-y plane.
+* \param	givenW			Widget instance.	
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount		Unused.
+*/
 void		HGUglwCanvasTbMotionXY(Widget givenW, XEvent *event,
 			  	       String *args, Cardinal *argCount)
 {
@@ -508,16 +522,13 @@ void		HGUglwCanvasTbMotionXY(Widget givenW, XEvent *event,
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbCalculateXY			
-* Returns:	void						
-* Purpose:	Update the trackball xy translation for the given
-*		current pointer position. 			
-* Global refs:	-						
-* Parameters:   HGUglwCanvasTbWidget tbW: Canvas / trackball widget
-*					instance.		
-*		WlzIVertex2 curPos:	New position.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Update the trackball xy translation for the given
+*		current pointer position.
+* \param	tbW			Canvas / trackball widget instance.
+* \param	curPos			New position.
+*/
 static void	HGUglwCanvasTbCalculateXY(HGUglwCanvasTbWidget tbW,
 					  WlzIVertex2 curPos)
 {
@@ -538,16 +549,14 @@ static void	HGUglwCanvasTbCalculateXY(HGUglwCanvasTbWidget tbW,
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionZ				
-* Returns:      void                                                   
-* Purpose:      Action Procedure: Translate trackball along z axis.
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: Translate trackball along z axis.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount		Unused.
+*/
 void		HGUglwCanvasTbMotionZ(Widget givenW, XEvent *event,
 			  	      String *args, Cardinal *argCount)
 {
@@ -579,16 +588,13 @@ void		HGUglwCanvasTbMotionZ(Widget givenW, XEvent *event,
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbCalculateZ			
-* Returns:	void						
-* Purpose:	Update the trackball z translation for the given
-*		current pointer position. 			
-* Global refs:	-						
-* Parameters:   HGUglwCanvasTbWidget tbW: Canvas / trackball widget
-*					instance.		
-*		WlzIVertex2 curPos:	New position.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Update the trackball z translation for the given
+*		current pointer position.
+* \param	tbW			Canvas / trackball widget instance.
+* \param	curPos			New position.
+*/
 static void	HGUglwCanvasTbCalculateZ(HGUglwCanvasTbWidget tbW,
 					 WlzIVertex2 curPos)
 {
@@ -606,16 +612,14 @@ static void	HGUglwCanvasTbCalculateZ(HGUglwCanvasTbWidget tbW,
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbMotionEnd				
-* Returns:      void                                                   
-* Purpose:      Action Procedure: End of non-free trackball motion.
-* Global refs:  -                                                      
-* Parameters:   Widget givenW:		Widget instance.	
-*		XEvent *event:		Event that caused the action.
-*		String *args:		NOT USED.		
-*		cardinal *argCount:	NOT USED.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action Procedure: End of non-free trackball motion.
+* \param	givenW			Widget instance.
+* \param	event			Event that caused the action.
+* \param	args			Unused.
+* \param	argCount		Unused.
+*/
 void		HGUglwCanvasTbMotionEnd(Widget givenW, XEvent *event,
 			  	        String *args, Cardinal *argCount)
 {
@@ -668,14 +672,12 @@ void		HGUglwCanvasTbMotionEnd(Widget givenW, XEvent *event,
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbReset				
-* Returns:      void                                                   
-* Purpose:      Reset trackball to identity, ie no rotation, 	
-*		no translation and no animation.		
-* Global refs:  -                                                      
-* Parameters:    Widget givenW:		Widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Reset trackball to identity, ie no rotation, 	
+*		no translation and no animation.
+* \param	givenW			Widget instance.
+*/
 void            HGUglwCanvasTbReset(Widget givenW)
 {
   HGUglwCanvasTbWidget tbW;
@@ -691,14 +693,12 @@ void            HGUglwCanvasTbReset(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbStop                                     
-* Returns:      void                                                   
-* Purpose:      Stop trackball with rotation and translation delta's
-*		set to identity.				
-* Global refs:  -                                                      
-* Parameters:    Widget givenW:		Widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Stop trackball with rotation and translation delta's
+*		set to identity.
+* \param	givenW			Widget instance.
+*/
 void            HGUglwCanvasTbStop(Widget givenW)
 {
   HGUglwCanvasTbWidget tbW;
@@ -714,14 +714,12 @@ void            HGUglwCanvasTbStop(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:     HGUglwCanvasTbPause				
-* Returns:      void                                                   
-* Purpose:      Pause trackball without changing the rotation and
-*		translation delta's.				
-* Global refs:  -                                                      
-* Parameters:    Widget givenW:		Widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Pause trackball without changing the rotation and
+*		translation delta's.
+* \param	givenW			Widget instance.
+*/
 void            HGUglwCanvasTbPause(Widget givenW)
 {
   HGUglwCanvasTbWidget tbW;
@@ -735,13 +733,11 @@ void            HGUglwCanvasTbPause(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbAnimate				
-* Returns:	void						
-* Purpose:	Start trackball animation.			
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief 	Start trackball animation.
+* \param	givenW			Widget instance.
+*/
 void		HGUglwCanvasTbAnimate(Widget givenW)
 {
   HGUglwCanvasTbWidget tbW;
@@ -762,15 +758,13 @@ void		HGUglwCanvasTbAnimate(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbUpdate				
-* Returns:	void						
-* Purpose:	Calls the trackball animation function without setting
+/*!
+* \ingroup	HGU_GL
+* \brief	Calls the trackball animation function without setting
 *		the trackball mode to HGUglwCANVASTB_MODE_ANIMATION so
-*		that a single update is done.			
-* Global refs:	-						
-* Parameters:	 Widget givenW:		Widget instance.	
-************************************************************************/
+*		that a single update is done.
+* \param	givenW			Widget instance.
+*/
 void		HGUglwCanvasTbUpdate(Widget givenW)
 {
   HGUglwCanvasTbWidget tbW;
@@ -785,18 +779,15 @@ void		HGUglwCanvasTbUpdate(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbAnimateFn				
-* Returns:	void						
-* Purpose:	Trackball animation time-out procedure which calls any 
+/*!
+* \ingroup	HGU_GL
+* \brief	Trackball animation time-out procedure which calls any 
 *		trackball callbacks and then if the trackball is in
 *		it's animation mode reregisters itself as a time-out
-*		procedure.					
-* Global refs:	-						
-* Parameters:	XtPointer clientData:	Used to pass the trackball
-*					instance.		
-*		XtIntervalId *id:	Timeout function id.	
-************************************************************************/
+*		procedure.
+* \param	clientData		Used to pass the trackball instance.
+* \param	id			Timeout function id.
+*/
 static void	HGUglwCanvasTbAnimateFn(XtPointer clientData, XtIntervalId *id)
 {
   Widget		givenW;
@@ -829,15 +820,13 @@ static void	HGUglwCanvasTbAnimateFn(XtPointer clientData, XtIntervalId *id)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbGetRotateMatrixGL			
-* Returns:	void						
-* Purpose:	Converts current rotation quaternion to an Open GL
+/*!
+* \ingroup	HGU_GL
+* \brief	Converts current rotation quaternion to an Open GL
 *		rotation matrix, using the given Open GL matrix.
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-*		double matrix[4][4]:	Given rotation matrix.	
-************************************************************************/
+* \param	givenW			Widget instance
+* \param	matrix[4][4]		Given rotation matrix.
+*/
 void		HGUglwCanvasTbGetRotateMatrixGL(Widget givenW,
 					        double matrix[4][4])
 {
@@ -850,14 +839,12 @@ void		HGUglwCanvasTbGetRotateMatrixGL(Widget givenW,
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbGetTranslate			
-* Returns:	void						
-* Purpose:	Gets current trackball XYZ translation.		
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-*		WlzDVertex3 *translate:	Destination for translation.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Gets current trackball XYZ translation.
+* \param	givenW			Widget instance.
+* \param	translate		Destination for translation.
+*/
 void		HGUglwCanvasTbGetTranslate(Widget givenW,
 				           WlzDVertex3 *translate)
 {
@@ -870,15 +857,13 @@ void		HGUglwCanvasTbGetTranslate(Widget givenW,
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbGetAnimateInterval		
-* Returns:	int:			Animation interval, or 0 
-*					on error.		
-* Purpose:	Gets current trackball animation interval, ie the
+/*!
+* \return	Animation interval, or 0 on error.
+* \ingroup	HGU_GL
+* \brief	Gets current trackball animation interval, ie the
 *		minimum time between anaimation frames in milliseconds.
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-************************************************************************/
+* \param	givenW			Widget instance.
+*/
 int		HGUglwCanvasTbGetAnimateInterval(Widget givenW)
 {
   int		itvl = -1;
@@ -892,15 +877,13 @@ int		HGUglwCanvasTbGetAnimateInterval(Widget givenW)
   return(itvl);
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbSetAnimateInterval		
-* Returns:	void						
-* Purpose:	Sets current trackball animation interval, ie the
+/*!
+* \ingroup	HGU_GL
+* \brief	Sets current trackball animation interval, ie the
 *		minimum time between animation frames in milliseconds.
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-*		int itvl:		New animation interval.	
-************************************************************************/
+* \param	givenW			Widget instance.
+* \param	itvl			New animation interval.
+*/
 void		HGUglwCanvasTbSetAnimateInterval(Widget givenW, int itvl)
 {
   HGUglwCanvasTbWidget tbW;
@@ -916,14 +899,13 @@ void		HGUglwCanvasTbSetAnimateInterval(Widget givenW, int itvl)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbGetMotionInterval			
-* Returns:	int:			Motion interval, or 0 on error.
-* Purpose:	Gets current trackball motion interval, ie the	
+/*!
+* \return	Motion interval, or 0 on error.
+* \ingroup	HGU_GL
+* \brief	Gets current trackball motion interval, ie the	
 *		minimum time between motion events for no motion.
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-************************************************************************/
+* \param	givenW			Widget instance.
+*/
 int		HGUglwCanvasTbGetMotionInterval(Widget givenW)
 {
   int		itvl = -1;
@@ -937,15 +919,13 @@ int		HGUglwCanvasTbGetMotionInterval(Widget givenW)
   return(itvl);
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbSetMotionInterval			
-* Returns:	void						
-* Purpose:	Sets current trackball motion interval, ie the	
+/*!
+* \ingroup	HGU_GL
+* \brief	Sets current trackball motion interval, ie the	
 *		minimum time between motion events for no motion.
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-*		int itvl:		New motion interval.	
-************************************************************************/
+* \param	givenW			Widget instance.
+* \param	itvl			New motion interval.
+*/
 void		HGUglwCanvasTbSetMotionInterval(Widget givenW, int itvl)
 {
   HGUglwCanvasTbWidget tbW;
@@ -961,14 +941,13 @@ void		HGUglwCanvasTbSetMotionInterval(Widget givenW, int itvl)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbGetTrackballSize			
-* Returns:	int:			Trackball size, or 0 on error.
-* Purpose:	Gets current trackball size as percentage of the
-*		widgets window size.				
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-************************************************************************/
+/*!
+* \return	Trackball size, or 0 on error.
+* \ingroup	HGU_GL
+* \brief	Gets current trackball size as percentage of the
+*		widgets window size.
+* \param	givenW			Widget instance.
+*/
 int		HGUglwCanvasTbGetTrackballSize(Widget givenW)
 {
   int		size = -1;
@@ -982,15 +961,13 @@ int		HGUglwCanvasTbGetTrackballSize(Widget givenW)
   return(size);
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbSetTrackballSize			
-* Returns:	void						
-* Purpose:	Sets current trackball size as percentage of the
-*		widgets window size.				
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance		
-*		int size:		Requested size.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Sets current trackball size as percentage of the
+*		widgets window size.
+* \param	givenW			Widget instance.
+* \param	size			Requested size.
+*/
 void		HGUglwCanvasTbSetTrackballSize(Widget givenW, int size)
 {
   HGUglwCanvasTbWidget tbW;
@@ -1010,16 +987,15 @@ void		HGUglwCanvasTbSetTrackballSize(Widget givenW, int size)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasTbProjectToZ			
-* Returns:	double:			Z coordinate of projection.
-* Purpose:	Projects the given point onto the trackball sphere with
+/*!
+* \return	Z coordinate of projection.
+* \ingroup	HGU_GL
+* \brief	Projects the given point onto the trackball sphere with
 *		the given radius, or a hyperbolic sheet if the point is
-*		away from the center of the sphere.		
-* Global refs:	-						
-* Parameters:	double size:		The trackball size [0.0-1.0].
-*		WlzDVertex2 point:	Given point.		
-************************************************************************/
+*		away from the center of the sphere.
+* \param	size			The trackball size [0.0-1.0].
+* \param	point			Given point.
+*/
 static double	HGUglwCanvasTbProjectToZ(double size, WlzDVertex2 point)
 {
   double	sqLen,

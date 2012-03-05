@@ -1,27 +1,26 @@
 #ifndef HGUGL_GLWCANVASTB_H
 #define HGUGL_GLWCANVASTB_H
-
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUgl_canvasTb.h[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglwCanvasTb_h[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglwCanvasTb.h
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:07:39 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -44,9 +43,6 @@
 *		drawing area and a 3D virtual trackball, it is descended
 *		from the HGUglCanvas OpenGL widget. See the manual page
 *		HGUglCanvasTb(3) for a description of the widget.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <GL/gl.h>
@@ -91,22 +87,43 @@ externalref WidgetClass	hguGLwCanvasTbWidgetClass;
 typedef struct _HGUglwCanvasTbClassRec	*HGUglwCanvasTbWidgetClass;
 typedef struct _HGUglwCanvasTbRec	*HGUglwCanvasTbWidget;
 
-extern Widget		HGUglwCreateCanvasTb(Widget, String,
-					     ArgList, Cardinal);
+extern Widget			HGUglwCreateCanvasTb(
+				  Widget,
+				  String,
+				  ArgList,
+				  Cardinal);
 
-extern void		HGUglwCanvasTbReset(Widget),
-			HGUglwCanvasTbStop(Widget),
-			HGUglwCanvasTbPause(Widget),
-			HGUglwCanvasTbAnimate(Widget),
-			HGUglwCanvasTbUpdate(Widget),
-			HGUglwCanvasTbGetRotateMatrixGL(Widget, double[4][4]),
-			HGUglwCanvasTbGetTranslate(Widget, WlzDVertex3 *),
-			HGUglwCanvasTbSetAnimateInterval(Widget, int),
-			HGUglwCanvasTbSetTrackballSize(Widget, int),
-			HGUglwCanvasTbSetMotionInterval(Widget, int);
-extern int		HGUglwCanvasTbGetAnimateInterval(Widget),
-			HGUglwCanvasTbGetTrackballSize(Widget),
-			HGUglwCanvasTbGetMotionInterval(Widget);
+extern void			HGUglwCanvasTbReset(
+				  Widget);
+extern void			HGUglwCanvasTbStop(
+				  Widget);
+extern void			HGUglwCanvasTbPause(
+				  Widget);
+extern void			HGUglwCanvasTbAnimate(
+				  Widget);
+extern void			HGUglwCanvasTbUpdate(
+				  Widget);
+extern void			HGUglwCanvasTbGetRotateMatrixGL(
+				  Widget,
+				  double[4][4]);
+extern void			HGUglwCanvasTbGetTranslate(
+				  Widget,
+				  WlzDVertex3 *);
+extern void			HGUglwCanvasTbSetAnimateInterval(
+				  Widget,
+				  int);
+extern void			HGUglwCanvasTbSetTrackballSize(
+				  Widget,
+				  int);
+extern void			HGUglwCanvasTbSetMotionInterval(
+				  Widget,
+				  int);
+extern int			HGUglwCanvasTbGetAnimateInterval(
+				  Widget);
+extern int			HGUglwCanvasTbGetTrackballSize(
+				  Widget);
+extern int			HGUglwCanvasTbGetMotionInterval(
+				  Widget);
 
 
 #ifdef __cplusplus

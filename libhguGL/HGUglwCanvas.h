@@ -1,26 +1,26 @@
 #ifndef HGUGL_GLWCANVAS_H
 #define HGUGL_GLWCANVAS_H
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUgl_canvas.h[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglwCanvas_h[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglwCanvas.h
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:09:17 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -42,9 +42,6 @@
 *		widget. The HGUglCanvas widget is descended from the
 *		Motif primitive widget. See the manual page
 *		HGUglCanvas(3) for a description of the widget.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <GL/gl.h>
@@ -145,13 +142,29 @@ externalref WidgetClass hguGLwCanvasWidgetClass;
 typedef struct _HGUglwCanvasClassRec	*HGUglwCanvasWidgetClass;
 typedef struct _HGUglwCanvasRec		*HGUglwCanvasWidget;
 
-extern Widget 	HGUglwCreateCanvas(Widget, char *, ArgList, Cardinal);
-extern void	HGUglwSetCanvasGlxContext(Widget, GLXContext),
-		HGUglwCanvasInput(Widget, XEvent *, String *, Cardinal *),
-		HGUglwCanvasSwapBuffers(Widget);
-extern GLXContext HGUglwCreateCanvasGlxContext(Widget, GLXContext),
-		HGUglwGetCanvasGlxContext(Widget);
-extern Bool	HGUglwCanvasGlxMakeCurrent(Widget, GLXContext);
+extern Widget 			HGUglwCreateCanvas(
+				  Widget,
+				  char *,
+				  ArgList,
+				  Cardinal);
+extern void			HGUglwSetCanvasGlxContext(
+				  Widget,
+				  GLXContext);
+extern void			HGUglwCanvasInput(
+				  Widget,
+				  XEvent *,
+				  String *,
+				  Cardinal *);
+extern void			HGUglwCanvasSwapBuffers(
+				  Widget);
+extern GLXContext 		HGUglwCreateCanvasGlxContext(
+				  Widget,
+				  GLXContext);
+extern GLXContext		HGUglwGetCanvasGlxContext(
+				  Widget);
+extern Bool			HGUglwCanvasGlxMakeCurrent(
+				  Widget,
+				  GLXContext);
 
 #ifdef __cplusplus
 }

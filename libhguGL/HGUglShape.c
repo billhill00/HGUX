@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUglShape_c[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglShape_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglShape.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:15:18 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -38,9 +38,6 @@
 * \ingroup      HGU_GL
 * \brief        Functions for drawing simple OpenGL shapes in
 *		the MRC HGU OpenGL library.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <stdlib.h>
@@ -52,19 +49,17 @@
 #include <Wlz.h>
 #include <HGUgl.h>
 
-/************************************************************************
-* Function:	HGUglShapeWireAxes				
-* Returns:	void						
-* Purpose:	Draws a set of wire axes of length 1.0 * scale factor,
-*		center (0,0,0),	each with a wire arrow tip and optional
-*		x,y,z label.					
-* Global refs:	-						
-* Parameters:	HGUglTextFont *fnt:	HGU gl text font instance.
-*		WlzDVertex3 scale:	Scale factor for axes.	
-*		char *xLabel:		X axis label if non NULL.
-*		char *yLabel:		Y axis label if non NULL.
-*		char *zLabel:		Z axis label if non NULL.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Draws a set of wire axes of length 1.0 * scale factor,
+* 		center (0,0,0), each with a wire arrow tip and optional
+* 		x,y,z label.
+* \param	fnt			HGU gl text font instance.
+* \param	scale			Scale factor for axes.
+* \param	xLabel			X axis label if non NULL.
+* \param	yLabel			Y axis label if non NULL.
+* \param	zLabel			Z axis label if non NULL.
+*/
 void		HGUglShapeWireAxes(HGUglTextFont *fnt,
 				   WlzDVertex3 scale,
 			           char *xLabel, char *yLabel, char *zLabel)
@@ -128,14 +123,12 @@ void		HGUglShapeWireAxes(HGUglTextFont *fnt,
   }
 }
 
-/************************************************************************
-* Function:	HGUglShapeWireCube				
-* Returns:	void						
-* Purpose:	Draws a wire cube with the given scale and center.
-* Global refs:	-						
-* Parameters:	WlzDVertex3 side:	Length of sides.	
-*		WlzDVertex3 center:	Center of the cube.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Draws a wire cube with the given scale and center.
+* \param	side			Length of sides.
+* \param	center			Center of the cube.
+*/
 void		HGUglShapeWireCube(WlzDVertex3 side, WlzDVertex3 center)
 {
   WlzDVertex3	min,
@@ -168,15 +161,13 @@ void		HGUglShapeWireCube(WlzDVertex3 side, WlzDVertex3 center)
   glEnd();
 }
 
-/************************************************************************
-* Function:	HGUglShapeSolidCube				
-* Returns:	void						
-* Purpose:	Draws a solid cube of side using the given side length
-*		and center.					
-* Global refs:	-						
-* Parameters:	WlzDVertex3 side:	Length of sides.	
-*		WlzDVertex3 center:	Center of the cube.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Draws a solid cube of side using the given side length
+* 		and center.
+* \param	side			Length of sides.
+* \param	center			Center of the cube.
+*/
 void		HGUglShapeSolidCube(WlzDVertex3 side, WlzDVertex3 center)
 {
   WlzDVertex3	min,

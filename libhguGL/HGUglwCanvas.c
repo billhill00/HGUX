@@ -1,24 +1,24 @@
 #if defined(__GNUC__)
-#ident "MRC HGU $Id:"
+#ident "University of Edinburgh $Id$"
 #else
-#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
-#pragma ident "MRC HGU $Id:"
-#else static char _HGUgl_canvas_c[] = "MRC HGU $Id:";
-#endif
+static char _libhguGL/HGUglwCanvas_c[] = "University of Edinburgh $Id$";
 #endif
 /*!
 * \file         HGUglwCanvas.c
-* \author       Richard Baldock <Richard.Baldock@hgu.mrc.ac.uk>
+* \author       Bill Hill
 * \date         Wed Apr 29 11:11:51 2009
-* \version      MRC HGU $Id$
-*               $Revision$
-*               $Name$
-* \par Address:
+* \version      $Id$
+* \par
+* Address:
 *               MRC Human Genetics Unit,
+*               MRC Institute of Genetics and Molecular Medicine,
+*               University of Edinburgh,
 *               Western General Hospital,
 *               Edinburgh, EH4 2XU, UK.
-* \par Copyright:
-* Copyright (C) 2005 Medical research Council, UK.
+* \par
+* Copyright (C), [2012],
+* The University Court of the University of Edinburgh,
+* Old College, Edinburgh, UK.
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -40,9 +40,6 @@
 *		widget. The HGUglCanvas widget is descended from the
 *		Motif primitive widget. See the manual page
 *		HGUglCanvas(3) for a description of the widget.
-*               
-*
-* Maintenance log with most recent changes at top of list.
 */
 
 #include <stdio.h>
@@ -57,13 +54,27 @@
 
 #define HGUglw_OFFSET(field) XtOffset(HGUglwCanvasWidget, field)
 
-static void	HGUglwCreateColormap(HGUglwCanvasWidget, int, XrmValue *);
-
-static void 	Initialize(Widget, Widget, ArgList, Cardinal *),
-		Realize(Widget, Mask *, XSetWindowAttributes *),
-		Redraw(Widget, XEvent *, Region),
-		Resize(Widget),
-		Destroy(Widget);
+static void			HGUglwCreateColormap(
+				  HGUglwCanvasWidget,
+				  int,
+				  XrmValue *);
+static void 			Initialize(
+				  Widget,
+				  Widget,
+				  ArgList,
+				  Cardinal *);
+static void			Realize(
+				  Widget,
+				  Mask *,
+				  XSetWindowAttributes *);
+static void			Redraw(
+				  Widget,
+				  XEvent *,
+				  Region);
+static void			Resize(
+				  Widget);
+static void			Destroy(
+				  Widget);
 
 static char defaultTranslations[] = "<Key>osfHelp: PrimitiveHelp() \n"
 				    "<KeyDown>:    HGUglwCanvasInput() \n"
@@ -281,12 +292,16 @@ static XtResource initializeResources[] =
 };
 
   
-/* reallocate colors needed in new cmap, background only obtained if
+/* Reallocate colors needed in new cmap, background only obtained if
  * the allocateBackground resource is TRUE
  */
-#if defined (LINUX2) || defined (DARWIN)
+#ifndef _XmBackgroundColorDefault
 #define _XmBackgroundColorDefault 0
+#endif
+#ifndef _XmForegroundColorDefault
 #define _XmForegroundColorDefault 1
+#endif
+#ifndef _XmHighlightColorDefault
 #define _XmHighlightColorDefault 2
 #endif
 static XtResource backgroundResources[] =
@@ -451,15 +466,13 @@ HGUglwCanvasClassRec hguGLwCanvasClassRec =
 
 WidgetClass	hguGLwCanvasWidgetClass = (WidgetClass )&hguGLwCanvasClassRec;
 
-/************************************************************************
-* Function:	HGUglwCanvasError				
-* Returns:	void						
-* Purpose:	Passes appropriate message string to the installed
-*		error handler.					
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance.	
-*		String str:		Error message string.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Passes appropriate message string to the installed
+*		error handler.
+* \param	givenW			Widget instance.
+* \param	str			Error message string.
+*/
 static void	HGUglwCanvasError(Widget givenW, String str)
 {
   char		buf[256];
@@ -468,15 +481,13 @@ static void	HGUglwCanvasError(Widget givenW, String str)
   XtAppError(XtWidgetToApplicationContext(givenW), buf);
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasWarning				
-* Returns:	void						
-* Purpose:	Passes appropriate message string to the installed
-*		non-fatal error handler.			
-* Global refs:	-						
-* Parameters:	Widget givenW:		Widget instance.	
-*		String str:		Non-fatal error message string.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Passes appropriate message string to the installed
+*		non-fatal error handler.
+* \param	givenW			Widget instance.
+* \param	str			Non-fatal error message string.
+*/
 static void	HGUglwCanvasWarning(Widget givenW, String str)
 {
   char		buf[256];
@@ -485,17 +496,12 @@ static void	HGUglwCanvasWarning(Widget givenW, String str)
   XtAppWarning(XtWidgetToApplicationContext(givenW), buf);
 }
 
-/************************************************************************
-* Function:	HGUglwCreateAttribList				
-* Returns:	void						
-* Purpose:	Resource initialization method: Initializes the 
-		attribute list based on the attributes.			*
-* Global refs:	struct attribInfo booleanAttribs: Widget's boolean
-*					attribute list.		
-*		struct attribInfo intAttribs: Widget's int attribute
-*					list.			
-* Parameters:	HGUglwCanvasWidget cW:	Canvas widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Resource initialization method: Initializes the 
+		attribute list based on the attributes.
+* \param	cW			Canvas widget instance.
+*/
 static void	HGUglwCreateAttribList(HGUglwCanvasWidget cW)
 {
   int		listLength;
@@ -537,14 +543,12 @@ static void	HGUglwCreateAttribList(HGUglwCanvasWidget cW)
   *ip = None;
 }
 
-/************************************************************************
-* Function:	HGUglwCreateVisualInfo				
-* Returns:	void						
-* Purpose:	Resource initialization method: Initializes the 
-		visualInfo based on the attribute list.			*
-* Global refs:	-						
-* Parameters:	HGUglwCanvasWidget cW:	Canvas widget instance.	
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Resource initialization method: Initializes the 
+		visualInfo based on the attribute list.
+* \param	cW			Canvas widget instance.
+*/
 static void	HGUglwCreateVisualInfo(HGUglwCanvasWidget cW)
 {
   cW->hguGLwCanvas.visualInfo = glXChooseVisual(XtDisplay(cW),
@@ -556,20 +560,18 @@ static void	HGUglwCreateVisualInfo(HGUglwCanvasWidget cW)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCreateColormap				
-* Returns:	void						
-* Purpose:	Resource initialization method: Initializes the 
+/*!
+* \ingroup	HGU_GL
+* \brief	Resource initialization method: Initializes the 
 *		colormap based on the visual info.		
 *		This function maintains a cache of visual-infos to 
 *		colormaps. If two widgets share the same visual info,
 *		they share the same colormap. This function is called
-*		by the callProc of the colormap resource entry.	
-* Global refs:	-						
-* Parameters:	HGUglwCanvasWidget cW:	Canvas widget instance.	
-*		int offset:		NOT USED.		
-*		XrmValue *value:	Resource value.		
-************************************************************************/
+*		by the callProc of the colormap resource entry.
+* \param	cW			Canvas widget instance.
+* \param	offset			Unused.
+* \param	value			Resource value.
+*/
 static void	HGUglwCreateColormap(HGUglwCanvasWidget cW,
 				     int offset, XrmValue *value)
 {
@@ -622,18 +624,16 @@ static void	HGUglwCreateColormap(HGUglwCanvasWidget cW,
   }
 }
 
-/************************************************************************
-* Function:	Initialize					
-* Returns:	void						
-* Purpose:	Widget Method: Initialises the HGU Open GL canvas 
-*		widget.						
-* Global refs:	-						
-* Parameters:	Widget reqW:		Widget values as set by the
-*					resource manager.	
-*		Widget newW:		
-*		ArgList args:
-*		Cardinal *numArgs:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Widget Method: Initialises the HGU Open GL canvas 
+*		widget.
+* \param	reqW			Widget values as set by the resource
+* 					manager.
+* \param	newW
+* \param	args
+* \param	numArgs
+*/
 static void	Initialize(Widget reqW, Widget newW,
 			   ArgList args, Cardinal *numArgs)
 {
@@ -692,15 +692,13 @@ static void	Initialize(Widget reqW, Widget newW,
   }
 }
 
-/************************************************************************
-* Function:	Realize						
-* Returns:	void						
-* Purpose:	Initializes the HGU Open GL canvas widget.	
-* Global refs:	-						
-* Parameters:	Widget givenW:
-*		Mask *valueMask:
-*		XSetWindowAttributes *attributes:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Initializes the HGU Open GL canvas widget.
+* \param	givenW
+* \param	valueMask
+* \param	attributes
+*/
 static void	Realize(Widget givenW, Mask *valueMask,
 			XSetWindowAttributes *attributes)
 {
@@ -775,15 +773,13 @@ static void	Realize(Widget givenW, Mask *valueMask,
 		     &cb);
 }
 
-/************************************************************************
-* Function:	Redraw						
-* Returns:	void						
-* Purpose:	Expose method which calls widgets callbacks.	
-* Global refs:	-						
-* Parameters:	Widget givenW:
-*		XEvent *event:
-*		Region region:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Expose method which calls widgets callbacks.
+* \param	givenW
+* \param	event
+* \param	region
+*/
 static void	Redraw(Widget givenW, XEvent *event, Region region)
 {
   HGUglwCanvasWidget givenCW;
@@ -799,13 +795,11 @@ static void	Redraw(Widget givenW, XEvent *event, Region region)
 		     &cb);
 }
 
-/************************************************************************
-* Function:	Resize						
-* Returns:	void						
-* Purpose:	Resize method which calls widgets callbacks.	
-* Global refs:	-						
-* Parameters:	Widget givenW:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Resize method which calls widgets callbacks.
+* \param	givenW			Given widget.
+*/
 static void	Resize(Widget givenW)
 {
   HGUglwCanvasCallbackStruct cb;
@@ -825,13 +819,11 @@ static void	Resize(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:	Destroy						
-* Returns:	void						
-* Purpose:	Destroy method which destroys the given widget.	
-* Global refs:	-						
-* Parameters:	Widget givenW:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Destroy method which destroys the given widget.
+* \param	givenW			Given widget.
+*/
 static void	Destroy(Widget givenW)    
 {
   Widget	parentShW;
@@ -892,16 +884,14 @@ static void	Destroy(Widget givenW)
   }
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasInput				
-* Returns:	void						
-* Purpose:	Action function for keyboard and mouse events.	
-* Global refs:	-						
-* Parameters:	Widget givenW:
-*		XEvent *event:
-*		String *params:
-*		Cardinal *numParams:
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Action function for keyboard and mouse events.
+* \param	givenW
+* \param	event
+* \param	params
+* \param	numParams
+*/
 void		HGUglwCanvasInput(Widget givenW, XEvent *event,
 		        	  String *params, Cardinal *numParams)
 {
@@ -919,18 +909,17 @@ void		HGUglwCanvasInput(Widget givenW, XEvent *event,
 		     &cb);
 }
 
-/************************************************************************
-* Function:	HGUglwCreateCanvas				
-* Returns:	Widget:			New HGU Open GL canvas widget.
-* Purpose:	Motif style convienience function to create an HGU Open
-*		GL canvas widget.				
-* Global refs:	-						
-* Parameters:	Widget parent:		Parent widget.		
-*		String name:		New widget name.	
-*		ArgList argList:	Argument list for new widget.
-*		Cardinal argCount:	Number of arguments in the
-*					argument list.		
-************************************************************************/
+/*!
+* \return	New HGU Open GL canvas widget.
+* \ingroup	HGU_GL
+* \brief	Motif style convienience function to create an HGU Open
+*		GL canvas widget.
+* \param	parent			Parent widget.
+* \param	name			New widget name.
+* \param	argList			Argument list for new widget.
+* \param	argCount		Number of arguments in the
+* 					argument list.
+*/
 Widget 		HGUglwCreateCanvas(Widget parent, String name,
 			 	   ArgList argList, Cardinal argCount)
 {
@@ -938,15 +927,14 @@ Widget 		HGUglwCreateCanvas(Widget parent, String name,
 			argCount));
 }
 
-/************************************************************************
-* Function:	HGUglwSetCanvasGlxContext			
-* Returns:	void						
-* Purpose:	Sets the Open GL rendering context associated with 
-*		this canvas widget.				
-* Global refs:	-						
-* Parameters:	Widget thisW:		Instance of canvas widget.
-*		GLXContext glxCtx:	GLX rendering context to set.
-************************************************************************/
+/*!
+* \return
+* \ingroup	HGU_GL
+* \brief	Sets the Open GL rendering context associated with 
+*		this canvas widget.
+* \param	thisW			Instance of canvas widget.
+* \param	glxCtx			GLX rendering context to set.
+*/
 void     	HGUglwSetCanvasGlxContext(Widget thisW, GLXContext glxCtx)
 {
   HGUglwCanvasWidget thisCW;
@@ -955,17 +943,16 @@ void     	HGUglwSetCanvasGlxContext(Widget thisW, GLXContext glxCtx)
   thisCW->hguGLwCanvas.glxCtx = glxCtx;
 }
 
-/************************************************************************
-* Function:	HGUglwCreateCanvasGlxContext			
-* Returns:	GLXContext:		The Open GL rendering context.
-* Purpose:	Creates an Open GL rendering context associated with
-*		this canvas widget.				
-* Global refs:	-						
-* Parameters:	Widget thisW:		Instance of canvas widget.
-*		GLXContext shareList:	Context with which to share 
-*					display lists, NULL indicates
-*					no display list sharing.
-************************************************************************/
+/*!
+* \return	The Open GL rendering context.
+* \ingroup	HGU_GL
+* \brief	Creates an Open GL rendering context associated with
+* 		this canvas widget.
+* \param	thisW			Instance of canvas widget.
+* \param	shareList		Context with which to share display
+* 					lists, NULL indicates no display list
+* 					sharing.
+*/
 GLXContext     	HGUglwCreateCanvasGlxContext(Widget thisW,
 					     GLXContext shareList)
 {
@@ -980,14 +967,13 @@ GLXContext     	HGUglwCreateCanvasGlxContext(Widget thisW,
   return(glxCtx);
 }
 
-/************************************************************************
-* Function:	HGUglwGetCanvasGlxContext			
-* Returns:	GLXContext:		The Open GL rendering context.
-* Purpose:	Gets the Open GL rendering context associated with
-*		this canvas widget.				
-* Global refs:	-						
-* Parameters:	Widget thisW:		Instance of canvas widget.
-************************************************************************/
+/*!
+* \return	The Open GL rendering context.
+* \ingroup	HGU_GL
+* \brief	Gets the Open GL rendering context associated with
+* 		this canvas widget.
+* \param	thisW			Instance of canvas widget.
+*/
 GLXContext     	HGUglwGetCanvasGlxContext(Widget thisW)
 {
   HGUglwCanvasWidget thisCW;
@@ -997,20 +983,17 @@ GLXContext     	HGUglwGetCanvasGlxContext(Widget thisW)
   return(thisCW->hguGLwCanvas.glxCtx);
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasGlxMakeCurrent			
-* Returns:	void						
-* Purpose:	Convienience function to make given Open GL context the
-*		current context.				
-* Global refs:	-						
-* Parameters:	Widget thisW:		Instance of canvas widget.
-*		GLXContext glxCtx:	GLX rendering context to make
-*					current for this canvs widget.
-*					If NULL then the Open GL 
-*					rendering context associated
-*					with this canvas is made
-*					current.		
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Convienience function to make given Open GL context the
+*		current context.
+* \param	thisW			Instance of canvas widget.
+* \param	glxCtx			GLX rendering context to make current
+* 					for this canvs widget. If NULL then the
+* 					Open GL rendering context associated
+* 					with this canvas is made current.
+* 					
+*/
 Bool     	HGUglwCanvasGlxMakeCurrent(Widget thisW, GLXContext glxCtx)
 {
   HGUglwCanvasWidget thisCW;
@@ -1023,14 +1006,12 @@ Bool     	HGUglwCanvasGlxMakeCurrent(Widget thisW, GLXContext glxCtx)
   return(glXMakeCurrent(XtDisplay(thisW), XtWindow(thisW), glxCtx));
 }
 
-/************************************************************************
-* Function:	HGUglwCanvasSwapBuffers				
-* Returns:	void						
-* Purpose:	Convienience function to swap the Open GL front and
-*		back buffers.					
-* Global refs:	-						
-* Parameters:	Widget thisW:		Instance of canvas widget.
-************************************************************************/
+/*!
+* \ingroup	HGU_GL
+* \brief	Convienience function to swap the Open GL front and
+*		back buffers.
+* \param	thisW			Instance of canvas widget.
+*/
 void     	HGUglwCanvasSwapBuffers(Widget thisW)
 {
   glXSwapBuffers(XtDisplay(thisW), XtWindow(thisW));
