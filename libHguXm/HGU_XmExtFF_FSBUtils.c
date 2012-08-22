@@ -202,7 +202,7 @@ WlzObject *HGU_XmReadExtFFObject(
     case WLZEFF_FORMAT_BMP:
     case WLZEFF_FORMAT_TIFF:
       if( (filename = HGU_XmGetFileStr(dialog, cbs->value, cbs->dir)) ){
-	obj = WlzEffReadObj(NULL, filename, format, 0, &errNum);
+	obj = WlzEffReadObj(NULL, filename, format, 0, 0, 0, &errNum);
 	AlcFree( filename );
       }
       else {
@@ -225,7 +225,7 @@ WlzObject *HGU_XmReadExtFFObject(
 	errNum = WLZ_ERR_FILE_OPEN;
       }
       else {
-	obj = WlzEffReadObj(fp, NULL, format, 0, &errNum);
+	obj = WlzEffReadObj(fp, NULL, format, 0, 0, 0, &errNum);
 	fclose(fp);
       }
       break;

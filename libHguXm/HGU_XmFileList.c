@@ -469,7 +469,7 @@ WlzObject *HGU_XmFileListReadObject(
   WlzErrorNum	errNum=WLZ_ERR_NONE;
 
   if((w != NULL) && (cbs != NULL)){
-    rtnObj = WlzEffReadObj(NULL, cbs->file, cbs->format, 0, &errNum);
+    rtnObj = WlzEffReadObj(NULL, cbs->file, cbs->format, 0, 0, 0, &errNum);
   }
   else {
     errNum = WLZ_ERR_PARAM_NULL;
