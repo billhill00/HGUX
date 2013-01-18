@@ -1,5 +1,9 @@
+*.a
 *.o
+*.la
+*.lo
 .deps
+.libs
 COPYING
 INSTALL
 Makefile
