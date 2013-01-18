@@ -14,5 +14,6 @@ configure
 depcomp
 install-sh
 libtool
+ltmain.sh
 missing
 
