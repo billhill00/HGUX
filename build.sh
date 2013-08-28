@@ -16,7 +16,8 @@ autoreconf
 export MA=/opt/MouseAtlas
 
 # Configure
-./configure --with-pic --enable-optimise --enable-openmp \
+# may need to append --with-opengl=/usr/lib64
+./configure --prefix=$MA --with-pic --enable-optimise --enable-openmp \
             --with-woolz=$MA --with-nifti=$MA --with-tiff=$MA --with-jpeg=$MA
 
 # Make and install
