@@ -960,9 +960,12 @@ GLXContext     	HGUglwCreateCanvasGlxContext(Widget thisW,
   HGUglwCanvasWidget thisCW;
 
   thisCW = (HGUglwCanvasWidget )thisW;
+  /* Using indirect GLX has become difficult on machines following the
+   * decision to disable it by default, hence ethe code below requests
+   * direct rendering. */
   glxCtx = glXCreateContext(XtDisplay(thisW),
   			    thisCW->hguGLwCanvas.visualInfo,
-  			    shareList, thisCW->hguGLwCanvas.directRender);
+  			    shareList, True);
   thisCW->hguGLwCanvas.glxCtx = glxCtx;
   return(glxCtx);
 }
